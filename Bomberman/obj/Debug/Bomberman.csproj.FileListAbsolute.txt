@@ -1,0 +1,12 @@
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\bin\Debug\Bomberman.exe.config
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\bin\Debug\Bomberman.exe
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\bin\Debug\Bomberman.pdb
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.csprojResolveAssemblyReference.cache
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.Form1.resources
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.Properties.Resources.resources
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.csproj.GenerateResource.Cache
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.exe
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.pdb
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\bin\Debug\cs-CZ\Bomberman.resources.dll
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\Bomberman.Properties.Resources.cs-CZ.resources
+d:\dokumenty\visual studio 2012\Projects\Bomberman\Bomberman\obj\Debug\cs-CZ\Bomberman.resources.dll
