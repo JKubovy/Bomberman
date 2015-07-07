@@ -14,15 +14,17 @@ namespace Bomberman
 		Empty,
 		Wall,
 		Unbreakable_Wall,
-		Bomb,
+		Bomb_1,
+		Bomb_2,
+		Bomb_3,
 		Fire
 	}
 
 	class Playground
 	{
-		private const int playgroundSize = 14; // must be greater then 8!
+		public const int playgroundSize = 14; // must be greater then 8!
 
-		Square[][] board;
+		public Square[][] board;
 
 		public Playground()
 		{

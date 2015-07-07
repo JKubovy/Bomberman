@@ -39,13 +39,11 @@
 			this.panelControls = new System.Windows.Forms.Panel();
 			this.panelMultiplayer = new System.Windows.Forms.Panel();
 			this.panelGame = new System.Windows.Forms.Panel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).BeginInit();
 			this.splitContainerMenu.Panel1.SuspendLayout();
 			this.splitContainerMenu.Panel2.SuspendLayout();
 			this.splitContainerMenu.SuspendLayout();
 			this.panelAbout.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainerMenu
@@ -183,20 +181,11 @@
 			this.panelGame.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelGame.Controls.Add(this.pictureBox1);
 			this.panelGame.Location = new System.Drawing.Point(0, 0);
 			this.panelGame.Name = "panelGame";
 			this.panelGame.Size = new System.Drawing.Size(726, 450);
 			this.panelGame.TabIndex = 1;
 			this.panelGame.Visible = false;
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(28, 28);
-			this.pictureBox1.TabIndex = 5;
-			this.pictureBox1.TabStop = false;
 			// 
 			// Form1
 			// 
@@ -215,7 +204,6 @@
 			this.splitContainerMenu.ResumeLayout(false);
 			this.panelAbout.ResumeLayout(false);
 			this.panelAbout.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -233,7 +221,6 @@
 		private System.Windows.Forms.Panel panelMultiplayer;
 		private System.Windows.Forms.Label labelAbout;
 		private System.Windows.Forms.Panel panelGame;
-		private System.Windows.Forms.PictureBox pictureBox1;
 
 
 	}
