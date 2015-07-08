@@ -20,5 +20,6 @@ namespace Bomberman
 		}
 
 		internal static Playground playground;
+		internal static bool playing = false;
 	}
 }

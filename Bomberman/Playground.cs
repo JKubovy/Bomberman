@@ -25,7 +25,7 @@ namespace Bomberman
 
 	class Playground
 	{
-		public const int playgroundSize = 14; // must be greater then 8!
+		public const int playgroundSize = 14; // must be greater or eaqual to 7!
 
 		public Square[][] board;
 

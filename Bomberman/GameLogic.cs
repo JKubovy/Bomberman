@@ -15,10 +15,25 @@ namespace Bomberman
 	{
 		public Point location;
 		public Movement movement;
+
+		public Move(Point location, Movement movement)
+		{
+			this.location = location;
+			this.movement = movement;
+		}
 	}
 	class GameLogic
 	{
-		public Playground ProcessMove(Playground playground, Move move)
+		public Playground Process(Playground playground, Move[] moves)
+		{
+			Playground outPlayground = playground;
+			for (int i = 0; i < moves.Length; i++)
+			{
+				outPlayground = ProcessMove(outPlayground, moves[i]);
+			}
+			return outPlayground;
+		}
+		private Playground ProcessMove(Playground playground, Move move)
 		{
 
 			switch (move.movement)

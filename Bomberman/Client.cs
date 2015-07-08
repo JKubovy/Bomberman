@@ -8,5 +8,11 @@ namespace Bomberman
 {
 	class Client
 	{
+		private Connection connection;
+
+		public Client(Connection connection)
+		{
+			this.connection = connection;
+		}
 	}
 }

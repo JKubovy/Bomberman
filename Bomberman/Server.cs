@@ -8,5 +8,15 @@ namespace Bomberman
 {
 	class Server
 	{
+		List<Connection> clients;
+		public Server()
+		{
+			clients = new List<Connection>();
+		}
+
+		public void GetMovements()
+		{
+
+		}
 	}
 }
