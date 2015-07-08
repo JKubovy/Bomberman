@@ -14,7 +14,10 @@ namespace Bomberman
 		Empty,
 		Wall,
 		Unbreakable_Wall,
-		Bomb_1,
+		Bomb_1_1,
+		Bomb_1_2,
+		Bomb_1_3,
+		Bomb_1_4,
 		Bomb_2,
 		Bomb_3,
 		Fire

@@ -46,13 +46,12 @@ namespace Bomberman
 
 		private void buttonSingleplayer_Click(object sender, EventArgs e)
 		{
-			p = new Playground();
+			Program.playground = new Playground();
 			initGraphicPlayground();
 			splitContainerMenu.Visible = false;
 			panelGame.Visible = true;
 		}
 
-		private Playground p;
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
 		private void initGraphicPlayground()
 		{
@@ -74,7 +73,7 @@ namespace Bomberman
 		}
 		private Image getImage(int x, int y)
 		{
-			Square square = p.board[x][y];
+			Square square = Program.playground.board[x][y];
 			switch (square)
 			{
 				case Square.Player_1:
@@ -91,8 +90,14 @@ namespace Bomberman
 					return Properties.Resources.Wall;
 				case Square.Unbreakable_Wall:
 					return Properties.Resources.Unbreakable_Wall;
-				case Square.Bomb_1:
-					return Properties.Resources.Bomb_1;
+				case Square.Bomb_1_1:
+					return Properties.Resources.Bomb_1_1;
+				case Square.Bomb_1_2:
+					return Properties.Resources.Bomb_1_2;
+				case Square.Bomb_1_3:
+					return Properties.Resources.Bomb_1_3;
+				case Square.Bomb_1_4:
+					return Properties.Resources.Bomb_1_4;
 				case Square.Bomb_2:
 					return Properties.Resources.Bomb_2;
 				case Square.Bomb_3:

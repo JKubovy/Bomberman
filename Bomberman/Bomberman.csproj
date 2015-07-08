@@ -52,6 +52,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameLogic.cs" />
     <Compile Include="Playground.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,6 +116,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Wall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_1_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_1_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_1_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_1_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

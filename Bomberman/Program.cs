@@ -18,5 +18,7 @@ namespace Bomberman
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());
 		}
+
+		internal static Playground playground;
 	}
 }
