@@ -11,7 +11,7 @@ namespace Bomberman
 		Right,
 		Plant_bomb
 	}
-	struct Move
+	class Move
 	{
 		public Point location;
 		public Movement movement;
@@ -22,8 +22,25 @@ namespace Bomberman
 			this.movement = movement;
 		}
 	}
+	class Change
+	{
+		public Point location;
+		public Square square;
+
+		public Change(Point location, Square square)
+		{
+			this.location = location;
+			this.square = square;
+		}
+	}
 	class GameLogic
 	{
+		/// <summary>
+		/// Determinate changes on playground base on player's movements
+		/// </summary>
+		/// <param name="playground">Instance of playground to update</param>
+		/// <param name="moves">Array of moves by players</param>
+		/// <returns>Updated playground</returns>
 		public Playground Process(Playground playground, Move[] moves)
 		{
 			Playground outPlayground = playground;
@@ -88,6 +105,52 @@ namespace Bomberman
 				default:
 					return square;
 			}
+		}
+
+		public byte[] GetBytes(Move move)
+		{
+			byte[] data = new byte[3];
+			data[0] = (byte)move.location.X;
+			data[1] = (byte)move.location.Y;
+			data[2] = (byte)move.movement;
+			return data;
+		}
+		public Move GetMove(byte[] data)
+		{
+			Point location = new Point(data[0], data[1]);
+			Movement movement = (Movement)data[2];
+			return new Move(location, movement);
+		}
+		public Playground ProcessChanges(Playground playground, byte[] data)
+		{
+			// TODO data museji byt delitelna 3, jinak error
+			byte[][] cutData = CutBytes(data);
+			Change change;
+			for (int i = 0; i < cutData.Length; i++)
+			{
+				change = GetChange(cutData[i]);
+				playground.board[change.location.X][change.location.Y] = change.square;
+			}
+			return playground;
+		}
+		private Change GetChange(byte[] data)
+		{
+			Point location = new Point(data[0], data[1]);
+			Square square = (Square)data[2];
+			return new Change(location, square);
+		}
+		private byte[][] CutBytes(byte[] data)
+		{
+			int triplets = data.Length / 3;
+			byte[][] outData = new byte[triplets][];
+			for (int i = 0; i < triplets; i++)
+			{
+				outData[i] = new byte[3];
+				outData[i][0] = data[i * 3];
+				outData[i][1] = data[i * 3 + 1];
+				outData[i][2] = data[i * 3 + 2];
+			}
+			return outData;
 		}
 	}
 }

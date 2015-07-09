@@ -49,7 +49,7 @@ namespace Bomberman
 			Program.playground = new Playground();
 			initGraphicPlayground();
 			splitContainerMenu.Visible = false;
-			panelGame.Visible = true;
+			splitContainerGame.Visible = true;
 		}
 
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -10,16 +11,16 @@ namespace Bomberman
 	class Connection
 	{
 		public TcpClient connectionWith = null;
-		public int protocolVersion;
 		public DateTime lastTouch;
-		// Reader and Writer (Stream or Binary)
+		public BinaryWriter writer;
+		public BinaryReader reader;
 
-		public Connection(TcpClient client, int protocolVersion)
+		public Connection(TcpClient client)
 		{
 			this.connectionWith = client;
-			this.protocolVersion = protocolVersion;
+			this.writer = new BinaryWriter(connectionWith.GetStream());
+			this.reader = new BinaryReader(connectionWith.GetStream());
 			this.lastTouch = DateTime.Now;
-			// make Reader and Writer
 		}
 	}
 }
