@@ -187,7 +187,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelGame.Location = new System.Drawing.Point(3, 3);
 			this.panelGame.Name = "panelGame";
-			this.panelGame.Size = new System.Drawing.Size(473, 441);
+			this.panelGame.Size = new System.Drawing.Size(472, 441);
 			this.panelGame.TabIndex = 1;
 			// 
 			// splitContainerGame
@@ -197,14 +197,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainerGame.Location = new System.Drawing.Point(0, 0);
 			this.splitContainerGame.Name = "splitContainerGame";
-			this.splitContainerGame.Visible = false;
 			// 
 			// splitContainerGame.Panel1
 			// 
 			this.splitContainerGame.Panel1.Controls.Add(this.panelGame);
 			this.splitContainerGame.Size = new System.Drawing.Size(726, 450);
-			this.splitContainerGame.SplitterDistance = 479;
+			this.splitContainerGame.SplitterDistance = 478;
 			this.splitContainerGame.TabIndex = 5;
+			this.splitContainerGame.Visible = false;
 			// 
 			// Form1
 			// 
@@ -217,6 +217,7 @@
 			this.Controls.Add(this.splitContainerMenu);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
+			this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
 			this.splitContainerMenu.Panel1.ResumeLayout(false);
 			this.splitContainerMenu.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).EndInit();

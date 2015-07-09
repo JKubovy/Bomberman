@@ -21,5 +21,6 @@ namespace Bomberman
 
 		internal static Playground playground;
 		internal static bool playing = false;
+		internal static int port = 4684;
 	}
 }

@@ -36,6 +36,15 @@ namespace Bomberman
 			panelMultiplayer.Visible = true;
 			panelControls.Visible = false;
 			panelAbout.Visible = false;
+			TEST();
+		}
+		private void TEST()
+		{
+			Server s = new Server();
+			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
+			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
+			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
+			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
 		}
 
 		private void buttonExit_Click(object sender, EventArgs e)
@@ -107,6 +116,14 @@ namespace Bomberman
 				default:
 					// error
 					return null;
+			}
+		}
+
+		private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (Program.playing)
+			{
+				// TODO dodelat pohyb
 			}
 		}
 	}
