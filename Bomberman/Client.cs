@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -12,33 +13,82 @@ namespace Bomberman
 	class Client
 	{
 		private TcpClient server;
-		private BinaryWriter writer;
-		private BinaryReader reader;
+		private StreamWriter writer;
+		private StreamReader reader;
+		private Point position;
 
-		public Client(IPAddress ip)
+		public Client(IPAddress ip, bool user)
 		{
 			server = new TcpClient(AddressFamily.InterNetworkV6);
 			server.Client.DualMode = true;
 			server.Connect(ip,Program.port);
-			writer = new BinaryWriter(server.GetStream());
-			reader = new BinaryReader(server.GetStream());
-			if (!Handshake())
+			writer = new StreamWriter(server.GetStream());
+			reader = new StreamReader(server.GetStream());
+			writer.AutoFlush = true;
+			Handshake(user);
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="update">Boolean if client want to recive updates of playground</param>
+		private async void Handshake(bool update)
+		{
+			string request = "Bomberman " + update;
+			writer.WriteLine(request);
+			string response = await reader.ReadLineAsync();
+			string[] tokens = response.Split(' ');
+			if (tokens[0] == "ACK")
 			{
-				// TODO dodelat error
-				return;
+				position = getPosition(tokens[1]);
+				StartListening();
 			}
 		}
-		private bool Handshake()
+		private async void StartListening()
 		{
-			byte[] data = new byte[3];
-			data[0] = 0;
-			data[1] = byte.MaxValue;
-			data[2] = (byte)Program.port;
-			writer.Write(data);
-			byte[] dataRecive = reader.ReadBytes(3);
-			if (data[0] == dataRecive[0] && data[1] == dataRecive[1] && data[2] == dataRecive[2])
-				return true;
-			return false;
+			while (server.Connected)
+			{
+				try
+				{
+					string command = await reader.ReadLineAsync();
+					ProcessCommand(command);
+				}
+				catch (IOException)
+				{
+					// TODO error
+				}
+			}
+		}
+		private Point getPosition(string number)
+		{
+			switch (number)
+			{
+				case "0":
+					return new Point(1, 1);
+				case "1":
+					return new Point(1, Playground.playgroundSize - 2);
+				case "2":
+					return new Point(Playground.playgroundSize - 2, 1);
+				case "3":
+					return new Point(Playground.playgroundSize - 2, Playground.playgroundSize - 2);
+				default:
+					// TODO error
+					return new Point();
+			}
+		}
+		private void ProcessCommand(string msg)
+		{
+			// TODO process command
+		}
+		internal void Send(string msg)
+		{
+			try
+			{
+				writer.WriteLine(msg);
+			}
+			catch (IOException)
+			{
+				// TODO error
+			}
 		}
 	}
 }

@@ -11,15 +11,18 @@ namespace Bomberman
 	class Connection
 	{
 		public TcpClient connectionWith = null;
+		public bool playgroundUpdates;
 		public DateTime lastTouch;
-		public BinaryWriter writer;
-		public BinaryReader reader;
+		public StreamWriter writer;
+		public StreamReader reader;
 
 		public Connection(TcpClient client)
 		{
 			this.connectionWith = client;
-			this.writer = new BinaryWriter(connectionWith.GetStream());
-			this.reader = new BinaryReader(connectionWith.GetStream());
+			this.writer = new StreamWriter(connectionWith.GetStream());
+			this.reader = new StreamReader(connectionWith.GetStream());
+			this.writer.AutoFlush = true;
+			this.playgroundUpdates = false;
 			this.lastTouch = DateTime.Now;
 		}
 	}

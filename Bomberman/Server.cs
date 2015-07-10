@@ -11,69 +11,76 @@ namespace Bomberman
 {
 	class Server
 	{
-		Connection[] clients;
-		//static ManualResetEvent allDone;
-		//static int clientsCount = 0;
+		static List<Connection> clients;
+		static ManualResetEvent allDone;
 
-		public Server()
+		public static void Start()
 		{
-			clients = new Connection[4];
+			clients = new List<Connection>();
 			TcpListener listener = TcpListener.Create(Program.port);
 			listener.Start();
-			for (int i = 0; i < 4; i++)
+			allDone = new ManualResetEvent(false);
+			listener.Start();
+			while (true)
 			{
-				//TcpClient client = listener.AcceptTcpClient();
-				//Task.Run(() => AcceptTcpClient(client, i));
-				Task.Run(() =>
-				{
-					TcpClient client = listener.AcceptTcpClient();
-					AcceptTcpClient(client, i);
-				});
+				allDone.Reset();
+				listener.BeginAcceptTcpClient(new AsyncCallback(AcceptTcpClient), listener);
+				allDone.WaitOne();
 			}
-			//allDone = new ManualResetEvent(false);
-			//listener.Start();
-			//while (true)
-			//{
-			//	allDone.Reset();
-			//	listener.BeginAcceptTcpClient(new AsyncCallback(AcceptTcpClient), listener);
-			//	if (clientsCount == 4) break;
-			//	allDone.WaitOne();
-			//}
 		}
-		private void AcceptTcpClient(TcpClient client, int position)
+		private static void AcceptTcpClient(IAsyncResult ar)
 		{
+			allDone.Set();
+			TcpListener listener = (TcpListener)ar.AsyncState;
+			TcpClient client = listener.EndAcceptTcpClient(ar);
 			Connection connection = new Connection(client);
-			if (Handshake(connection))
-				clients[position] = connection;
-			else
+			Handshake(connection);
+		}
+
+		private void GetMovements()
+		{
+			
+		}
+		private static async void Handshake(Connection connection)
+		{
+			string line = await connection.reader.ReadLineAsync();
+			string[] tokens = line.Split(' ');
+			if (tokens[0] == "Bomberman")
 			{
-				// TODO doelat error
-				return;
+				if (tokens[1] == true.ToString())
+				{
+					connection.playgroundUpdates = true;
+				}
+				string response;
+				lock(clients){
+					response = "ACK " + clients.Count;
+					clients.Add(connection);
+				}
+				connection.writer.WriteLine(response);
+				StartListening(connection);
+			}
+			// TODO dodelat Handshake + proceduru zpracovani
+		}
+		private static async void StartListening(Connection connection)
+		{
+			string line;
+			try
+			{
+				while (connection.connectionWith.Connected)
+				{
+					line = await connection.reader.ReadLineAsync();
+					ProcessCommand(line, connection);
+				}
+			}
+			catch (System.IO.IOException)
+			{
+				connection.connectionWith.Close();
+				// TODO error spadlo spojeni
 			}
 		}
-		//private static void AcceptTcpClient(IAsyncResult ar)
-		//{
-		//	Interlocked.Increment(ref clientsCount);
-		//	allDone.Set();
-		//	TcpListener listener = (TcpListener)ar.AsyncState;
-		//	TcpClient client = listener.EndAcceptTcpClient(ar);
-		//	Connection connection = new Connection(client);
-		//	Handshake(connection);
-		//}
-
-		public void GetMovements()
+		private static void ProcessCommand(string command, Connection connection)
 		{
-
-		}
-		private static bool Handshake(Connection connection)
-		{
-			byte[] data = connection.reader.ReadBytes(3);
-			if (data[0] == 0 && data[1] == byte.MaxValue && data[1] == Program.port)
-			{
-				connection.writer.Write(data);
-				return true;
-			}
-			return false;
+			// TODO dodelat
 		}
 	}
 }
