@@ -40,11 +40,14 @@ namespace Bomberman
 		}
 		private void TEST()
 		{
-			Server s = new Server();
-			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
-			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
-			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
-			Task.Run(() => new Client(System.Net.IPAddress.Loopback));
+			Task.Factory.StartNew(() =>
+			{
+				Server.Start();
+			}, TaskCreationOptions.LongRunning);
+			Task.Factory.StartNew(() =>
+				{
+					new Client(System.Net.IPAddress.IPv6Loopback, true);
+				}, TaskCreationOptions.LongRunning);
 		}
 
 		private void buttonExit_Click(object sender, EventArgs e)
@@ -62,6 +65,7 @@ namespace Bomberman
 		}
 
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
+		public static Client player;
 		private void initGraphicPlayground()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)
@@ -123,6 +127,7 @@ namespace Bomberman
 		{
 			if (Program.playing)
 			{
+				// player.Send pohyb
 				// TODO dodelat pohyb
 			}
 		}

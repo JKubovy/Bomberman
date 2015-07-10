@@ -38,6 +38,14 @@ namespace Bomberman
 			}
 			InitPlayground();
 		}
+		public Playground(int size)
+		{
+			this.board = new Square[size][];
+			for (int i = 0; i < size; i++)
+			{
+				this.board[i] = new Square[size];
+			}
+		}
 		private void InitPlayground()
 		{
 			#region Borders

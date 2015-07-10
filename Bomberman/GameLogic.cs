@@ -41,7 +41,7 @@ namespace Bomberman
 		/// <param name="playground">Instance of playground to update</param>
 		/// <param name="moves">Array of moves by players</param>
 		/// <returns>Updated playground</returns>
-		public Playground Process(Playground playground, Move[] moves)
+		public static Playground Process(Playground playground, Move[] moves)
 		{
 			Playground outPlayground = playground;
 			for (int i = 0; i < moves.Length; i++)
@@ -50,7 +50,7 @@ namespace Bomberman
 			}
 			return outPlayground;
 		}
-		private Playground ProcessMove(Playground playground, Move move)
+		private static Playground ProcessMove(Playground playground, Move move)
 		{
 
 			switch (move.movement)
@@ -90,7 +90,7 @@ namespace Bomberman
 					return playground;
 			}
 		}
-		private Square GetBombSquare(Square square)
+		private static Square GetBombSquare(Square square)
 		{
 			switch (square)
 			{
@@ -107,7 +107,7 @@ namespace Bomberman
 			}
 		}
 
-		public byte[] GetBytes(Move move)
+		public static byte[] GetBytes(Move move)
 		{
 			byte[] data = new byte[3];
 			data[0] = (byte)move.location.X;
@@ -115,13 +115,13 @@ namespace Bomberman
 			data[2] = (byte)move.movement;
 			return data;
 		}
-		public Move GetMove(byte[] data)
+		public static Move GetMove(byte[] data)
 		{
 			Point location = new Point(data[0], data[1]);
 			Movement movement = (Movement)data[2];
 			return new Move(location, movement);
 		}
-		public Playground ProcessChanges(Playground playground, byte[] data)
+		public static Playground ProcessChanges(Playground playground, byte[] data)
 		{
 			// TODO data museji byt delitelna 3, jinak error
 			byte[][] cutData = CutBytes(data);
@@ -133,13 +133,13 @@ namespace Bomberman
 			}
 			return playground;
 		}
-		private Change GetChange(byte[] data)
+		private static Change GetChange(byte[] data)
 		{
 			Point location = new Point(data[0], data[1]);
 			Square square = (Square)data[2];
 			return new Change(location, square);
 		}
-		private byte[][] CutBytes(byte[] data)
+		private static byte[][] CutBytes(byte[] data)
 		{
 			int triplets = data.Length / 3;
 			byte[][] outData = new byte[triplets][];

@@ -25,6 +25,7 @@ namespace Bomberman
 			writer = new StreamWriter(server.GetStream());
 			reader = new StreamReader(server.GetStream());
 			writer.AutoFlush = true;
+			if (user) Form1.player = this;
 			Handshake(user);
 		}
 		/// <summary>

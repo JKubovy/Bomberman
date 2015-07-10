@@ -47,19 +47,35 @@ namespace Bomberman
 			string[] tokens = line.Split(' ');
 			if (tokens[0] == "Bomberman")
 			{
-				if (tokens[1] == true.ToString())
-				{
-					connection.playgroundUpdates = true;
-				}
 				string response;
 				lock(clients){
 					response = "ACK " + clients.Count;
 					clients.Add(connection);
 				}
 				connection.writer.WriteLine(response);
+				if (tokens[1] == true.ToString())
+				{
+					connection.playgroundUpdates = true;
+					SendPlayground(connection);
+				}
 				StartListening(connection);
 			}
 			// TODO dodelat Handshake + proceduru zpracovani
+		}
+
+		private static void SendPlayground(Connection connection)
+		{
+			connection.writer.WriteLine("Playground " + Program.playground.playgroundSize);
+			for (int i = 0; i < Program.playground.playgroundSize; i++)
+			{
+				string line = "";
+				for (int j = 0; j < Program.playground.playgroundSize; j++)
+				{
+					line += (int)Program.playground.board[i][j] + " ";
+				}
+				connection.writer.WriteLine(line);
+			}
+			connection.writer.WriteLine("End");
 		}
 		private static async void StartListening(Connection connection)
 		{
