@@ -46,7 +46,7 @@ namespace Bomberman
 			}, TaskCreationOptions.LongRunning);
 			Task.Factory.StartNew(() =>
 				{
-					new Client(System.Net.IPAddress.IPv6Loopback, true);
+					new Client(System.Net.IPAddress.IPv6Loopback, true, false);
 				}, TaskCreationOptions.LongRunning);
 		}
 
@@ -65,7 +65,7 @@ namespace Bomberman
 		}
 
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
-		public static Client player;
+		internal static Client player;
 		private void initGraphicPlayground()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)

@@ -25,7 +25,7 @@ namespace Bomberman
 
 	class Playground
 	{
-		public const int playgroundSize = 14; // must be greater or eaqual to 7!
+		public static int playgroundSize = 14; // must be greater or eaqual to 7!
 
 		public Square[][] board;
 
@@ -40,10 +40,11 @@ namespace Bomberman
 		}
 		public Playground(int size)
 		{
-			this.board = new Square[size][];
-			for (int i = 0; i < size; i++)
+			playgroundSize = size;
+			this.board = new Square[playgroundSize][];
+			for (int i = 0; i < playgroundSize; i++)
 			{
-				this.board[i] = new Square[size];
+				this.board[i] = new Square[playgroundSize];
 			}
 		}
 		private void InitPlayground()

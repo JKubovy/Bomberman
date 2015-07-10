@@ -17,7 +17,7 @@ namespace Bomberman
 		private StreamReader reader;
 		private Point position;
 
-		public Client(IPAddress ip, bool user)
+		public Client(IPAddress ip, bool user, bool update)
 		{
 			server = new TcpClient(AddressFamily.InterNetworkV6);
 			server.Client.DualMode = true;
@@ -26,7 +26,7 @@ namespace Bomberman
 			reader = new StreamReader(server.GetStream());
 			writer.AutoFlush = true;
 			if (user) Form1.player = this;
-			Handshake(user);
+			Handshake(update);
 		}
 		/// <summary>
 		/// 
@@ -41,7 +41,38 @@ namespace Bomberman
 			if (tokens[0] == "ACK")
 			{
 				position = getPosition(tokens[1]);
+				if (update) RecivePlayground();
 				StartListening();
+			}
+		}
+		private async void RecivePlayground()
+		{
+			string data;
+			data = await reader.ReadLineAsync();
+			string[] tokens = data.Split(' ');
+			if (tokens[0] == "Playground")
+			{
+				int size = Int32.Parse(tokens[1]);
+				if (Program.playground == null) Program.playground = new Playground(size);
+				for (int i = 0; i < size; i++)
+				{
+					data = await reader.ReadLineAsync();
+					tokens = data.Split(' ');
+					for (int j = 0; j < size; j++)
+					{
+						Program.playground.board[i][j] = (Square)int.Parse(tokens[j]);
+					}
+				}
+				data = await reader.ReadLineAsync();
+				if (data == "End") return;
+				else
+				{
+					// TODO error
+				}
+			}
+			else
+			{
+				// TODO error
 			}
 		}
 		private async void StartListening()
