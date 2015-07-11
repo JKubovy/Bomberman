@@ -82,8 +82,10 @@ namespace Bomberman
 				{
 					PictureBox p = new PictureBox();
 					p.Name = "pictureBox_" + i + "_"+j;
-					p.Size = new System.Drawing.Size(28, 28);
-					p.Location = new System.Drawing.Point((28*j), (28*i));
+					//p.Size = new System.Drawing.Size(28, 28);
+					p.Size = new System.Drawing.Size(35, 35);
+					//p.Location = new System.Drawing.Point((28*j), (28*i));
+					p.Location = new System.Drawing.Point((35 * j), (35 * i));
 					p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 					p.Image = getImage(i,j);
 					screen[i][j] = p;

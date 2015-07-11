@@ -43,6 +43,7 @@
 			this.pictureNextMove2 = new System.Windows.Forms.PictureBox();
 			this.pictureNextMove1 = new System.Windows.Forms.PictureBox();
 			this.label1 = new System.Windows.Forms.Label();
+			this.panelGameInfo = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).BeginInit();
 			this.splitContainerMenu.Panel1.SuspendLayout();
 			this.splitContainerMenu.Panel2.SuspendLayout();
@@ -54,11 +55,13 @@
 			this.splitContainerGame.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).BeginInit();
+			this.panelGameInfo.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainerMenu
 			// 
 			this.splitContainerMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerMenu.IsSplitterFixed = true;
 			this.splitContainerMenu.Location = new System.Drawing.Point(0, 0);
 			this.splitContainerMenu.MinimumSize = new System.Drawing.Size(200, 300);
 			this.splitContainerMenu.Name = "splitContainerMenu";
@@ -201,9 +204,9 @@
 			this.splitContainerGame.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainerGame.IsSplitterFixed = true;
 			this.splitContainerGame.Location = new System.Drawing.Point(0, 0);
 			this.splitContainerGame.Name = "splitContainerGame";
-			this.splitContainerGame.IsSplitterFixed = true;
 			// 
 			// splitContainerGame.Panel1
 			// 
@@ -211,9 +214,7 @@
 			// 
 			// splitContainerGame.Panel2
 			// 
-			this.splitContainerGame.Panel2.Controls.Add(this.pictureNextMove2);
-			this.splitContainerGame.Panel2.Controls.Add(this.pictureNextMove1);
-			this.splitContainerGame.Panel2.Controls.Add(this.label1);
+			this.splitContainerGame.Panel2.Controls.Add(this.panelGameInfo);
 			this.splitContainerGame.Size = new System.Drawing.Size(726, 450);
 			this.splitContainerGame.SplitterDistance = 478;
 			this.splitContainerGame.TabIndex = 5;
@@ -221,30 +222,40 @@
 			// 
 			// pictureNextMove2
 			// 
-			this.pictureNextMove2.Location = new System.Drawing.Point(64, 27);
+			this.pictureNextMove2.Location = new System.Drawing.Point(64, 29);
 			this.pictureNextMove2.Name = "pictureNextMove2";
 			this.pictureNextMove2.Size = new System.Drawing.Size(50, 50);
-			this.pictureNextMove2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureNextMove2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureNextMove2.TabIndex = 2;
 			this.pictureNextMove2.TabStop = false;
 			// 
 			// pictureNextMove1
 			// 
-			this.pictureNextMove1.Location = new System.Drawing.Point(7, 27);
+			this.pictureNextMove1.Location = new System.Drawing.Point(7, 29);
 			this.pictureNextMove1.Name = "pictureNextMove1";
 			this.pictureNextMove1.Size = new System.Drawing.Size(50, 50);
-			this.pictureNextMove1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureNextMove1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureNextMove1.TabIndex = 1;
 			this.pictureNextMove1.TabStop = false;
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(4, 7);
+			this.label1.Location = new System.Drawing.Point(4, 9);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(85, 17);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Next moves:";
+			// 
+			// panelGameInfo
+			// 
+			this.panelGameInfo.Controls.Add(this.pictureNextMove1);
+			this.panelGameInfo.Controls.Add(this.pictureNextMove2);
+			this.panelGameInfo.Controls.Add(this.label1);
+			this.panelGameInfo.Location = new System.Drawing.Point(-1, 0);
+			this.panelGameInfo.Name = "panelGameInfo";
+			this.panelGameInfo.Size = new System.Drawing.Size(239, 447);
+			this.panelGameInfo.TabIndex = 5;
 			// 
 			// Form1
 			// 
@@ -266,11 +277,12 @@
 			this.panelAbout.PerformLayout();
 			this.splitContainerGame.Panel1.ResumeLayout(false);
 			this.splitContainerGame.Panel2.ResumeLayout(false);
-			this.splitContainerGame.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerGame)).EndInit();
 			this.splitContainerGame.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).EndInit();
+			this.panelGameInfo.ResumeLayout(false);
+			this.panelGameInfo.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -292,6 +304,7 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.PictureBox pictureNextMove2;
 		private System.Windows.Forms.PictureBox pictureNextMove1;
+		private System.Windows.Forms.Panel panelGameInfo;
 
 
 	}
