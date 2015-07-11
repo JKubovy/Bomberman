@@ -217,7 +217,7 @@
 			this.Controls.Add(this.splitContainerMenu);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
-			this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
 			this.splitContainerMenu.Panel1.ResumeLayout(false);
 			this.splitContainerMenu.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).EndInit();

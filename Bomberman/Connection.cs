@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace Bomberman
 		public DateTime lastTouch;
 		public StreamWriter writer;
 		public StreamReader reader;
+		public Point position;
 
 		public Connection(TcpClient client)
 		{

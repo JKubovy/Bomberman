@@ -15,6 +15,7 @@ namespace Bomberman
 		public Form1()
 		{
 			InitializeComponent();
+			this.KeyPreview = true;
 		}
 
 		private void buttonAbout_Click(object sender, EventArgs e)
@@ -40,6 +41,14 @@ namespace Bomberman
 		}
 		private void TEST()
 		{
+			Program.playground = new Playground();
+			initGraphicPlayground();
+			splitContainerMenu.Visible = false;
+			splitContainerGame.Visible = true;
+			Program.playing = true;
+			panelGame.Select();
+			//(panelGame as Control).KeyPress += Form1_KeyPress;
+			//KeyDown 
 			Task.Factory.StartNew(() =>
 			{
 				Server.Start();
@@ -84,7 +93,17 @@ namespace Bomberman
 				}
 			}
 		}
-		private Image getImage(int x, int y)
+		internal static void updatePictureBox()
+		{
+			for (int i = 0; i < Playground.playgroundSize; i++)
+			{
+				for (int j = 0; j < Playground.playgroundSize; j++)
+				{
+					screen[i][j].Image = getImage(i, j);
+				}
+			}
+		}
+		private static Image getImage(int x, int y)
 		{
 			Square square = Program.playground.board[x][y];
 			switch (square)
@@ -123,12 +142,11 @@ namespace Bomberman
 			}
 		}
 
-		private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (Program.playing)
 			{
-				// player.Send pohyb
-				// TODO dodelat pohyb
+				player.ProcessKeyPress(e.KeyCode);
 			}
 		}
 	}
