@@ -76,6 +76,46 @@ namespace Bomberman.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Arrow_Down {
+            get {
+                object obj = ResourceManager.GetObject("Arrow_Down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Arrow_Left {
+            get {
+                object obj = ResourceManager.GetObject("Arrow_Left", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Arrow_Right {
+            get {
+                object obj = ResourceManager.GetObject("Arrow_Right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Arrow_Up {
+            get {
+                object obj = ResourceManager.GetObject("Arrow_Up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Bomb_1 {
             get {
                 object obj = ResourceManager.GetObject("Bomb_1", resourceCulture);
@@ -136,9 +176,89 @@ namespace Bomberman.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Bomb_2_1 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_2_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_2_2 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_2_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_2_3 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_2_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_2_4 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_2_4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Bomb_3 {
             get {
                 object obj = ResourceManager.GetObject("Bomb_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_3_1 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_3_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_3_2 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_3_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_3_3 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_3_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bomb_3_4 {
+            get {
+                object obj = ResourceManager.GetObject("Bomb_3_4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -205,6 +325,26 @@ namespace Bomberman.Properties {
         internal static string Menu_Singleplayer {
             get {
                 return ResourceManager.GetString("Menu_Singleplayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Nothing {
+            get {
+                object obj = ResourceManager.GetObject("Nothing", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Plant_Bomb {
+            get {
+                object obj = ResourceManager.GetObject("Plant_Bomb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

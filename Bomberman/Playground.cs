@@ -14,20 +14,30 @@ namespace Bomberman
 		Empty,
 		Wall,
 		Unbreakable_Wall,
+		Bomb_1,
 		Bomb_1_1,
 		Bomb_1_2,
 		Bomb_1_3,
 		Bomb_1_4,
 		Bomb_2,
+		Bomb_2_1,
+		Bomb_2_2,
+		Bomb_2_3,
+		Bomb_2_4,
 		Bomb_3,
+		Bomb_3_1,
+		Bomb_3_2,
+		Bomb_3_3,
+		Bomb_3_4,
 		Fire
 	}
 
 	class Playground
 	{
-		public static int playgroundSize = 14; // must be greater or eaqual to 7!
-
+		public static int playgroundSize = 10; // must be greater or eaqual to 7! 14
 		public Square[][] board;
+
+		private Queue<Point> bombs = new Queue<Point>();
 
 		public Playground()
 		{
@@ -46,6 +56,79 @@ namespace Bomberman
 			{
 				this.board[i] = new Square[playgroundSize];
 			}
+		}
+		internal void AddBomb(Point location)
+		{
+			if (!bombs.Contains(location)) bombs.Enqueue(location);
+		}
+		internal void UpdateBombs()
+		{
+			int bombCount = bombs.Count;
+			for (int i = 0; i < bombCount; i++)
+			{
+				Point location = bombs.Dequeue();
+				switch (board[location.X][location.Y])
+				{
+					case Square.Bomb_1:
+						board[location.X][location.Y] = Square.Bomb_2;
+						bombs.Enqueue(location);
+						break;
+					case Square.Bomb_2:
+						//board[location.X][location.Y] = Square.Bomb_3;
+						//bombs.Enqueue(location);
+						Explode(location);
+						break;
+					//case Square.Bomb_3:
+					//	Explode(location);
+					//	break;
+					case Square.Player_1:
+						board[location.X][location.Y] = Square.Bomb_1_1;
+						bombs.Enqueue(location);
+						break;
+					case Square.Player_2:
+						board[location.X][location.Y] = Square.Bomb_1_2;
+						bombs.Enqueue(location);
+						break;
+					case Square.Player_3:
+						board[location.X][location.Y] = Square.Bomb_1_3;
+						bombs.Enqueue(location);
+						break;
+					case Square.Player_4:
+						board[location.X][location.Y] = Square.Bomb_1_4;
+						bombs.Enqueue(location);
+						break;
+					case Square.Bomb_1_1:
+						board[location.X][location.Y] = Square.Bomb_2_1;
+						bombs.Enqueue(location);
+						break;
+					case Square.Bomb_1_2:
+						board[location.X][location.Y] = Square.Bomb_2_2;
+						bombs.Enqueue(location);
+						break;
+					case Square.Bomb_1_3:
+						board[location.X][location.Y] = Square.Bomb_2_3;
+						bombs.Enqueue(location);
+						break;
+					case Square.Bomb_1_4:
+						board[location.X][location.Y] = Square.Bomb_2_4;
+						bombs.Enqueue(location);
+						break;
+					case Square.Bomb_2_1:
+					case Square.Bomb_2_2:
+					case Square.Bomb_2_3:
+					case Square.Bomb_2_4:
+						Explode(location);
+						break;
+					default:
+						bombs.Enqueue(location);
+						break;
+				}
+			}
+		}
+		private void Explode(Point location)
+		{
+			// TODO Explode
+			board[location.X][location.Y] = Square.Empty;
 		}
 		private void InitPlayground()
 		{

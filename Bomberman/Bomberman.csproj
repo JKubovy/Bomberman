@@ -129,6 +129,48 @@
   <ItemGroup>
     <None Include="Resources\Bomb_1_4.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_2_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_2_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_2_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_2_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_3_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_3_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_3_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bomb_3_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Arrow_Down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Arrow_Left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Arrow_Right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Arrow_Up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nothing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Plant_Bomb.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

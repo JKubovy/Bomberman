@@ -16,7 +16,7 @@ namespace Bomberman
 		private TcpClient server;
 		private StreamWriter writer;
 		private StreamReader reader;
-		private Point position;
+		internal Point position;
 
 		public Client(IPAddress ip, bool user, bool update)
 		{
@@ -164,6 +164,54 @@ namespace Bomberman
 					if (indexFutureMoves == 0) break;
 					indexFutureMoves--;
 					futureMoves[indexFutureMoves] = Movement.Nothing;
+					break;
+				default:
+					break;
+			}
+		}
+		internal void ProcessMovement(Movement movement)
+		{
+			switch (movement)
+			{
+				case Movement.Up:
+				case Movement.Left:
+				case Movement.Down:
+				case Movement.Right:
+				case Movement.Plant_bomb:
+					if (indexFutureMoves < futureMoves.Length)
+					{
+						futureMoves[indexFutureMoves] = movement;
+						indexFutureMoves++;
+						updatePosition(movement);
+					}
+					break;
+				case Movement.Backspace:
+					if (indexFutureMoves == 0) break;
+					indexFutureMoves--;
+					futureMoves[indexFutureMoves] = Movement.Nothing;
+					break;
+				case Movement.Enter:
+					SendMoves();
+					break;
+				default:
+					break;
+			}
+		}
+		private void updatePosition(Movement movement)
+		{
+			switch (movement)
+			{
+				case Movement.Up:
+					position.X--;
+					break;
+				case Movement.Left:
+					position.Y--;
+					break;
+				case Movement.Down:
+					position.X++;
+					break;
+				case Movement.Right:
+					position.Y++;
 					break;
 				default:
 					break;

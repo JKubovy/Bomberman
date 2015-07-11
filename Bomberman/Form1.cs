@@ -47,8 +47,6 @@ namespace Bomberman
 			splitContainerGame.Visible = true;
 			Program.playing = true;
 			panelGame.Select();
-			//(panelGame as Control).KeyPress += Form1_KeyPress;
-			//KeyDown 
 			Task.Factory.StartNew(() =>
 			{
 				Server.Start();
@@ -109,6 +107,27 @@ namespace Bomberman
 			switch (square)
 			{
 				case Square.Player_1:
+					break;
+				case Square.Player_2:
+					break;
+				case Square.Player_3:
+					break;
+				case Square.Player_4:
+					break;
+				case Square.Empty:
+					break;
+				case Square.Wall:
+					break;
+				case Square.Unbreakable_Wall:
+					break;
+				case Square.Fire:
+					break;
+				default:
+					break;
+			}
+			switch (square)
+			{
+				case Square.Player_1:
 					return Properties.Resources.Player_1;
 				case Square.Player_2:
 					return Properties.Resources.Player_2;
@@ -122,6 +141,8 @@ namespace Bomberman
 					return Properties.Resources.Wall;
 				case Square.Unbreakable_Wall:
 					return Properties.Resources.Unbreakable_Wall;
+				case Square.Bomb_1:
+					return Properties.Resources.Bomb_1;
 				case Square.Bomb_1_1:
 					return Properties.Resources.Bomb_1_1;
 				case Square.Bomb_1_2:
@@ -132,12 +153,48 @@ namespace Bomberman
 					return Properties.Resources.Bomb_1_4;
 				case Square.Bomb_2:
 					return Properties.Resources.Bomb_2;
+				case Square.Bomb_2_1:
+					return Properties.Resources.Bomb_2_1;
+				case Square.Bomb_2_2:
+					return Properties.Resources.Bomb_2_2;
+				case Square.Bomb_2_3:
+					return Properties.Resources.Bomb_2_3;
+				case Square.Bomb_2_4:
+					return Properties.Resources.Bomb_2_4;
 				case Square.Bomb_3:
 					return Properties.Resources.Bomb_3;
+				case Square.Bomb_3_1:
+					return Properties.Resources.Bomb_3_1;
+				case Square.Bomb_3_2:
+					return Properties.Resources.Bomb_3_2;
+				case Square.Bomb_3_3:
+					return Properties.Resources.Bomb_3_3;
+				case Square.Bomb_3_4:
+					return Properties.Resources.Bomb_3_4;
 				case Square.Fire:
 					return Properties.Resources.Fire;
 				default:
 					// error
+					return null;
+			}
+		}
+		private static Image getImage(Movement movement)
+		{
+			switch (movement)
+			{
+				case Movement.Nothing:
+					return Properties.Resources.Nothing;
+				case Movement.Up:
+					return Properties.Resources.Arrow_Up;
+				case Movement.Left:
+					return Properties.Resources.Arrow_Left;
+				case Movement.Down:
+					return Properties.Resources.Arrow_Down;
+				case Movement.Right:
+					return Properties.Resources.Arrow_Right;
+				case Movement.Plant_bomb:
+					return Properties.Resources.Plant_Bomb;
+				default:
 					return null;
 			}
 		}
@@ -146,8 +203,51 @@ namespace Bomberman
 		{
 			if (Program.playing)
 			{
-				player.ProcessKeyPress(e.KeyCode);
+				//player.ProcessKeyPress(e.KeyCode);
+				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
+				UpdateFutureMoves(movement);
+				player.ProcessMovement(movement);
 			}
+		}
+		Movement[] futureMovements = new Movement[2];
+		int indexFutureMovements = 0;
+		private void UpdateFutureMoves(Movement movement)
+		{
+			switch (movement)
+			{
+				case Movement.Up:
+				case Movement.Left:
+				case Movement.Down:
+				case Movement.Right:
+				case Movement.Plant_bomb:
+					if (indexFutureMovements < futureMovements.Length)
+					{
+						futureMovements[indexFutureMovements] = movement;
+						indexFutureMovements++;
+					}
+					break;
+				case Movement.Enter:
+					if (indexFutureMovements == 2)
+					{
+						indexFutureMovements = 0;
+						futureMovements[0] = Movement.Nothing;
+						futureMovements[1] = Movement.Nothing;
+					}
+					break;
+				case Movement.Backspace:
+					if (indexFutureMovements == 0) break;
+					indexFutureMovements--;
+					futureMovements[indexFutureMovements] = Movement.Nothing;
+					break;
+				default:
+					break;
+			}
+			UpdatePictureBoxMovements();
+		}
+		private void UpdatePictureBoxMovements()
+		{
+			pictureNextMove1.Image = getImage(futureMovements[0]);
+			pictureNextMove2.Image = getImage(futureMovements[1]);
 		}
 	}
 }

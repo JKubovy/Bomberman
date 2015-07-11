@@ -125,9 +125,12 @@ namespace Bomberman
 			*/
 			futureMoves.Enqueue(new FutureMove((Movement)int.Parse(moves[2]),connection));
 			GameLogic.Process(Program.playground, movement, connection);
+			Program.playground.UpdateBombs();
 			Form1.updatePictureBox();
+
 			FutureMove futureMove = futureMoves.Dequeue();
 			GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+			Program.playground.UpdateBombs();
 			updateTimer.Enabled = true;
 		}
 		private static void UpdateTick(Object source, ElapsedEventArgs e)
