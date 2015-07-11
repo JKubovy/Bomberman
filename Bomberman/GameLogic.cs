@@ -5,32 +5,22 @@ namespace Bomberman
 {
 	enum Movement
 	{
+		Nothing,
 		Up,
 		Left,
 		Down,
 		Right,
 		Plant_bomb
 	}
-	class Move
+	class FutureMove
 	{
-		public Point location;
+		public Connection connection;
 		public Movement movement;
 
-		public Move(Point location, Movement movement)
+		public FutureMove(Movement movement, Connection connection)
 		{
-			this.location = location;
+			this.connection = connection;
 			this.movement = movement;
-		}
-	}
-	class Change
-	{
-		public Point location;
-		public Square square;
-
-		public Change(Point location, Square square)
-		{
-			this.location = location;
-			this.square = square;
 		}
 	}
 	class GameLogic
@@ -39,52 +29,45 @@ namespace Bomberman
 		/// Determinate changes on playground base on player's movements
 		/// </summary>
 		/// <param name="playground">Instance of playground to update</param>
-		/// <param name="moves">Array of moves by players</param>
+		/// <param name="movement">Array of moves by players</param>
+		/// <param name="connection"></param>
 		/// <returns>Updated playground</returns>
-		public static Playground Process(Playground playground, Move[] moves)
+		/// 
+		internal static Playground Process(Playground playground, Movement movement, Connection connection)
 		{
 			Playground outPlayground = playground;
-			for (int i = 0; i < moves.Length; i++)
-			{
-				outPlayground = ProcessMove(outPlayground, moves[i]);
-			}
-			return outPlayground;
-		}
-		private static Playground ProcessMove(Playground playground, Move move)
-		{
-
-			switch (move.movement)
+			switch (movement)
 			{
 				case Movement.Up:
-					if (playground.board[move.location.X - 1][move.location.Y] == Square.Empty)
+					if (playground.board[connection.position.X - 1][connection.position.Y] == Square.Empty)
 					{
-						playground.board[move.location.X - 1][move.location.Y] = playground.board[move.location.X][move.location.Y];
-						playground.board[move.location.X][move.location.Y] = Square.Empty;
+						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X - 1, connection.position.Y));
+						connection.position = new Point(connection.position.X - 1, connection.position.Y);
 					}
 					return playground;
 				case Movement.Left:
-					if (playground.board[move.location.X][move.location.Y - 1] == Square.Empty)
+					if (playground.board[connection.position.X][connection.position.Y - 1] == Square.Empty)
 					{
-						playground.board[move.location.X][move.location.Y] = playground.board[move.location.X][move.location.Y];
-						playground.board[move.location.X][move.location.Y - 1] = Square.Empty;
+						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y - 1));
+						connection.position = new Point(connection.position.X,connection.position.Y - 1);
 					}
 					return playground;
 				case Movement.Down:
-					if (playground.board[move.location.X + 1][move.location.Y] == Square.Empty)
+					if (playground.board[connection.position.X + 1][connection.position.Y] == Square.Empty)
 					{
-						playground.board[move.location.X + 1][move.location.Y] = playground.board[move.location.X][move.location.Y];
-						playground.board[move.location.X][move.location.Y] = Square.Empty;
+						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X + 1, connection.position.Y));
+						connection.position = new Point(connection.position.X + 1, connection.position.Y);
 					}
 					return playground;
 				case Movement.Right:
-					if (playground.board[move.location.X][move.location.Y + 1] == Square.Empty)
+					if (playground.board[connection.position.X][connection.position.Y + 1] == Square.Empty)
 					{
-						playground.board[move.location.X][move.location.Y + 1] = playground.board[move.location.X][move.location.Y];
-						playground.board[move.location.X][move.location.Y] = Square.Empty;
+						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y + 1));
+						connection.position = new Point(connection.position.X, connection.position.Y + 1);
 					}
 					return playground;
 				case Movement.Plant_bomb:
-					playground.board[move.location.X][move.location.Y] = GetBombSquare(playground.board[move.location.X][move.location.Y]);
+					playground.board[connection.position.X][connection.position.Y] = GetBombSquare(playground.board[connection.position.X][connection.position.Y]);
 					return playground;
 				default:
 					return playground;
@@ -106,51 +89,53 @@ namespace Bomberman
 					return square;
 			}
 		}
-
-		public static byte[] GetBytes(Move move)
+		private static Square GetPlayerSquare(Square square)
 		{
-			byte[] data = new byte[3];
-			data[0] = (byte)move.location.X;
-			data[1] = (byte)move.location.Y;
-			data[2] = (byte)move.movement;
-			return data;
-		}
-		public static Move GetMove(byte[] data)
-		{
-			Point location = new Point(data[0], data[1]);
-			Movement movement = (Movement)data[2];
-			return new Move(location, movement);
-		}
-		public static Playground ProcessChanges(Playground playground, byte[] data)
-		{
-			// TODO data museji byt delitelna 3, jinak error
-			byte[][] cutData = CutBytes(data);
-			Change change;
-			for (int i = 0; i < cutData.Length; i++)
+			switch (square)
 			{
-				change = GetChange(cutData[i]);
-				playground.board[change.location.X][change.location.Y] = change.square;
+				case Square.Bomb_1_1:
+					return Square.Player_1;
+				case Square.Bomb_1_2:
+					return Square.Player_2;
+				case Square.Bomb_1_3:
+					return Square.Player_3;
+				case Square.Bomb_1_4:
+					return Square.Player_4;
+				default:
+					return square;
 			}
-			return playground;
 		}
-		private static Change GetChange(byte[] data)
+		private static void Move(Playground playground, Point oldLocation, Point newLocation)
 		{
-			Point location = new Point(data[0], data[1]);
-			Square square = (Square)data[2];
-			return new Change(location, square);
-		}
-		private static byte[][] CutBytes(byte[] data)
-		{
-			int triplets = data.Length / 3;
-			byte[][] outData = new byte[triplets][];
-			for (int i = 0; i < triplets; i++)
+			Square oldSquare = playground.board[oldLocation.X][oldLocation.Y];
+			if (oldSquare >= Square.Bomb_1_1 && oldSquare <= Square.Bomb_1_4)
 			{
-				outData[i] = new byte[3];
-				outData[i][0] = data[i * 3];
-				outData[i][1] = data[i * 3 + 1];
-				outData[i][2] = data[i * 3 + 2];
+				//playground.board[newLocation.X][newLocation.Y] = (oldSquare - 7); // from bomb_1_x to Player_x
+				playground.board[newLocation.X][newLocation.Y] = GetPlayerSquare(oldSquare);
+				playground.board[oldLocation.X][oldLocation.Y] = Square.Bomb_2;
 			}
-			return outData;
+			else
+			{
+				playground.board[newLocation.X][newLocation.Y] = playground.board[oldLocation.X][oldLocation.Y];
+				playground.board[oldLocation.X][oldLocation.Y] = Square.Empty;
+			}
+		}
+		internal static Point GetStartPosition(string number)
+		{
+			switch (number)
+			{
+				case "0":
+					return new Point(1, 1);
+				case "1":
+					return new Point(1, Playground.playgroundSize - 2);
+				case "2":
+					return new Point(Playground.playgroundSize - 2, 1);
+				case "3":
+					return new Point(Playground.playgroundSize - 2, Playground.playgroundSize - 2);
+				default:
+					// TODO error
+					return new Point();
+			}
 		}
 	}
 }

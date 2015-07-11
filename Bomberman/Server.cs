@@ -7,15 +7,20 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using System.Timers;
+
 namespace Bomberman
 {
 	class Server
 	{
 		static List<Connection> clients;
 		static ManualResetEvent allDone;
+		static System.Timers.Timer updateTimer = new System.Timers.Timer(1000);
 
 		public static void Start()
 		{
+			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTick);
+			updateTimer.AutoReset = false;
 			clients = new List<Connection>();
 			TcpListener listener = TcpListener.Create(Program.port);
 			listener.Start();
@@ -37,10 +42,6 @@ namespace Bomberman
 			Handshake(connection);
 		}
 
-		private void GetMovements()
-		{
-			
-		}
 		private static async void Handshake(Connection connection)
 		{
 			string line = await connection.reader.ReadLineAsync();
@@ -50,6 +51,7 @@ namespace Bomberman
 				string response;
 				lock(clients){
 					response = "ACK " + clients.Count;
+					connection.position = GameLogic.GetStartPosition(clients.Count.ToString());
 					clients.Add(connection);
 				}
 				connection.writer.WriteLine(response);
@@ -60,16 +62,15 @@ namespace Bomberman
 				}
 				StartListening(connection);
 			}
-			// TODO dodelat Handshake + proceduru zpracovani
 		}
 
 		private static void SendPlayground(Connection connection)
 		{
-			connection.writer.WriteLine("Playground " + Program.playground.playgroundSize);
-			for (int i = 0; i < Program.playground.playgroundSize; i++)
+			connection.writer.WriteLine("Playground " + Playground.playgroundSize);
+			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
 				string line = "";
-				for (int j = 0; j < Program.playground.playgroundSize; j++)
+				for (int j = 0; j < Playground.playgroundSize; j++)
 				{
 					line += (int)Program.playground.board[i][j] + " ";
 				}
@@ -96,7 +97,42 @@ namespace Bomberman
 		}
 		private static void ProcessCommand(string command, Connection connection)
 		{
-			// TODO dodelat
+			string[] tokens = command.Split(' ');
+			switch (tokens[0])
+			{
+				case "Move":
+					ProcessMove(tokens, connection);
+					break;
+				default:
+					break;
+			}
+		}
+		//static int playersPlayed = 0;
+		static Queue<FutureMove> futureMoves = new Queue<FutureMove>();
+		private static void ProcessMove(string[] moves, Connection connection)
+		{
+			Movement movement = (Movement)int.Parse(moves[1]);
+			/*
+			//futureMoves.Enqueue((Movement)int.Parse(moves[2]));
+			GameLogic.Process(Program.playground, movement, connection);
+			Form1.updatePictureBox();
+			playersPlayed++;
+			if (playersPlayed == 4)
+			{
+				playersPlayed = 0;
+				// TODO dodelat
+			}
+			*/
+			futureMoves.Enqueue(new FutureMove((Movement)int.Parse(moves[2]),connection));
+			GameLogic.Process(Program.playground, movement, connection);
+			Form1.updatePictureBox();
+			FutureMove futureMove = futureMoves.Dequeue();
+			GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+			updateTimer.Enabled = true;
+		}
+		private static void UpdateTick(Object source, ElapsedEventArgs e)
+		{
+			Form1.updatePictureBox();
 		}
 	}
 }
