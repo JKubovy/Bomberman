@@ -17,9 +17,11 @@ namespace Bomberman
 		private StreamWriter writer;
 		private StreamReader reader;
 		internal Point position;
+		internal bool alive;
 
 		public Client(IPAddress ip, bool user, bool update)
 		{
+			alive = true;
 			server = new TcpClient(AddressFamily.InterNetworkV6);
 			server.Client.DualMode = true;
 			server.Connect(ip,Program.port);
@@ -114,61 +116,6 @@ namespace Bomberman
 		}
 		Movement[] futureMoves = new Movement[2];
 		int indexFutureMoves = 0;
-		internal void ProcessKeyPress(Keys key)
-		{
-			switch (key)
-			{
-				case Keys.Left:
-				case Keys.A:
-					if (indexFutureMoves < futureMoves.Length)
-					{
-						futureMoves[indexFutureMoves] = Movement.Left;
-						indexFutureMoves++;
-					}
-					break;
-				case Keys.Up:
-				case Keys.W:
-					if (indexFutureMoves < futureMoves.Length)
-					{
-						futureMoves[indexFutureMoves] = Movement.Up;
-						indexFutureMoves++;
-					}
-					break;
-				case Keys.Right:
-				case Keys.D:
-					if (indexFutureMoves < futureMoves.Length)
-					{
-						futureMoves[indexFutureMoves] = Movement.Right;
-						indexFutureMoves++;
-					}
-					break;
-				case Keys.Down:
-				case Keys.S:
-					if (indexFutureMoves < futureMoves.Length)
-					{
-						futureMoves[indexFutureMoves] = Movement.Down;
-						indexFutureMoves++;
-					}
-					break;
-				case Keys.Space:
-					if (indexFutureMoves < futureMoves.Length)
-					{
-						futureMoves[indexFutureMoves] = Movement.Plant_bomb;
-						indexFutureMoves++;
-					}
-					break;
-				case Keys.Enter:
-					SendMoves();
-					break;
-				case Keys.Back:
-					if (indexFutureMoves == 0) break;
-					indexFutureMoves--;
-					futureMoves[indexFutureMoves] = Movement.Nothing;
-					break;
-				default:
-					break;
-			}
-		}
 		internal void ProcessMovement(Movement movement)
 		{
 			switch (movement)

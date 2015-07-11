@@ -39,23 +39,20 @@
 			this.panelControls = new System.Windows.Forms.Panel();
 			this.panelMultiplayer = new System.Windows.Forms.Panel();
 			this.panelGame = new System.Windows.Forms.Panel();
-			this.splitContainerGame = new System.Windows.Forms.SplitContainer();
-			this.pictureNextMove2 = new System.Windows.Forms.PictureBox();
-			this.pictureNextMove1 = new System.Windows.Forms.PictureBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.panelGameInfo = new System.Windows.Forms.Panel();
+			this.pictureNextMove1 = new System.Windows.Forms.PictureBox();
+			this.pictureNextMove2 = new System.Windows.Forms.PictureBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.panel1 = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).BeginInit();
 			this.splitContainerMenu.Panel1.SuspendLayout();
 			this.splitContainerMenu.Panel2.SuspendLayout();
 			this.splitContainerMenu.SuspendLayout();
 			this.panelAbout.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainerGame)).BeginInit();
-			this.splitContainerGame.Panel1.SuspendLayout();
-			this.splitContainerGame.Panel2.SuspendLayout();
-			this.splitContainerGame.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).BeginInit();
 			this.panelGameInfo.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).BeginInit();
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainerMenu
@@ -191,43 +188,21 @@
 			// 
 			// panelGame
 			// 
-			this.panelGame.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelGame.Location = new System.Drawing.Point(3, 3);
+			this.panelGame.Location = new System.Drawing.Point(0, 0);
 			this.panelGame.Name = "panelGame";
-			this.panelGame.Size = new System.Drawing.Size(472, 441);
+			this.panelGame.Size = new System.Drawing.Size(444, 444);
 			this.panelGame.TabIndex = 1;
 			// 
-			// splitContainerGame
+			// panelGameInfo
 			// 
-			this.splitContainerGame.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainerGame.IsSplitterFixed = true;
-			this.splitContainerGame.Location = new System.Drawing.Point(0, 0);
-			this.splitContainerGame.Name = "splitContainerGame";
-			// 
-			// splitContainerGame.Panel1
-			// 
-			this.splitContainerGame.Panel1.Controls.Add(this.panelGame);
-			// 
-			// splitContainerGame.Panel2
-			// 
-			this.splitContainerGame.Panel2.Controls.Add(this.panelGameInfo);
-			this.splitContainerGame.Size = new System.Drawing.Size(726, 450);
-			this.splitContainerGame.SplitterDistance = 478;
-			this.splitContainerGame.TabIndex = 5;
-			this.splitContainerGame.Visible = false;
-			// 
-			// pictureNextMove2
-			// 
-			this.pictureNextMove2.Location = new System.Drawing.Point(64, 29);
-			this.pictureNextMove2.Name = "pictureNextMove2";
-			this.pictureNextMove2.Size = new System.Drawing.Size(50, 50);
-			this.pictureNextMove2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureNextMove2.TabIndex = 2;
-			this.pictureNextMove2.TabStop = false;
+			this.panelGameInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelGameInfo.Controls.Add(this.pictureNextMove1);
+			this.panelGameInfo.Controls.Add(this.pictureNextMove2);
+			this.panelGameInfo.Controls.Add(this.label1);
+			this.panelGameInfo.Location = new System.Drawing.Point(450, -3);
+			this.panelGameInfo.Name = "panelGameInfo";
+			this.panelGameInfo.Size = new System.Drawing.Size(267, 447);
+			this.panelGameInfo.TabIndex = 5;
 			// 
 			// pictureNextMove1
 			// 
@@ -238,6 +213,15 @@
 			this.pictureNextMove1.TabIndex = 1;
 			this.pictureNextMove1.TabStop = false;
 			// 
+			// pictureNextMove2
+			// 
+			this.pictureNextMove2.Location = new System.Drawing.Point(64, 29);
+			this.pictureNextMove2.Name = "pictureNextMove2";
+			this.pictureNextMove2.Size = new System.Drawing.Size(50, 50);
+			this.pictureNextMove2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureNextMove2.TabIndex = 2;
+			this.pictureNextMove2.TabStop = false;
+			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
@@ -247,15 +231,18 @@
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Next moves:";
 			// 
-			// panelGameInfo
+			// panel1
 			// 
-			this.panelGameInfo.Controls.Add(this.pictureNextMove1);
-			this.panelGameInfo.Controls.Add(this.pictureNextMove2);
-			this.panelGameInfo.Controls.Add(this.label1);
-			this.panelGameInfo.Location = new System.Drawing.Point(-1, 0);
-			this.panelGameInfo.Name = "panelGameInfo";
-			this.panelGameInfo.Size = new System.Drawing.Size(239, 447);
-			this.panelGameInfo.TabIndex = 5;
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Controls.Add(this.panelGameInfo);
+			this.panel1.Controls.Add(this.panelGame);
+			this.panel1.Location = new System.Drawing.Point(3, 3);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(720, 444);
+			this.panel1.TabIndex = 3;
+			this.panel1.Visible = false;
 			// 
 			// Form1
 			// 
@@ -264,7 +251,7 @@
 			this.AutoScroll = true;
 			this.AutoScrollMinSize = new System.Drawing.Size(200, 300);
 			this.ClientSize = new System.Drawing.Size(726, 450);
-			this.Controls.Add(this.splitContainerGame);
+			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.splitContainerMenu);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
@@ -275,14 +262,11 @@
 			this.splitContainerMenu.ResumeLayout(false);
 			this.panelAbout.ResumeLayout(false);
 			this.panelAbout.PerformLayout();
-			this.splitContainerGame.Panel1.ResumeLayout(false);
-			this.splitContainerGame.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainerGame)).EndInit();
-			this.splitContainerGame.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).EndInit();
 			this.panelGameInfo.ResumeLayout(false);
 			this.panelGameInfo.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).EndInit();
+			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -300,11 +284,11 @@
 		private System.Windows.Forms.Panel panelMultiplayer;
 		private System.Windows.Forms.Label labelAbout;
 		private System.Windows.Forms.Panel panelGame;
-		private System.Windows.Forms.SplitContainer splitContainerGame;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.PictureBox pictureNextMove2;
 		private System.Windows.Forms.PictureBox pictureNextMove1;
 		private System.Windows.Forms.Panel panelGameInfo;
+		private System.Windows.Forms.Panel panel1;
 
 
 	}

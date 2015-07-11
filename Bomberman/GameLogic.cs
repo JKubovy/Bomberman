@@ -42,35 +42,38 @@ namespace Bomberman
 			switch (movement)
 			{
 				case Movement.Up:
-					if (playground.board[connection.position.X - 1][connection.position.Y] == Square.Empty)
+					if ((playground.board[connection.position.X - 1][connection.position.Y] == Square.Empty) ||
+						(playground.board[connection.position.X - 1][connection.position.Y] == Square.Fire))
 					{
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X - 1, connection.position.Y));
 						connection.position = new Point(connection.position.X - 1, connection.position.Y);
 					}
 					return playground;
 				case Movement.Left:
-					if (playground.board[connection.position.X][connection.position.Y - 1] == Square.Empty)
+					if ((playground.board[connection.position.X][connection.position.Y - 1] == Square.Empty) ||
+						(playground.board[connection.position.X][connection.position.Y - 1] == Square.Fire))
 					{
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y - 1));
 						connection.position = new Point(connection.position.X,connection.position.Y - 1);
 					}
 					return playground;
 				case Movement.Down:
-					if (playground.board[connection.position.X + 1][connection.position.Y] == Square.Empty)
+					if ((playground.board[connection.position.X + 1][connection.position.Y] == Square.Empty) ||
+						(playground.board[connection.position.X + 1][connection.position.Y] == Square.Fire))
 					{
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X + 1, connection.position.Y));
 						connection.position = new Point(connection.position.X + 1, connection.position.Y);
 					}
 					return playground;
 				case Movement.Right:
-					if (playground.board[connection.position.X][connection.position.Y + 1] == Square.Empty)
+					if ((playground.board[connection.position.X][connection.position.Y + 1] == Square.Empty) ||
+						(playground.board[connection.position.X][connection.position.Y + 1] == Square.Fire))
 					{
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y + 1));
 						connection.position = new Point(connection.position.X, connection.position.Y + 1);
 					}
 					return playground;
 				case Movement.Plant_bomb:
-					//playground.board[connection.position.X][connection.position.Y] = GetFirstBombSquare(playground.board[connection.position.X][connection.position.Y]);
 					playground.AddBomb(new Point(connection.position.X, connection.position.Y));
 					return playground;
 				default:

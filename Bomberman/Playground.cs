@@ -36,8 +36,8 @@ namespace Bomberman
 	{
 		public static int playgroundSize = 14; // must be greater or eaqual to 7! 14
 		public Square[][] board;
-
 		private Queue<Point> bombs = new Queue<Point>();
+		private Queue<Point> fire = new Queue<Point>();
 
 		public Playground()
 		{
@@ -61,7 +61,7 @@ namespace Bomberman
 		{
 			if (!bombs.Contains(location)) bombs.Enqueue(location);
 		}
-		internal void UpdateBombs()
+		internal void UpdateBombsFire()
 		{
 			int bombCount = bombs.Count;
 			for (int i = 0; i < bombCount; i++)
@@ -127,8 +127,13 @@ namespace Bomberman
 		}
 		private void Explode(Point location)
 		{
+
 			// TODO Explode
 			board[location.X][location.Y] = Square.Empty;
+		}
+		private void SetFire(Point location)
+		{
+			// TODO Set fire
 		}
 		private void InitPlayground()
 		{

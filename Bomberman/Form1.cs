@@ -44,7 +44,9 @@ namespace Bomberman
 			Program.playground = new Playground();
 			initGraphicPlayground();
 			splitContainerMenu.Visible = false;
-			splitContainerGame.Visible = true;
+			panel1.Visible = true;
+			//splitContainerGame.Visible = true;
+			UpdatePictureBoxMovements();
 			Program.playing = true;
 			panelGame.Select();
 			Task.Factory.StartNew(() =>
@@ -68,7 +70,8 @@ namespace Bomberman
 			Program.playground = new Playground();
 			initGraphicPlayground();
 			splitContainerMenu.Visible = false;
-			splitContainerGame.Visible = true;
+			panel1.Visible = true;
+			//splitContainerGame.Visible = true;
 		}
 
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
@@ -83,9 +86,9 @@ namespace Bomberman
 					PictureBox p = new PictureBox();
 					p.Name = "pictureBox_" + i + "_"+j;
 					//p.Size = new System.Drawing.Size(28, 28);
-					p.Size = new System.Drawing.Size(35, 35);
+					p.Size = new System.Drawing.Size(32, 32);
 					//p.Location = new System.Drawing.Point((28*j), (28*i));
-					p.Location = new System.Drawing.Point((35 * j), (35 * i));
+					p.Location = new System.Drawing.Point((32 * j), (32 * i));
 					p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 					p.Image = getImage(i,j);
 					screen[i][j] = p;
