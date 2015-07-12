@@ -63,6 +63,12 @@ namespace Bomberman
 		}
 		internal void UpdateBombsFire()
 		{
+			int fireCount = fire.Count;
+			for (int i = 0; i < fireCount; i++)
+			{
+				Point location = fire.Dequeue();
+				if (board[location.X][location.Y] == Square.Fire) board[location.X][location.Y] = Square.Empty;
+			}
 			int bombCount = bombs.Count;
 			for (int i = 0; i < bombCount; i++)
 			{
@@ -127,13 +133,24 @@ namespace Bomberman
 		}
 		private void Explode(Point location)
 		{
-
-			// TODO Explode
-			board[location.X][location.Y] = Square.Empty;
+			SetFire(location, true);
+			SetFire(new Point(location.X - 1, location.Y), false);
+			SetFire(new Point(location.X, location.Y - 1), false);
+			SetFire(new Point(location.X + 1, location.Y), false);
+			SetFire(new Point(location.X, location.Y + 1), false);
+			//board[location.X][location.Y] = Square.Empty;
 		}
-		private void SetFire(Point location)
+		private void SetFire(Point location, bool center)
 		{
-			// TODO Set fire
+			Square squere = board[location.X][location.Y];
+			if (squere == Square.Unbreakable_Wall) return;
+			if ((!center)&&(squere >= Square.Bomb_1 && squere <= Square.Bomb_3_4)) Explode(location);
+			if ((squere >= Square.Player_1 && squere <= Square.Player_4) ||
+				(squere >= Square.Bomb_1_1 && squere <= Square.Bomb_1_4) ||
+				(squere >= Square.Bomb_2_1 && squere <= Square.Bomb_2_4) ||
+				(squere >= Square.Bomb_3_1 && squere <= Square.Bomb_3_4)) Server.Dead(location);
+			board[location.X][location.Y] = Square.Fire;
+			fire.Enqueue(location);
 		}
 		private void InitPlayground()
 		{

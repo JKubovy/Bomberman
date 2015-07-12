@@ -53,7 +53,7 @@ namespace Bomberman
 				lock(clients){
 					response = "ACK " + clients.Count;
 					connection.position = GameLogic.GetStartPosition(clients.Count.ToString());
-					clients.Add(connection);
+					clients.Add(connection); // TODO lock
 				}
 				connection.writer.WriteLine(response);
 				if (tokens[1] == true.ToString())
@@ -138,9 +138,9 @@ namespace Bomberman
 		{
 			Form1.updatePictureBox();
 		}
-		//private static void CheckFire(Point location)
-		//{
-
-		//}
+		internal static void Dead(Point location)
+		{
+			// TODO kdyz na policku nekdo umre
+		}
 	}
 }
