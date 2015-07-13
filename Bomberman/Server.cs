@@ -204,9 +204,7 @@ namespace Bomberman
 		}
 		private static void Send(string msg, Connection connection)
 		{
-			//connection.writer.WriteLine(msg);
-			System.IO.StreamWriter s = new System.IO.StreamWriter(connection.connectionWith.GetStream());
-			s.WriteLine(msg);
+			connection.writer.WriteLine(msg);
 		}
 	}
 }
