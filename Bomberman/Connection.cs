@@ -12,7 +12,7 @@ namespace Bomberman
 	class Connection
 	{
 		public TcpClient connectionWith = null;
-		public bool playgroundUpdates;
+		//public bool playgroundUpdates;
 		public DateTime lastTouch;
 		public StreamWriter writer;
 		public StreamReader reader;
@@ -24,7 +24,7 @@ namespace Bomberman
 			this.writer = new StreamWriter(connectionWith.GetStream());
 			this.reader = new StreamReader(connectionWith.GetStream());
 			this.writer.AutoFlush = true;
-			this.playgroundUpdates = false;
+			//this.playgroundUpdates = false;
 			this.lastTouch = DateTime.Now;
 		}
 	}

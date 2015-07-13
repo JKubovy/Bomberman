@@ -23,60 +23,84 @@ namespace Bomberman
 		{
 			alive = true;
 			server = new TcpClient(AddressFamily.InterNetworkV6);
-			server.Client.DualMode = true;
+			//server.Client.DualMode = true;
 			server.Connect(ip,Program.port);
 			writer = new StreamWriter(server.GetStream());
 			reader = new StreamReader(server.GetStream());
 			writer.AutoFlush = true;
 			if (user) Form1.player = this;
-			Handshake(update);
+			Handshake(update, user);
 		}
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="update">Boolean if client want to recive updates of playground</param>
-		private async void Handshake(bool update)
+		/// <param name="user">Boolean if client is user</param>
+		private async void Handshake(bool update, bool user)
 		{
-			string request = "Bomberman " + update;
+			string request = "Bomberman " + update + " " + user;
 			writer.WriteLine(request);
 			string response = await reader.ReadLineAsync();
 			string[] tokens = response.Split(' ');
 			if (tokens[0] == "ACK")
 			{
 				position = GameLogic.GetStartPosition(tokens[1]);
-				if (update) RecivePlayground();
+				if (update)
+				{
+					response = await reader.ReadLineAsync();
+					tokens = response.Split(' ');
+					RecivePlayground(tokens);
+				}
 				StartListening();
 			}
 		}
-		private async void RecivePlayground()
+		//private async void RecivePlayground(int size)
+		//{
+		//	string data;
+		//	if (Program.playground == null || Program.playground.board.Length != size)
+		//	{
+		//		Program.playground = new Playground(size);
+		//		Form form1 = Application.OpenForms[0];
+		//		((Form1)form1).initGraphicPlayground();
+		//	}
+		//	for (int i = 0; i < size; i++)
+		//	{
+		//		data = await reader.ReadLineAsync();
+		//		//data = reader.ReadLine();
+		//		string[] tokens = data.Split(' ');
+		//		for (int j = 0; j < size; j++)
+		//		{
+		//			Program.playground.board[i][j] = (Square)int.Parse(tokens[j]);
+		//		}
+		//	}
+		//	data = await reader.ReadLineAsync();
+		//	if (data == "End")
+		//	{
+		//		Form1.updatePictureBox();
+		//		return;
+		//	}
+		//	else
+		//	{
+		//		// TODO error
+		//	}
+		//}
+		private void RecivePlayground(string[] data)
 		{
-			string data;
-			data = await reader.ReadLineAsync();
-			string[] tokens = data.Split(' ');
-			if (tokens[0] == "Playground")
+			int size = int.Parse(data[1]);
+			if (Program.playground == null || Program.playground.board.Length != size)
 			{
-				int size = Int32.Parse(tokens[1]);
-				if (Program.playground == null) Program.playground = new Playground(size);
-				for (int i = 0; i < size; i++)
+				Program.playground = new Playground(size);
+				Form form1 = Application.OpenForms[0];
+				((Form1)form1).initGraphicPlayground();
+			}
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < size; j++)
 				{
-					data = await reader.ReadLineAsync();
-					tokens = data.Split(' ');
-					for (int j = 0; j < size; j++)
-					{
-						Program.playground.board[i][j] = (Square)int.Parse(tokens[j]);
-					}
-				}
-				data = await reader.ReadLineAsync();
-				if (data == "End") return;
-				else
-				{
-					// TODO error
+					Program.playground.board[i][j] = (Square)int.Parse(data[2+size*i+j]);
 				}
 			}
-			else
-			{
-				// TODO error
-			}
+			Form1.updatePictureBox();
 		}
 		private async void StartListening()
 		{
@@ -110,9 +134,21 @@ namespace Bomberman
 					return new Point();
 			}
 		}
-		private void ProcessCommand(string msg)
+		private void ProcessCommand(string command)
 		{
-			// TODO process command
+			string[] tokens = command.Split(' ');
+			switch (tokens[0])
+			{
+				case "SendMoves":
+					// TODO vypocitat a poslat tahy
+					break;
+				case "Playground":
+					//RecivePlayground(int.Parse(tokens[1]));
+					RecivePlayground(tokens);
+					break;
+				default:
+					break;
+			}
 		}
 		Movement[] futureMoves = new Movement[2];
 		int indexFutureMoves = 0;
@@ -172,7 +208,7 @@ namespace Bomberman
 			futureMoves[1] = Movement.Nothing;
 			indexFutureMoves = 0;
 		}
-		internal void Send(string msg)
+		private void Send(string msg)
 		{
 			try
 			{

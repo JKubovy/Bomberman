@@ -57,6 +57,19 @@ namespace Bomberman
 				{
 					new Client(System.Net.IPAddress.IPv6Loopback, true, false);
 				}, TaskCreationOptions.LongRunning);
+			// dale jsou clienti
+			Task.Factory.StartNew(() =>
+			{
+				new Client(System.Net.IPAddress.IPv6Loopback, false, false);
+			}, TaskCreationOptions.LongRunning);
+			Task.Factory.StartNew(() =>
+			{
+				new Client(System.Net.IPAddress.IPv6Loopback, false, false);
+			}, TaskCreationOptions.LongRunning);
+			//Task.Factory.StartNew(() =>
+			//{
+			//	new Client(System.Net.IPAddress.IPv6Loopback, false, false);
+			//}, TaskCreationOptions.LongRunning);
 		}
 
 		private void buttonExit_Click(object sender, EventArgs e)
@@ -67,16 +80,25 @@ namespace Bomberman
 
 		private void buttonSingleplayer_Click(object sender, EventArgs e)
 		{
-			Program.playground = new Playground();
-			initGraphicPlayground();
+			//Program.playground = new Playground();
+			//initGraphicPlayground();
+			//splitContainerMenu.Visible = false;
+			//panel1.Visible = true;
+
 			splitContainerMenu.Visible = false;
 			panel1.Visible = true;
-			//splitContainerGame.Visible = true;
+			Program.playing = true;
+			UpdatePictureBoxMovements();
+			panelGame.Select();
+			Task.Factory.StartNew(() =>
+			{
+				new Client(System.Net.IPAddress.IPv6Loopback, true, true);
+			}, TaskCreationOptions.LongRunning);
 		}
 
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
 		internal static Client player;
-		private void initGraphicPlayground()
+		internal void initGraphicPlayground()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
@@ -92,9 +114,24 @@ namespace Bomberman
 					p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 					p.Image = getImage(i,j);
 					screen[i][j] = p;
-					panelGame.Controls.Add(p);
+					//panelGame.Controls.Add(p);
+					AddPictureBox(p);
 				}
 			}
+		}
+		delegate void AddPictureBoxCallback(PictureBox p);
+		private void AddPictureBox(PictureBox p)
+		{
+			if (panelGame.InvokeRequired)
+			{
+				AddPictureBoxCallback d = new AddPictureBoxCallback(AddPictureBox);
+				this.Invoke(d, new object[] { p });
+			}
+			else
+			{
+				panelGame.Controls.Add(p);
+			}
+
 		}
 		internal static void updatePictureBox()
 		{
@@ -234,9 +271,7 @@ namespace Bomberman
 				case Movement.Enter:
 					if (indexFutureMovements == 2)
 					{
-						indexFutureMovements = 0;
-						futureMovements[0] = Movement.Nothing;
-						futureMovements[1] = Movement.Nothing;
+						DeleteFutureMovement();
 					}
 					break;
 				case Movement.Backspace:
@@ -253,6 +288,12 @@ namespace Bomberman
 		{
 			pictureNextMove1.Image = getImage(futureMovements[0]);
 			pictureNextMove2.Image = getImage(futureMovements[1]);
+		}
+		private void DeleteFutureMovement()
+		{
+			indexFutureMovements = 0;
+			futureMovements[0] = Movement.Nothing;
+			futureMovements[1] = Movement.Nothing;
 		}
 	}
 }

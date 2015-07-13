@@ -14,15 +14,18 @@ namespace Bomberman
 {
 	class Server
 	{
-		static List<Connection> clients;
+		static List<Connection> clients = new List<Connection>();
+		static List<Connection> clientUpdate = new List<Connection>();
+		static List<Connection> clientAI = new List<Connection>();
+		static List<Connection> clientPlayers = new List<Connection>();
 		static ManualResetEvent allDone;
+		static ManualResetEvent getMoves = new ManualResetEvent(false);
 		static System.Timers.Timer updateTimer = new System.Timers.Timer(1000);
 
 		public static void Start()
 		{
 			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTick);
 			updateTimer.AutoReset = false;
-			clients = new List<Connection>();
 			TcpListener listener = TcpListener.Create(Program.port);
 			listener.Start();
 			allDone = new ManualResetEvent(false);
@@ -53,13 +56,23 @@ namespace Bomberman
 				lock(clients){
 					response = "ACK " + clients.Count;
 					connection.position = GameLogic.GetStartPosition(clients.Count.ToString());
-					clients.Add(connection); // TODO lock
+					clients.Add(connection);
 				}
 				connection.writer.WriteLine(response);
-				if (tokens[1] == true.ToString())
+				if (tokens[1] == true.ToString()) // if client need updates
 				{
-					connection.playgroundUpdates = true;
-					SendPlayground(connection);
+					//connection.playgroundUpdates = true;
+					lock (clientUpdate) clientUpdate.Add(connection);
+					SendPlayground2(connection);
+				}
+				if (tokens[2] == false.ToString()) // if client is AI
+				{
+					lock (clientAI) clientAI.Add(connection);
+					// TODO user (cekat na pokyny)
+				}
+				else
+				{
+					lock (clientPlayers) clientPlayers.Add(connection);
 				}
 				StartListening(connection);
 			}
@@ -79,6 +92,21 @@ namespace Bomberman
 			}
 			connection.writer.WriteLine("End");
 		}
+		private static void SendPlayground2(Connection connection)
+		{
+			StringBuilder sb = new StringBuilder("Playground " + Playground.playgroundSize + " ");
+			for (int i = 0; i < Playground.playgroundSize; i++)
+			{
+				for (int j = 0; j < Playground.playgroundSize; j++)
+				{
+					sb.Append((int)Program.playground.board[i][j] + " ");
+				}
+			}
+			string data = sb.ToString();
+			Send(data, connection);
+			//connection.writer.WriteLineAsync(sb.ToString());
+		}
+
 		private static async void StartListening(Connection connection)
 		{
 			string line;
@@ -102,7 +130,7 @@ namespace Bomberman
 			switch (tokens[0])
 			{
 				case "Move":
-					ProcessMove(tokens, connection);
+					AddMove(tokens, connection);
 					break;
 				default:
 					break;
@@ -110,37 +138,75 @@ namespace Bomberman
 		}
 		//static int playersPlayed = 0;
 		static Queue<FutureMove> futureMoves = new Queue<FutureMove>();
-		private static void ProcessMove(string[] moves, Connection connection)
+		private static void AddMove(string[] moves, Connection connection)
 		{
-			Movement movement = (Movement)int.Parse(moves[1]);
-			/*
-			//futureMoves.Enqueue((Movement)int.Parse(moves[2]));
-			GameLogic.Process(Program.playground, movement, connection);
-			Form1.updatePictureBox();
-			playersPlayed++;
-			if (playersPlayed == 4)
+			if (!clients.Contains(connection)) return; // check if moves send regular client
+			if (futureMoves.Count == 0)
 			{
-				playersPlayed = 0;
-				// TODO dodelat
+				for (int i = 0; i < clientAI.Count; i++)
+				{
+					clientAI[i].writer.WriteLine("SendMoves");
+				}
 			}
-			*/
-			futureMoves.Enqueue(new FutureMove((Movement)int.Parse(moves[2]),connection));
-			GameLogic.Process(Program.playground, movement, connection);
+			Movement movement = (Movement)int.Parse(moves[1]);
+			futureMoves.Enqueue(new FutureMove(movement, connection));
+			movement = (Movement)int.Parse(moves[2]);
+			futureMoves.Enqueue(new FutureMove(movement, connection));
+			//if (futureMoves.Count == clients.Count * 2) ProcessMove();
+			if (futureMoves.Count == clientPlayers.Count * 2) ProcessMove();
+		}
+		private static void ProcessMove()
+		{
+			int moveCount = futureMoves.Count / 2;
+			for (int i = 0; i < moveCount; i++)
+			{
+				FutureMove futureMove = futureMoves.Dequeue();
+				GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+				futureMoves.Enqueue(futureMoves.Dequeue());
+			}
 			Program.playground.UpdateBombsFire();
+			for (int i = 0; i < clientUpdate.Count; i++)
+			{
+				SendPlayground2(clientUpdate[i]);
+			}
 			Form1.updatePictureBox();
-
-			FutureMove futureMove = futureMoves.Dequeue();
-			GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+			for (int i = 0; i < moveCount; i++)
+			{
+				FutureMove futureMove = futureMoves.Dequeue();
+				GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+			}
 			Program.playground.UpdateBombsFire();
 			updateTimer.Enabled = true;
 		}
 		private static void UpdateTick(Object source, ElapsedEventArgs e)
 		{
+			for (int i = 0; i < clientUpdate.Count; i++)
+			{
+				SendPlayground2(clientUpdate[i]);
+			}
 			Form1.updatePictureBox();
 		}
 		internal static void Dead(Point location)
 		{
-			// TODO kdyz na policku nekdo umre
+			Connection connection = clients[0]; // just init value
+			for (int i = 0; i < clients.Count; i++)
+			{
+				if (clients[i].position == location)
+				{
+					connection = clients[i];
+					break;
+				}
+			}
+			clients.Remove(connection);
+			clientAI.Remove(connection);
+			clientPlayers.Remove(connection);
+			clientUpdate.Remove(connection); // TODO nechat pro sledovani?
+		}
+		private static void Send(string msg, Connection connection)
+		{
+			//connection.writer.WriteLine(msg);
+			System.IO.StreamWriter s = new System.IO.StreamWriter(connection.connectionWith.GetStream());
+			s.WriteLine(msg);
 		}
 	}
 }
