@@ -61,7 +61,6 @@ namespace Bomberman
 				connection.writer.WriteLine(response);
 				if (tokens[1] == true.ToString()) // if client need updates
 				{
-					//connection.playgroundUpdates = true;
 					lock (clientUpdate) clientUpdate.Add(connection);
 					SendPlayground2(connection);
 				}

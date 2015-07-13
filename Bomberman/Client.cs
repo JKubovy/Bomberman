@@ -17,13 +17,11 @@ namespace Bomberman
 		private StreamWriter writer;
 		private StreamReader reader;
 		internal Point position;
-		internal bool alive;
 
 		public Client(IPAddress ip, bool user, bool update)
 		{
-			alive = true;
 			server = new TcpClient(AddressFamily.InterNetworkV6);
-			//server.Client.DualMode = true;
+			server.Client.DualMode = true;
 			server.Connect(ip,Program.port);
 			writer = new StreamWriter(server.GetStream());
 			reader = new StreamReader(server.GetStream());
@@ -36,18 +34,18 @@ namespace Bomberman
 		/// </summary>
 		/// <param name="update">Boolean if client want to recive updates of playground</param>
 		/// <param name="user">Boolean if client is user</param>
-		private async void Handshake(bool update, bool user)
+		private void Handshake(bool update, bool user)
 		{
 			string request = "Bomberman " + update + " " + user;
 			writer.WriteLine(request);
-			string response = await reader.ReadLineAsync();
+			string response = reader.ReadLine();
 			string[] tokens = response.Split(' ');
 			if (tokens[0] == "ACK")
 			{
 				position = GameLogic.GetStartPosition(tokens[1]);
 				if (update)
 				{
-					response = await reader.ReadLineAsync();
+					response = reader.ReadLine();
 					tokens = response.Split(' ');
 					RecivePlayground(tokens);
 				}
@@ -102,13 +100,13 @@ namespace Bomberman
 			}
 			Form1.updatePictureBox();
 		}
-		private async void StartListening()
+		private void StartListening()
 		{
 			while (server.Connected)
 			{
 				try
 				{
-					string command = await reader.ReadLineAsync();
+					string command = reader.ReadLine();
 					ProcessCommand(command);
 				}
 				catch (IOException)
