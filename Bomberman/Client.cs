@@ -26,7 +26,10 @@ namespace Bomberman
 			writer = new StreamWriter(server.GetStream());
 			reader = new StreamReader(server.GetStream());
 			writer.AutoFlush = true;
-			if (user) Form1.player = this;
+			if (user)
+			{
+				Form1.player = this;
+			}
 			Handshake(update, user);
 		}
 		/// <summary>
@@ -48,6 +51,11 @@ namespace Bomberman
 					response = reader.ReadLine();
 					tokens = response.Split(' ');
 					RecivePlayground(tokens);
+				}
+				if (user)
+				{
+					Form form1 = Application.OpenForms[0];
+					((Form1)form1).SetAvatar();
 				}
 				StartListening();
 			}

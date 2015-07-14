@@ -107,14 +107,11 @@ namespace Bomberman
 				{
 					PictureBox p = new PictureBox();
 					p.Name = "pictureBox_" + i + "_"+j;
-					//p.Size = new System.Drawing.Size(28, 28);
 					p.Size = new System.Drawing.Size(32, 32);
-					//p.Location = new System.Drawing.Point((28*j), (28*i));
 					p.Location = new System.Drawing.Point((32 * j), (32 * i));
 					p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 					p.Image = getImage(i,j);
 					screen[i][j] = p;
-					//panelGame.Controls.Add(p);
 					AddPictureBox(p);
 				}
 			}
@@ -133,6 +130,7 @@ namespace Bomberman
 			}
 
 		}
+
 		internal static void updatePictureBox()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)
@@ -294,6 +292,16 @@ namespace Bomberman
 			indexFutureMovements = 0;
 			futureMovements[0] = Movement.Nothing;
 			futureMovements[1] = Movement.Nothing;
+		}
+		internal void SetAvatar()
+		{
+			Point position = player.position;
+			Image image;
+			if (position == new Point(1, 1)) image = Properties.Resources.Player_1;
+			else if (position == new Point(1, Playground.playgroundSize-2)) image = Properties.Resources.Player_2;
+			else if (position == new Point(Playground.playgroundSize - 2,1)) image = Properties.Resources.Player_3;
+			else image = Properties.Resources.Player_4;
+			this.pictureBoxAvatar.Image = image;
 		}
 	}
 }

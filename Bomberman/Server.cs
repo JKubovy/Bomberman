@@ -62,12 +62,11 @@ namespace Bomberman
 				if (tokens[1] == true.ToString()) // if client need updates
 				{
 					lock (clientUpdate) clientUpdate.Add(connection);
-					SendPlayground2(connection);
+					SendPlayground(connection);
 				}
 				if (tokens[2] == false.ToString()) // if client is AI
 				{
 					lock (clientAI) clientAI.Add(connection);
-					// TODO user (cekat na pokyny)
 				}
 				else
 				{
@@ -79,20 +78,6 @@ namespace Bomberman
 
 		private static void SendPlayground(Connection connection)
 		{
-			connection.writer.WriteLine("Playground " + Playground.playgroundSize);
-			for (int i = 0; i < Playground.playgroundSize; i++)
-			{
-				string line = "";
-				for (int j = 0; j < Playground.playgroundSize; j++)
-				{
-					line += (int)Program.playground.board[i][j] + " ";
-				}
-				connection.writer.WriteLine(line);
-			}
-			connection.writer.WriteLine("End");
-		}
-		private static void SendPlayground2(Connection connection)
-		{
 			StringBuilder sb = new StringBuilder("Playground " + Playground.playgroundSize + " ");
 			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
@@ -103,7 +88,6 @@ namespace Bomberman
 			}
 			string data = sb.ToString();
 			Send(data, connection);
-			//connection.writer.WriteLineAsync(sb.ToString());
 		}
 
 		private static async void StartListening(Connection connection)
@@ -166,7 +150,7 @@ namespace Bomberman
 			Program.playground.UpdateBombsFire();
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
-				SendPlayground2(clientUpdate[i]);
+				SendPlayground(clientUpdate[i]);
 			}
 			Form1.updatePictureBox();
 			for (int i = 0; i < moveCount; i++)
@@ -181,7 +165,7 @@ namespace Bomberman
 		{
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
-				SendPlayground2(clientUpdate[i]);
+				SendPlayground(clientUpdate[i]);
 			}
 			Form1.updatePictureBox();
 		}
