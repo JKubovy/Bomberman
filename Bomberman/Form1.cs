@@ -110,6 +110,20 @@ namespace Bomberman
 			}
 		}
 
+		delegate void SetLabelTextCallback(Label label, String text);
+		internal void SetLabelText(Label label, String text)
+		{
+			if (label.InvokeRequired)
+			{
+				SetLabelTextCallback d = new SetLabelTextCallback(SetLabelText);
+				this.Invoke(d, new object[] { label, text });
+			}
+			else
+			{
+				label.Text = text;
+			}
+		}
+
 		internal static void updatePictureBox()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)

@@ -123,10 +123,14 @@ namespace Bomberman
 				case "Playground":
 					ProcessPlayground(tokens);
 					break;
+				case "Update":
+					ProcessUpdate(tokens);
+					break;
 				default:
 					break;
 			}
 		}
+
 		Movement[] futureMoves = new Movement[2];
 		int indexFutureMoves = 0;
 		internal void ProcessMovement(Movement movement)
@@ -184,6 +188,16 @@ namespace Bomberman
 			futureMoves[0] = Movement.Nothing;
 			futureMoves[1] = Movement.Nothing;
 			indexFutureMoves = 0;
+		}
+		private void ProcessUpdate(string[] tokens)
+		{
+			Form form1 = Application.OpenForms[0];
+			Control[] controls = form1.Controls.Find("labelInfoPlayer" + tokens[1], true);
+			Label label = (Label)controls[0];
+			string text = label.Text;
+			string[] oldTextSplit = text.Split(':');
+			text = oldTextSplit[0] + ": " + tokens[2];
+			((Form1)form1).SetLabelText(label, text);
 		}
 		private void Send(string msg)
 		{

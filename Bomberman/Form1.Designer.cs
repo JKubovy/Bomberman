@@ -354,9 +354,11 @@
 			// 
 			// panelGame
 			// 
+			this.panelGame.AutoSize = true;
+			this.panelGame.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelGame.Location = new System.Drawing.Point(0, 0);
 			this.panelGame.Name = "panelGame";
-			this.panelGame.Size = new System.Drawing.Size(444, 444);
+			this.panelGame.Size = new System.Drawing.Size(719, 444);
 			this.panelGame.TabIndex = 1;
 			// 
 			// panelInfo
@@ -492,8 +494,8 @@
 			this.AutoScroll = true;
 			this.AutoScrollMinSize = new System.Drawing.Size(200, 300);
 			this.ClientSize = new System.Drawing.Size(725, 450);
-			this.Controls.Add(this.splitContainerMenu);
 			this.Controls.Add(this.panelGameInfo);
+			this.Controls.Add(this.splitContainerMenu);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -517,6 +519,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).EndInit();
 			this.panelGameInfo.ResumeLayout(false);
+			this.panelGameInfo.PerformLayout();
 			this.ResumeLayout(false);
 
 		}

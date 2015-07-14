@@ -16,6 +16,7 @@ namespace Bomberman
 		public StreamWriter writer;
 		public StreamReader reader;
 		public Point position;
+		public int playerNumber;
 
 		public Connection(TcpClient client)
 		{

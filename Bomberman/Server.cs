@@ -56,6 +56,7 @@ namespace Bomberman
 					response = "ACK " + clients.Count;
 					connection.position = GameLogic.GetStartPosition(clients.Count.ToString());
 					clients.Add(connection);
+					connection.playerNumber = clients.Count;
 				}
 				connection.writer.WriteLine(response);
 				if (tokens[1] == true.ToString()) // if client need updates
@@ -66,12 +67,31 @@ namespace Bomberman
 				if (tokens[2] == false.ToString()) // if client is AI
 				{
 					lock (clientAI) clientAI.Add(connection);
+					SendAll("Update " + connection.playerNumber + " AI");
+				}
+				else // client is Player
+				{
+					lock (clientPlayers) clientPlayers.Add(connection);
+					SendAll("Update " + connection.playerNumber + " Alive");
+				}
+				if (clients.Count == 4) SendInitUpdate();
+				StartListening(connection);
+			}
+		}
+
+		private static void SendInitUpdate()
+		{
+			for (int i = 0; i < clients.Count; i++)
+			{
+				if (clientAI.Contains(clients[i]))
+				{
+					SendUpdate("Update " + clients[i].playerNumber + " AI");
 				}
 				else
 				{
-					lock (clientPlayers) clientPlayers.Add(connection);
+
+					SendUpdate("Update " + clients[i].playerNumber + " Alive");
 				}
-				StartListening(connection);
 			}
 		}
 
@@ -102,6 +122,8 @@ namespace Bomberman
 			}
 			catch (System.IO.IOException)
 			{
+				clientUpdate.Remove(connection);
+				SendUpdate("Update " + connection.playerNumber + " Disconected");
 				connection.connectionWith.Close();
 				// TODO error spadlo spojeni
 				// dodelat poslani spadleho spojeni
@@ -180,6 +202,7 @@ namespace Bomberman
 					break;
 				}
 			}
+			SendUpdate("Update " + connection.playerNumber + " Dead");
 			clients.Remove(connection);
 			clientAI.Remove(connection);
 			clientPlayers.Remove(connection);
@@ -191,6 +214,14 @@ namespace Bomberman
 			{
 				Send(msg, clientUpdate[i]);
 			}
+		}
+		private static void SendUpdate(string msg)
+		{
+			for (int i = 0; i < clientUpdate.Count; i++)
+			{
+				Send(msg, clientUpdate[i]);
+			}
+			Send(msg, clientPlayers[0]);
 		}
 		private static void Send(string msg, Connection connection)
 		{
