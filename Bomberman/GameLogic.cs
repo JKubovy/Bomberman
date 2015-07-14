@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Windows.Forms;
 using System.Drawing;
 
@@ -35,7 +36,6 @@ namespace Bomberman
 		/// <param name="movement">Array of moves by players</param>
 		/// <param name="connection"></param>
 		/// <returns>Updated playground</returns>
-		/// 
 		internal static Playground Process(Playground playground, Movement movement, Connection connection)
 		{
 			Playground outPlayground = playground;
@@ -151,7 +151,6 @@ namespace Bomberman
 				(oldSquare >= Square.Bomb_2_1 && oldSquare <= Square.Bomb_2_4) ||
 				(oldSquare >= Square.Bomb_3_1 && oldSquare <= Square.Bomb_3_4))
 			{
-				//playground.board[newLocation.X][newLocation.Y] = (oldSquare - 7); // from bomb_1_x to Player_x
 				playground.board[newLocation.X][newLocation.Y] = GetPlayerSquare(oldSquare);
 				playground.board[oldLocation.X][oldLocation.Y] = GetBombSquare(playground.board[oldLocation.X][oldLocation.Y]);
 			}
@@ -237,9 +236,20 @@ namespace Bomberman
 					movement = Movement.Nothing;
 					break;
 			}
-			//if (ValidMovement(position, movement)) return movement;
-			//else return Movement.Nothing;
 			return movement;
+		}
+		internal static string GetLanIP()
+		{
+			string strHostName = System.Net.Dns.GetHostName();
+			IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(strHostName);
+			foreach (IPAddress ipAddress in ipEntry.AddressList)
+			{
+				if (ipAddress.AddressFamily.ToString() == "InterNetwork")
+				{
+					return ipAddress.ToString();
+				}
+			}
+			return "";
 		}
 	}
 }

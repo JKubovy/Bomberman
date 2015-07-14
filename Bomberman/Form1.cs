@@ -15,9 +15,30 @@ namespace Bomberman
 		public Form1()
 		{
 			InitializeComponent();
+			SetText();
 			this.KeyPreview = true;
 		}
 
+		private void SetText()
+		{
+			this.textBoxIP.Text = GameLogic.GetLanIP();
+
+			this.labelAbout.Text = Properties.Resources.About_Text;
+			this.labelControls_Text.Text = Properties.Resources.Controls_Text;
+			this.labelInfoPlayer1.Text = Properties.Resources.Info_Player1;
+			this.labelInfoPlayer2.Text = Properties.Resources.Info_Player2;
+			this.labelInfoPlayer3.Text = Properties.Resources.Info_Player3;
+			this.labelInfoPlayer4.Text = Properties.Resources.Info_Player4;
+			this.labelPlayerCount.Text = Properties.Resources.Multiplayer_PlayersCount;
+
+			this.buttonAbout.Text = Properties.Resources.Menu_About;
+			this.buttonControls.Text = Properties.Resources.Menu_Controls;
+			this.buttonExit.Text = Properties.Resources.Menu_Exit;
+			this.buttonExit2.Text = Properties.Resources.Menu_Exit;
+			this.buttonMultiplayer.Text = Properties.Resources.Menu_Multiplayer;
+			this.buttonSingleplayer.Text = Properties.Resources.Menu_Singleplayer;
+			this.buttonStart.Text = Properties.Resources.Multiplayer_Start;
+		}
 		private void buttonAbout_Click(object sender, EventArgs e)
 		{
 			panelMultiplayer.Visible = false;
@@ -37,39 +58,6 @@ namespace Bomberman
 			panelMultiplayer.Visible = true;
 			panelControls.Visible = false;
 			panelAbout.Visible = false;
-			TEST();
-		}
-		private void TEST()
-		{
-			Program.playground = new Playground();
-			initGraphicPlayground();
-			splitContainerMenu.Visible = false;
-			panel1.Visible = true;
-			//splitContainerGame.Visible = true;
-			UpdatePictureBoxMovements();
-			Program.playing = true;
-			panelGame.Select();
-			Task.Factory.StartNew(() =>
-			{
-				Server.Start();
-			}, TaskCreationOptions.LongRunning);
-			Task.Factory.StartNew(() =>
-				{
-					new Client(System.Net.IPAddress.IPv6Loopback, true, false);
-				}, TaskCreationOptions.LongRunning);
-			// dale jsou clienti
-			Task.Factory.StartNew(() =>
-			{
-				new Client(System.Net.IPAddress.IPv6Loopback, false, false);
-			}, TaskCreationOptions.LongRunning);
-			Task.Factory.StartNew(() =>
-			{
-				new Client(System.Net.IPAddress.IPv6Loopback, false, false);
-			}, TaskCreationOptions.LongRunning);
-			//Task.Factory.StartNew(() =>
-			//{
-			//	new Client(System.Net.IPAddress.IPv6Loopback, false, false);
-			//}, TaskCreationOptions.LongRunning);
 		}
 
 		private void buttonExit_Click(object sender, EventArgs e)
@@ -80,20 +68,12 @@ namespace Bomberman
 
 		private void buttonSingleplayer_Click(object sender, EventArgs e)
 		{
-			//Program.playground = new Playground();
-			//initGraphicPlayground();
-			//splitContainerMenu.Visible = false;
-			//panel1.Visible = true;
-
+			StartGame(1);
 			splitContainerMenu.Visible = false;
-			panel1.Visible = true;
+			panelGameInfo.Visible = true;
 			Program.playing = true;
 			UpdatePictureBoxMovements();
 			panelGame.Select();
-			Task.Factory.StartNew(() =>
-			{
-				new Client(System.Net.IPAddress.IPv6Loopback, true, true);
-			}, TaskCreationOptions.LongRunning);
 		}
 
 		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
@@ -128,7 +108,6 @@ namespace Bomberman
 			{
 				panelGame.Controls.Add(p);
 			}
-
 		}
 
 		internal static void updatePictureBox()
@@ -214,7 +193,7 @@ namespace Bomberman
 				case Square.Fire:
 					return Properties.Resources.Fire;
 				default:
-					// error
+					// TODO error
 					return null;
 			}
 		}
@@ -243,14 +222,17 @@ namespace Bomberman
 		{
 			if (Program.playing)
 			{
-				//player.ProcessKeyPress(e.KeyCode);
 				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
-				UpdateFutureMoves(movement);
-				player.ProcessMovement(movement);
+				if (!waiting)
+				{
+					UpdateFutureMoves(movement);
+					player.ProcessMovement(movement);
+				}
 			}
 		}
 		Movement[] futureMovements = new Movement[2];
 		int indexFutureMovements = 0;
+		internal static bool waiting = false;
 		private void UpdateFutureMoves(Movement movement)
 		{
 			switch (movement)
@@ -292,6 +274,7 @@ namespace Bomberman
 			indexFutureMovements = 0;
 			futureMovements[0] = Movement.Nothing;
 			futureMovements[1] = Movement.Nothing;
+			waiting = true;
 		}
 		internal void SetAvatar()
 		{
@@ -302,6 +285,59 @@ namespace Bomberman
 			else if (position == new Point(Playground.playgroundSize - 2,1)) image = Properties.Resources.Player_3;
 			else image = Properties.Resources.Player_4;
 			this.pictureBoxAvatar.Image = image;
+		}
+
+		private void radioButtonServer_CheckedChanged(object sender, EventArgs e)
+		{
+			textBoxIP.Enabled = !radioButtonServer.Checked;
+			groupBoxPlayersCount.Enabled = radioButtonServer.Checked;
+		}
+
+		private void buttonStart_Click(object sender, EventArgs e)
+		{
+			if (radioButtonServer.Checked)
+			{
+				int playersCount;
+				if (radioButton1.Checked) playersCount = 1;
+				else if (radioButton2.Checked) playersCount = 2;
+				else if (radioButton3.Checked) playersCount = 3;
+				else playersCount = 4;
+				StartGame(playersCount);
+			}
+			else
+			{
+				System.Net.IPAddress ip = System.Net.IPAddress.Parse(textBoxIP.Text); // TODO try catch
+				Task.Factory.StartNew(() =>
+				{
+					new Client(ip, true, true);
+				}, TaskCreationOptions.LongRunning);
+			}
+			splitContainerMenu.Visible = false;
+			panelGameInfo.Visible = true;
+			Program.playing = true;
+			UpdatePictureBoxMovements();
+			panelGame.Select();
+		}
+		private void StartGame(int playersCount)
+		{
+			Program.playground = new Playground();
+			initGraphicPlayground();
+			Task.Factory.StartNew(() =>
+			{
+				Server.Start();
+			}, TaskCreationOptions.LongRunning);
+
+			Task.Factory.StartNew(() =>
+			{
+				new Client(System.Net.IPAddress.IPv6Loopback, true, false);
+			}, TaskCreationOptions.LongRunning);
+			for (int i = 0; i < (4 - playersCount); i++)
+			{
+				Task.Factory.StartNew(() =>
+				{
+					new Client(System.Net.IPAddress.IPv6Loopback, false, false);
+				}, TaskCreationOptions.LongRunning);
+			}
 		}
 	}
 }

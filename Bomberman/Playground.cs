@@ -138,7 +138,6 @@ namespace Bomberman
 			SetFire(new Point(location.X, location.Y - 1), false);
 			SetFire(new Point(location.X + 1, location.Y), false);
 			SetFire(new Point(location.X, location.Y + 1), false);
-			//board[location.X][location.Y] = Square.Empty;
 		}
 		private void SetFire(Point location, bool center)
 		{

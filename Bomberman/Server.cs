@@ -19,7 +19,6 @@ namespace Bomberman
 		static List<Connection> clientAI = new List<Connection>();
 		static List<Connection> clientPlayers = new List<Connection>();
 		static ManualResetEvent allDone;
-		static ManualResetEvent getMoves = new ManualResetEvent(false);
 		static System.Timers.Timer updateTimer = new System.Timers.Timer(1000);
 
 		public static void Start()
@@ -105,6 +104,7 @@ namespace Bomberman
 			{
 				connection.connectionWith.Close();
 				// TODO error spadlo spojeni
+				// dodelat poslani spadleho spojeni
 			}
 		}
 		private static void ProcessCommand(string command, Connection connection)
@@ -119,7 +119,6 @@ namespace Bomberman
 					break;
 			}
 		}
-		//static int playersPlayed = 0;
 		static Queue<FutureMove> futureMoves = new Queue<FutureMove>();
 		private static void AddMove(string[] moves, Connection connection)
 		{
@@ -136,7 +135,7 @@ namespace Bomberman
 			movement = (Movement)int.Parse(moves[2]);
 			futureMoves.Enqueue(new FutureMove(movement, connection));
 			//if (futureMoves.Count == clients.Count * 2) ProcessMove();
-			if (futureMoves.Count == clientPlayers.Count * 2) ProcessMove();
+			if (futureMoves.Count == clientPlayers.Count * 2) ProcessMove();  // for testing
 		}
 		private static void ProcessMove()
 		{
@@ -168,6 +167,7 @@ namespace Bomberman
 				SendPlayground(clientUpdate[i]);
 			}
 			Form1.updatePictureBox();
+			Form1.waiting = false;
 		}
 		internal static void Dead(Point location)
 		{
@@ -183,7 +183,14 @@ namespace Bomberman
 			clients.Remove(connection);
 			clientAI.Remove(connection);
 			clientPlayers.Remove(connection);
-			clientUpdate.Remove(connection); // TODO nechat pro sledovani?
+			//clientUpdate.Remove(connection); // TODO nechat pro sledovani?
+		}
+		private static void SendAll(string msg)
+		{
+			for (int i = 0; i < clientUpdate.Count; i++)
+			{
+				Send(msg, clientUpdate[i]);
+			}
 		}
 		private static void Send(string msg, Connection connection)
 		{

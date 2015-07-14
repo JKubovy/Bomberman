@@ -124,6 +124,27 @@ Hlavní úkol je zabít zbylé tři protivníky bombami, které můžete poklád
 Autor: Jan Kubový
 Vytvoření: červenec 2015</value>
   </data>
+  <data name="Controls_Text" xml:space="preserve">
+    <value>dodelat</value>
+  </data>
+  <data name="Info_Avatar" xml:space="preserve">
+    <value>Vaše postava:</value>
+  </data>
+  <data name="Info_NextMoves" xml:space="preserve">
+    <value>Další tahy:</value>
+  </data>
+  <data name="Info_Player1" xml:space="preserve">
+    <value>Hráč 1:</value>
+  </data>
+  <data name="Info_Player2" xml:space="preserve">
+    <value>Hráč 2:</value>
+  </data>
+  <data name="Info_Player3" xml:space="preserve">
+    <value>Hráč 3:</value>
+  </data>
+  <data name="Info_Player4" xml:space="preserve">
+    <value>Hráč 4:</value>
+  </data>
   <data name="Menu_About" xml:space="preserve">
     <value>O hře</value>
   </data>
@@ -138,5 +159,11 @@ Vytvoření: červenec 2015</value>
   </data>
   <data name="Menu_Singleplayer" xml:space="preserve">
     <value>Hra pro jednoho</value>
+  </data>
+  <data name="Multiplayer_PlayersCount" xml:space="preserve">
+    <value>Počet hráčů:</value>
+  </data>
+  <data name="Multiplayer_Start" xml:space="preserve">
+    <value>Začít</value>
   </data>
 </root>

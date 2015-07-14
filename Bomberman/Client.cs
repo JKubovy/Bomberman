@@ -50,7 +50,7 @@ namespace Bomberman
 				{
 					response = reader.ReadLine();
 					tokens = response.Split(' ');
-					RecivePlayground(tokens);
+					ProcessPlayground(tokens);
 				}
 				if (user)
 				{
@@ -60,37 +60,8 @@ namespace Bomberman
 				StartListening();
 			}
 		}
-		//private async void RecivePlayground(int size)
-		//{
-		//	string data;
-		//	if (Program.playground == null || Program.playground.board.Length != size)
-		//	{
-		//		Program.playground = new Playground(size);
-		//		Form form1 = Application.OpenForms[0];
-		//		((Form1)form1).initGraphicPlayground();
-		//	}
-		//	for (int i = 0; i < size; i++)
-		//	{
-		//		data = await reader.ReadLineAsync();
-		//		//data = reader.ReadLine();
-		//		string[] tokens = data.Split(' ');
-		//		for (int j = 0; j < size; j++)
-		//		{
-		//			Program.playground.board[i][j] = (Square)int.Parse(tokens[j]);
-		//		}
-		//	}
-		//	data = await reader.ReadLineAsync();
-		//	if (data == "End")
-		//	{
-		//		Form1.updatePictureBox();
-		//		return;
-		//	}
-		//	else
-		//	{
-		//		// TODO error
-		//	}
-		//}
-		private void RecivePlayground(string[] data)
+
+		private void ProcessPlayground(string[] data)
 		{
 			int size = int.Parse(data[1]);
 			if (Program.playground == null || Program.playground.board.Length != size)
@@ -107,6 +78,7 @@ namespace Bomberman
 				}
 			}
 			Form1.updatePictureBox();
+			Form1.waiting = false;
 		}
 		private void StartListening()
 		{
@@ -149,8 +121,7 @@ namespace Bomberman
 					// TODO vypocitat a poslat tahy
 					break;
 				case "Playground":
-					//RecivePlayground(int.Parse(tokens[1]));
-					RecivePlayground(tokens);
+					ProcessPlayground(tokens);
 					break;
 				default:
 					break;

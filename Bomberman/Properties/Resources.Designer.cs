@@ -264,6 +264,15 @@ namespace Bomberman.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dodelat.
+        /// </summary>
+        internal static string Controls_Text {
+            get {
+                return ResourceManager.GetString("Controls_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Empty {
@@ -280,6 +289,60 @@ namespace Bomberman.Properties {
             get {
                 object obj = ResourceManager.GetObject("Fire", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your avatar:.
+        /// </summary>
+        internal static string Info_Avatar {
+            get {
+                return ResourceManager.GetString("Info_Avatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next moves:.
+        /// </summary>
+        internal static string Info_NextMoves {
+            get {
+                return ResourceManager.GetString("Info_NextMoves", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player 1:.
+        /// </summary>
+        internal static string Info_Player1 {
+            get {
+                return ResourceManager.GetString("Info_Player1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player 2:.
+        /// </summary>
+        internal static string Info_Player2 {
+            get {
+                return ResourceManager.GetString("Info_Player2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player 3:.
+        /// </summary>
+        internal static string Info_Player3 {
+            get {
+                return ResourceManager.GetString("Info_Player3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player 4:.
+        /// </summary>
+        internal static string Info_Player4 {
+            get {
+                return ResourceManager.GetString("Info_Player4", resourceCulture);
             }
         }
         
@@ -325,6 +388,24 @@ namespace Bomberman.Properties {
         internal static string Menu_Singleplayer {
             get {
                 return ResourceManager.GetString("Menu_Singleplayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of players:.
+        /// </summary>
+        internal static string Multiplayer_PlayersCount {
+            get {
+                return ResourceManager.GetString("Multiplayer_PlayersCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string Multiplayer_Start {
+            get {
+                return ResourceManager.GetString("Multiplayer_Start", resourceCulture);
             }
         }
         
