@@ -18,6 +18,12 @@ namespace Bomberman
 		private StreamReader reader;
 		internal Point position;
 
+		/// <summary>
+		/// Start new Client and connect it to server
+		/// </summary>
+		/// <param name="ip">IP address of server in local network</param>
+		/// <param name="user">boolean represent if client control user</param>
+		/// <param name="update">boolean represent if client want to recieve updates</param>
 		public Client(IPAddress ip, bool user, bool update)
 		{
 			server = new TcpClient(AddressFamily.InterNetworkV6);
@@ -33,9 +39,9 @@ namespace Bomberman
 			Handshake(update, user);
 		}
 		/// <summary>
-		/// 
+		/// Start comunicate with server
 		/// </summary>
-		/// <param name="update">Boolean if client want to recive updates of playground</param>
+		/// <param name="update">Boolean if client want to recive updates</param>
 		/// <param name="user">Boolean if client is user</param>
 		private void Handshake(bool update, bool user)
 		{
@@ -93,6 +99,12 @@ namespace Bomberman
 				{
 					// TODO error
 				}
+				// TESTING
+				catch (TaskCanceledException)
+				{
+					break;
+				}
+				// TESTING
 			}
 		}
 		private Point getPosition(string number)
@@ -123,9 +135,14 @@ namespace Bomberman
 				case "Playground":
 					ProcessPlayground(tokens);
 					break;
+				case "Change":
+					ProcessChange(tokens);
+					break;
 				case "Update":
 					ProcessUpdate(tokens);
 					break;
+				case "Stop":
+					throw new TaskCanceledException();
 				default:
 					break;
 			}
@@ -188,6 +205,15 @@ namespace Bomberman
 			futureMoves[0] = Movement.Nothing;
 			futureMoves[1] = Movement.Nothing;
 			indexFutureMoves = 0;
+		}
+		private void ProcessChange(string[] tokens)
+		{
+			for (int i = 0; i < int.Parse(tokens[1]); i++)
+			{
+				Program.playground.board[int.Parse(tokens[i*3+2])][int.Parse(tokens[i*3+3])] = (Square)int.Parse(tokens[i*3+4]);
+			}
+			Form1.updatePictureBox();
+			Form1.waiting = false;
 		}
 		private void ProcessUpdate(string[] tokens)
 		{

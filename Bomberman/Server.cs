@@ -21,6 +21,9 @@ namespace Bomberman
 		static ManualResetEvent allDone;
 		static System.Timers.Timer updateTimer = new System.Timers.Timer(1000);
 
+		/// <summary>
+		/// Start server and begin accepting clients
+		/// </summary>
 		public static void Start()
 		{
 			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTick);
@@ -44,7 +47,6 @@ namespace Bomberman
 			Connection connection = new Connection(client);
 			Handshake(connection);
 		}
-
 		private static async void Handshake(Connection connection)
 		{
 			string line = await connection.reader.ReadLineAsync();
@@ -78,7 +80,6 @@ namespace Bomberman
 				StartListening(connection);
 			}
 		}
-
 		private static void SendInitUpdate()
 		{
 			for (int i = 0; i < clients.Count; i++)
@@ -94,7 +95,6 @@ namespace Bomberman
 				}
 			}
 		}
-
 		private static void SendPlayground(Connection connection)
 		{
 			StringBuilder sb = new StringBuilder("Playground " + Playground.playgroundSize + " ");
@@ -108,7 +108,16 @@ namespace Bomberman
 			string data = sb.ToString();
 			Send(data, connection);
 		}
-
+		private static void SendChanges(Connection connection)
+		{
+			StringBuilder sb = new StringBuilder("Change " + GameLogic.changes.Count + " ");
+			for (int i = 0; i < GameLogic.changes.Count; i++)
+			{
+				Change change = GameLogic.changes[i];
+				sb.Append(change.coordinate.X + " " + change.coordinate.Y + " " + (int)change.square + " ");
+			}
+			connection.writer.WriteLine(sb.ToString());
+		}
 		private static async void StartListening(Connection connection)
 		{
 			string line;
@@ -122,11 +131,13 @@ namespace Bomberman
 			}
 			catch (System.IO.IOException)
 			{
+				//TESTING
+				//Send("Stop", clientAI[0]);
+				//TESTING
 				clientUpdate.Remove(connection);
+				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
 				connection.connectionWith.Close();
-				// TODO error spadlo spojeni
-				// dodelat poslani spadleho spojeni
 			}
 		}
 		private static void ProcessCommand(string command, Connection connection)
@@ -171,8 +182,10 @@ namespace Bomberman
 			Program.playground.UpdateBombsFire();
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
-				SendPlayground(clientUpdate[i]);
+				//SendPlayground(clientUpdate[i]);
+				SendChanges(clientUpdate[i]);
 			}
+			GameLogic.changes.Clear();
 			Form1.updatePictureBox();
 			for (int i = 0; i < moveCount; i++)
 			{
@@ -191,6 +204,18 @@ namespace Bomberman
 			Form1.updatePictureBox();
 			Form1.waiting = false;
 		}
+		private static void Clean(Connection connection)
+		{
+			clients.Remove(connection);
+			clientAI.Remove(connection);
+			clientPlayers.Remove(connection);
+			Program.playground.board[connection.position.X][connection.position.Y] = Square.Empty;
+			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
+		}
+		/// <summary>
+		/// Find out who died on given location and send update
+		/// </summary>
+		/// <param name="location">Coordinate of dead</param>
 		internal static void Dead(Point location)
 		{
 			Connection connection = clients[0]; // just init value
@@ -203,10 +228,7 @@ namespace Bomberman
 				}
 			}
 			SendUpdate("Update " + connection.playerNumber + " Dead");
-			clients.Remove(connection);
-			clientAI.Remove(connection);
-			clientPlayers.Remove(connection);
-			//clientUpdate.Remove(connection); // TODO nechat pro sledovani?
+			Clean(connection);
 		}
 		private static void SendAll(string msg)
 		{

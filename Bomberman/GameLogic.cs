@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
 
@@ -25,6 +26,16 @@ namespace Bomberman
 		{
 			this.connection = connection;
 			this.movement = movement;
+		}
+	}
+	class Change
+	{
+		public Point coordinate;
+		public Square square;
+		public Change(Point coordinate, Square square)
+		{
+			this.coordinate = coordinate;
+			this.square = square;
 		}
 	}
 	class GameLogic
@@ -144,6 +155,8 @@ namespace Bomberman
 					return square;
 			}
 		}
+
+		internal static List<Change> changes = new List<Change>();
 		private static void Move(Playground playground, Point oldLocation, Point newLocation)
 		{
 			Square oldSquare = playground.board[oldLocation.X][oldLocation.Y];
@@ -152,14 +165,23 @@ namespace Bomberman
 				(oldSquare >= Square.Bomb_3_1 && oldSquare <= Square.Bomb_3_4))
 			{
 				playground.board[newLocation.X][newLocation.Y] = GetPlayerSquare(oldSquare);
+				changes.Add(new Change(new Point(newLocation.X, newLocation.Y), playground.board[newLocation.X][newLocation.Y]));
 				playground.board[oldLocation.X][oldLocation.Y] = GetBombSquare(playground.board[oldLocation.X][oldLocation.Y]);
+				changes.Add(new Change(new Point(oldLocation.X, oldLocation.Y), playground.board[oldLocation.X][oldLocation.Y]));
 			}
 			else
 			{
 				playground.board[newLocation.X][newLocation.Y] = playground.board[oldLocation.X][oldLocation.Y];
+				changes.Add(new Change(new Point(newLocation.X, newLocation.Y), playground.board[newLocation.X][newLocation.Y]));
 				playground.board[oldLocation.X][oldLocation.Y] = Square.Empty;
+				changes.Add(new Change(new Point(oldLocation.X, oldLocation.Y), Square.Empty));
 			}
 		}
+		/// <summary>
+		/// Return coordinates on playground
+		/// </summary>
+		/// <param name="number">player's number</param>
+		/// <returns>coordinates on playground</returns>
 		internal static Point GetStartPosition(string number)
 		{
 			switch (number)
@@ -203,6 +225,11 @@ namespace Bomberman
 			if (Program.playground.board[position.X][position.Y] == Square.Empty) return true;
 			else return false;
 		}
+		/// <summary>
+		/// Get Movement which coresponding pressed key
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		internal static Movement ProcessKeyPress(Keys key)
 		{
 			Point position = Form1.player.position;
@@ -238,6 +265,10 @@ namespace Bomberman
 			}
 			return movement;
 		}
+		/// <summary>
+		/// Get local IP address of current computer
+		/// </summary>
+		/// <returns>IP address</returns>
 		internal static string GetLanIP()
 		{
 			string strHostName = System.Net.Dns.GetHostName();
