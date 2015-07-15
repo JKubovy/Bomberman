@@ -76,10 +76,11 @@ namespace Bomberman
 			panelGame.Select();
 		}
 
-		private static PictureBox[][] screen = new PictureBox[Playground.playgroundSize][];
+		private static PictureBox[][] screen;
 		internal static Client player;
 		internal void initGraphicPlayground()
 		{
+			if (screen == null) screen = new PictureBox[Playground.playgroundSize][];
 			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
 				screen[i] = new PictureBox[Playground.playgroundSize];

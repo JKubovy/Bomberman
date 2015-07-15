@@ -176,7 +176,7 @@ namespace Bomberman
 			for (int i = 0; i < moveCount; i++)
 			{
 				FutureMove futureMove = futureMoves.Dequeue();
-				GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+				GameLogic.Process(futureMove.movement, futureMove.connection);
 				futureMoves.Enqueue(futureMoves.Dequeue());
 			}
 			Program.playground.UpdateBombsFire();
@@ -190,7 +190,7 @@ namespace Bomberman
 			for (int i = 0; i < moveCount; i++)
 			{
 				FutureMove futureMove = futureMoves.Dequeue();
-				GameLogic.Process(Program.playground, futureMove.movement, futureMove.connection);
+				GameLogic.Process(futureMove.movement, futureMove.connection);
 			}
 			Program.playground.UpdateBombsFire();
 			updateTimer.Enabled = true;

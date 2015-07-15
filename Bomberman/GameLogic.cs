@@ -47,9 +47,9 @@ namespace Bomberman
 		/// <param name="movement">Array of moves by players</param>
 		/// <param name="connection"></param>
 		/// <returns>Updated playground</returns>
-		internal static Playground Process(Playground playground, Movement movement, Connection connection)
+		internal static Playground Process(Movement movement, Connection connection)
 		{
-			//Playground outPlayground = playground;
+			Playground playground = Program.playground;
 			if (playground.board[connection.position.X][connection.position.Y] == Square.Fire) return playground;
 			switch (movement)
 			{

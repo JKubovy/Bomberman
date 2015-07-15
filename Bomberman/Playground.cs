@@ -34,7 +34,7 @@ namespace Bomberman
 
 	class Playground
 	{
-		public static int playgroundSize = 7; // must be greater or eaqual to 7! 14
+		public static int playgroundSize = 14; // must be greater or eaqual to 7! 14
 		public Square[][] board;
 		private Queue<Point> bombs = new Queue<Point>();
 		private Queue<Point> fire = new Queue<Point>();
