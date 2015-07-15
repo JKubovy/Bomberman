@@ -34,7 +34,7 @@ namespace Bomberman
 
 	class Playground
 	{
-		public static int playgroundSize = 14; // must be greater or eaqual to 7! 14
+		public static int playgroundSize = 7; // must be greater or eaqual to 7! 14
 		public Square[][] board;
 		private Queue<Point> bombs = new Queue<Point>();
 		private Queue<Point> fire = new Queue<Point>();
@@ -67,7 +67,11 @@ namespace Bomberman
 			for (int i = 0; i < fireCount; i++)
 			{
 				Point location = fire.Dequeue();
-				if (board[location.X][location.Y] == Square.Fire) board[location.X][location.Y] = Square.Empty;
+				if (board[location.X][location.Y] == Square.Fire)
+				{
+					board[location.X][location.Y] = Square.Empty;
+					GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Empty));
+				}
 			}
 			int bombCount = bombs.Count;
 			for (int i = 0; i < bombCount; i++)
@@ -77,6 +81,7 @@ namespace Bomberman
 				{
 					case Square.Bomb_1:
 						board[location.X][location.Y] = Square.Bomb_2;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_2));
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_2:
@@ -89,34 +94,42 @@ namespace Bomberman
 					//	break;
 					case Square.Player_1:
 						board[location.X][location.Y] = Square.Bomb_1_1;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_1_1));
 						bombs.Enqueue(location);
 						break;
 					case Square.Player_2:
 						board[location.X][location.Y] = Square.Bomb_1_2;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_1_2));
 						bombs.Enqueue(location);
 						break;
 					case Square.Player_3:
 						board[location.X][location.Y] = Square.Bomb_1_3;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_1_3));
 						bombs.Enqueue(location);
 						break;
 					case Square.Player_4:
 						board[location.X][location.Y] = Square.Bomb_1_4;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_1_4));
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_1_1:
 						board[location.X][location.Y] = Square.Bomb_2_1;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_2_1));
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_1_2:
 						board[location.X][location.Y] = Square.Bomb_2_2;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_2_2));
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_1_3:
 						board[location.X][location.Y] = Square.Bomb_2_3;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_2_3));
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_1_4:
 						board[location.X][location.Y] = Square.Bomb_2_4;
+						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_2_4));
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_2_1:
@@ -125,6 +138,12 @@ namespace Bomberman
 					case Square.Bomb_2_4:
 						Explode(location);
 						break;
+					//case Square.Bomb_3_1:
+					//case Square.Bomb_3_2:
+					//case Square.Bomb_3_3:
+					//case Square.Bomb_3_4:
+					//	Explode(location);
+					//	break;
 					default:
 						bombs.Enqueue(location);
 						break;
@@ -139,6 +158,11 @@ namespace Bomberman
 			SetFire(new Point(location.X + 1, location.Y), false);
 			SetFire(new Point(location.X, location.Y + 1), false);
 		}
+		/// <summary>
+		/// Set fire to location if it is possible
+		/// </summary>
+		/// <param name="location"></param>
+		/// <param name="center">if the location is where the bomb explode</param>
 		private void SetFire(Point location, bool center)
 		{
 			Square squere = board[location.X][location.Y];
@@ -149,8 +173,12 @@ namespace Bomberman
 				(squere >= Square.Bomb_2_1 && squere <= Square.Bomb_2_4) ||
 				(squere >= Square.Bomb_3_1 && squere <= Square.Bomb_3_4)) Server.Dead(location);
 			board[location.X][location.Y] = Square.Fire;
+			GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Fire));
 			fire.Enqueue(location);
 		}
+		/// <summary>
+		/// Set borders and corners with players
+		/// </summary>
 		private void InitPlayground()
 		{
 			#region Borders
@@ -211,6 +239,9 @@ namespace Bomberman
 				InitPlaygroundCenter();
 			} while (!CheckFeasibility());
 		}
+		/// <summary>
+		/// Set randomly rest of board
+		/// </summary>
 		private void InitPlaygroundCenter()
 		{
 			Random random = new Random();

@@ -49,7 +49,8 @@ namespace Bomberman
 		/// <returns>Updated playground</returns>
 		internal static Playground Process(Playground playground, Movement movement, Connection connection)
 		{
-			Playground outPlayground = playground;
+			//Playground outPlayground = playground;
+			if (playground.board[connection.position.X][connection.position.Y] == Square.Fire) return playground;
 			switch (movement)
 			{
 				case Movement.Up:
