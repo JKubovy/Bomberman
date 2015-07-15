@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -100,28 +97,11 @@ namespace Bomberman
 					// TODO error
 				}
 				// TESTING
-				catch (TaskCanceledException)
+				catch (TaskCanceledException) // Thread is canceled
 				{
 					break;
 				}
 				// TESTING
-			}
-		}
-		private Point getPosition(string number)
-		{
-			switch (number)
-			{
-				case "0":
-					return new Point(1, 1);
-				case "1":
-					return new Point(1, Playground.playgroundSize - 2);
-				case "2":
-					return new Point(Playground.playgroundSize - 2, 1);
-				case "3":
-					return new Point(Playground.playgroundSize - 2, Playground.playgroundSize - 2);
-				default:
-					// TODO error
-					return new Point();
 			}
 		}
 		private void ProcessCommand(string command)
