@@ -200,32 +200,6 @@ namespace Bomberman
 					return new Point();
 			}
 		}
-		internal static bool ValidMovement(Point position, Movement movement)
-		{
-			switch (movement)
-			{
-				case Movement.Up:
-					position.X--;
-					break;
-				case Movement.Left:
-					position.Y--;
-					break;
-				case Movement.Down:
-					position.X++;
-					break;
-				case Movement.Right:
-					position.Y++;
-					break;
-				case Movement.Plant_bomb:
-					if (Program.playground.board[position.X][position.Y] >= Square.Player_1 &&
-						Program.playground.board[position.X][position.Y] <= Square.Player_4) return true;
-					else return false;
-				default:
-					return false;
-			}
-			if (Program.playground.board[position.X][position.Y] == Square.Empty) return true;
-			else return false;
-		}
 		/// <summary>
 		/// Get Movement which coresponding pressed key
 		/// </summary>
@@ -283,5 +257,18 @@ namespace Bomberman
 			}
 			return "";
 		}
+		public readonly static Tuple<Movement, Movement>[] possibleDoubleMove = { new Tuple<Movement, Movement>(Movement.Up, Movement.Left),
+																				new Tuple<Movement, Movement>(Movement.Up, Movement.Up),
+																				new Tuple<Movement, Movement>(Movement.Up, Movement.Right),
+																				new Tuple<Movement, Movement>(Movement.Left, Movement.Up),
+																				new Tuple<Movement, Movement>(Movement.Left, Movement.Left),
+																				new Tuple<Movement, Movement>(Movement.Left, Movement.Down),
+																				new Tuple<Movement, Movement>(Movement.Down, Movement.Right),
+																				new Tuple<Movement, Movement>(Movement.Down, Movement.Down),
+																				new Tuple<Movement, Movement>(Movement.Down, Movement.Left),
+																				new Tuple<Movement, Movement>(Movement.Right, Movement.Up),
+																				new Tuple<Movement, Movement>(Movement.Right, Movement.Right),
+																				new Tuple<Movement, Movement>(Movement.Right, Movement.Down)
+																				};
 	}
 }

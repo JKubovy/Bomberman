@@ -244,7 +244,7 @@ namespace Bomberman
 		}
 		Movement[] futureMovements = new Movement[2];
 		int indexFutureMovements = 0;
-		internal static bool waiting = false;
+		internal static bool waiting = true;
 		private void UpdateFutureMoves(Movement movement)
 		{
 			switch (movement)

@@ -91,6 +91,7 @@ namespace Bomberman
 					SendUpdate("Update " + clients[i].playerNumber + " Alive");
 				}
 			}
+			SendUpdate("Start");
 		}
 		private static void SendPlayground(Connection connection)
 		{
@@ -153,19 +154,22 @@ namespace Bomberman
 		private static void AddMove(string[] moves, Connection connection)
 		{
 			if (!clients.Contains(connection)) return; // check if moves send regular client
-			if (futureMoves.Count == 0)
+			lock (futureMoves)
 			{
-				for (int i = 0; i < clientAI.Count; i++)
+				if (futureMoves.Count == 0)
 				{
-					clientAI[i].writer.WriteLine("SendMoves");
+					for (int i = 0; i < clientAI.Count; i++)
+					{
+						clientAI[i].writer.WriteLine("SendMoves");
+					}
 				}
+				Movement movement = (Movement)int.Parse(moves[1]);
+				futureMoves.Enqueue(new FutureMove(movement, connection));
+				movement = (Movement)int.Parse(moves[2]);
+				futureMoves.Enqueue(new FutureMove(movement, connection));
+				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				//if (futureMoves.Count == clientPlayers.Count * 2) ProcessMove();  // for testing
 			}
-			Movement movement = (Movement)int.Parse(moves[1]);
-			futureMoves.Enqueue(new FutureMove(movement, connection));
-			movement = (Movement)int.Parse(moves[2]);
-			futureMoves.Enqueue(new FutureMove(movement, connection));
-			//if (futureMoves.Count == clients.Count * 2) ProcessMove();
-			if (futureMoves.Count == clientPlayers.Count * 2) ProcessMove();  // for testing
 		}
 		private static void ProcessMove()
 		{
