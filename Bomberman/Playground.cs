@@ -275,7 +275,7 @@ namespace Bomberman
 		private bool CheckFeasibility()
 		{
 			bool[][] field = new bool[playgroundSize][];
-			Stack<Point> stack = new Stack<Point>();
+			Queue<Point> queue = new Queue<Point>();
 
 			for (int i = 0; i < playgroundSize; i++)
 			{
@@ -296,19 +296,19 @@ namespace Bomberman
 				field[i][playgroundSize - 1] = true;
 			}
 			field[1][1] = true;
-			stack.Push(new Point(1, 1));
+			queue.Enqueue(new Point(1, 1));
 			do
 			{
-				Point p = stack.Pop();
+				Point p = queue.Dequeue();
 				if ((field[p.X][p.Y + 1] == false) && (board[p.X][p.Y + 1] != Square.Unbreakable_Wall))
-					stack.Push(new Point(p.X, p.Y + 1)); field[p.X][p.Y + 1] = true;
+					queue.Enqueue(new Point(p.X, p.Y + 1)); field[p.X][p.Y + 1] = true;
 				if ((field[p.X + 1][p.Y] == false) && (board[p.X + 1][p.Y] != Square.Unbreakable_Wall))
-					stack.Push(new Point(p.X + 1, p.Y)); field[p.X + 1][p.Y] = true;
+					queue.Enqueue(new Point(p.X + 1, p.Y)); field[p.X + 1][p.Y] = true;
 				if ((field[p.X][p.Y - 1] == false) && (board[p.X][p.Y - 1] != Square.Unbreakable_Wall))
-					stack.Push(new Point(p.X, p.Y - 1)); field[p.X][p.Y - 1] = true;
+					queue.Enqueue(new Point(p.X, p.Y - 1)); field[p.X][p.Y - 1] = true;
 				if ((field[p.X - 1][p.Y] == false) && (board[p.X - 1][p.Y] != Square.Unbreakable_Wall))
-					stack.Push(new Point(p.X - 1, p.Y)); field[p.X - 1][p.Y] = true;
-			} while (stack.Count != 0);
+					queue.Enqueue(new Point(p.X - 1, p.Y)); field[p.X - 1][p.Y] = true;
+			} while (queue.Count != 0);
 			return (field[1][playgroundSize - 2] & field[playgroundSize - 2][1] & field[playgroundSize - 2][playgroundSize - 2]);
 		}
 	}

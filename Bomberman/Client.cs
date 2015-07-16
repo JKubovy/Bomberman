@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -59,6 +60,10 @@ namespace Bomberman
 				{
 					Form form1 = Application.OpenForms[0];
 					((Form1)form1).SetAvatar();
+				}
+				else
+				{
+					SetHeadingPoint();
 				}
 				StartListening();
 			}
@@ -120,6 +125,9 @@ namespace Bomberman
 					break;
 				case "Update":
 					ProcessUpdate(tokens);
+					break;
+				case "Start":
+					Form1.waiting = false;
 					break;
 				case "Stop":
 					throw new TaskCanceledException();
@@ -215,6 +223,187 @@ namespace Bomberman
 			{
 				// TODO error
 			}
+		}
+
+		Point heading;
+		bool enemyClose; 
+		Point[] players = new Point[4];
+		int[][] boardWithObstacles;
+		int[][] boardPossibleMovement;
+		private void PrepareBoardMovement()
+		{
+			boardWithObstacles = new int[Playground.playgroundSize][];
+			boardPossibleMovement = new int[Playground.playgroundSize][];
+			for (int i = 0; i < Playground.playgroundSize; i++)
+			{
+				boardWithObstacles[i] = new int[Playground.playgroundSize];
+				boardPossibleMovement[i] = new int[Playground.playgroundSize];
+			}
+			for (int i = 0; i < Playground.playgroundSize; i++)
+			{
+				for (int j = 0; j < Playground.playgroundSize; j++)
+				{
+					Square sqare = Program.playground.board[i][j];
+					if (sqare == Square.Unbreakable_Wall) boardWithObstacles[i][j] = -3;
+					else if (sqare == Square.Wall) boardWithObstacles[i][j] = -2;
+					else boardWithObstacles[i][j] = -1;
+
+					if (sqare == Square.Empty || sqare == Square.Fire) boardPossibleMovement[i][j] = -1;
+					else boardPossibleMovement[i][j] = -2;
+					FindPlayer(new Point(i, j));
+				}
+			}
+			boardWithObstacles[position.X][position.Y] = 0;
+			boardPossibleMovement[position.X][position.Y] = 0;
+			Queue<Point> queue = new Queue<Point>();
+			queue.Enqueue(new Point(position.X, position.Y));
+			do
+			{
+				Point p = queue.Dequeue();
+				#region Right
+				if (boardWithObstacles[p.X][p.Y + 1] == -2)
+				{
+					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X,p.Y + 1));
+				}
+				else if (boardWithObstacles[p.X][p.Y + 1] == -1)
+				{
+					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y];
+					queue.Enqueue(new Point(p.X, p.Y + 1));
+				}
+				else if (boardWithObstacles[p.X][p.Y + 1] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X][p.Y + 1] == Square.Wall)
+				{
+					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y] + 1;
+				}
+				else if (boardWithObstacles[p.X][p.Y + 1] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X][p.Y + 1] != Square.Wall)
+				{
+					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y];
+				}
+				#endregion
+				#region Down
+				if (boardWithObstacles[p.X + 1][p.Y] == -2)
+				{
+					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X + 1, p.Y));
+				}
+				else if (boardWithObstacles[p.X + 1][p.Y] == -1)
+				{
+					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y];
+					queue.Enqueue(new Point(p.X + 1, p.Y));
+				}
+				else if (boardWithObstacles[p.X + 1][p.Y] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X + 1][p.Y] == Square.Wall)
+				{
+					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
+				}
+				else if (boardWithObstacles[p.X + 1][p.Y] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X + 1][p.Y] != Square.Wall)
+				{
+					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y];
+				}
+				#endregion
+				#region Left
+				if (boardWithObstacles[p.X][p.Y - 1] == -2)
+				{
+					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X, p.Y - 1));
+				}
+				else if (boardWithObstacles[p.X][p.Y - 1] == -1)
+				{
+					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y];
+					queue.Enqueue(new Point(p.X, p.Y - 1));
+				}
+				else if (boardWithObstacles[p.X][p.Y - 1] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X][p.Y - 1] == Square.Wall)
+				{
+					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y] + 1;
+				}
+				else if (boardWithObstacles[p.X][p.Y - 1] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X][p.Y - 1] != Square.Wall)
+				{
+					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y];
+				}
+				#endregion
+				#region Up
+				if (boardWithObstacles[p.X - 1][p.Y] == -2)
+				{
+					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X - 1, p.Y));
+				}
+				else if (boardWithObstacles[p.X - 1][p.Y] == -1)
+				{
+					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y];
+					queue.Enqueue(new Point(p.X - 1, p.Y));
+				}
+				else if (boardWithObstacles[p.X - 1][p.Y] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X - 1][p.Y] == Square.Wall)
+				{
+					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
+				}
+				else if (boardWithObstacles[p.X - 1][p.Y] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X - 1][p.Y] != Square.Wall)
+				{
+					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y];
+				}
+				#endregion
+			} while (queue.Count != 0);
+			queue.Enqueue(new Point(position.X, position.Y));
+			do
+			{
+				Point p = queue.Dequeue();
+				if (boardPossibleMovement[p.X][p.Y + 1] == -1)
+				{
+					boardPossibleMovement[p.X][p.Y + 1] = boardPossibleMovement[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X, p.Y + 1));
+				}
+				if (boardPossibleMovement[p.X + 1][p.Y] == -1)
+				{
+					boardPossibleMovement[p.X + 1][p.Y] = boardPossibleMovement[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X + 1, p.Y));
+				}
+				if (boardPossibleMovement[p.X][p.Y - 1] == -1)
+				{
+					boardPossibleMovement[p.X][p.Y - 1] = boardPossibleMovement[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X, p.Y - 1));
+				}
+				if (boardPossibleMovement[p.X - 1][p.Y] == -1)
+				{
+					boardPossibleMovement[p.X - 1][p.Y] = boardPossibleMovement[p.X][p.Y] + 1;
+					queue.Enqueue(new Point(p.X - 1, p.Y));
+				}
+			} while (queue.Count != 0);
+		}
+		private void SetHeadingPoint()
+		{
+			PrepareBoardMovement();
+			int shortestPathObstacles = Playground.playgroundSize * Playground.playgroundSize;
+			int shortestPath = Playground.playgroundSize * Playground.playgroundSize;
+			for (int i = 0; i < 4; i++)
+			{
+				int tmp = boardWithObstacles[players[i].X][players[i].Y];
+				if (tmp != 0 && tmp < shortestPathObstacles)
+				{
+					shortestPathObstacles = tmp;
+					heading = players[i];
+				}
+				tmp = boardPossibleMovement[players[i].X][players[i].Y];
+				if (tmp != -2 && tmp != 0 && tmp < shortestPath)
+				{
+					shortestPath = tmp;
+				}
+			}
+			if (shortestPath <= 3) enemyClose = true;
+			else enemyClose = false;
+		}
+		/// <summary>
+		/// Save to players array location of player if he is on location
+		/// </summary>
+		/// <param name="location">coordinate on playground</param>
+		private void FindPlayer(Point location)
+		{
+			Square square = Program.playground.board[location.X][location.Y];
+			if (square == Square.Player_1 || square == Square.Bomb_1_1 || square == Square.Bomb_2_1 || square == Square.Bomb_3_1)
+				players[0] = location;
+			else if (square == Square.Player_2 || square == Square.Bomb_1_2 || square == Square.Bomb_2_2 || square == Square.Bomb_3_2)
+				players[1] = location;
+			else if (square == Square.Player_3 || square == Square.Bomb_1_3 || square == Square.Bomb_2_3 || square == Square.Bomb_3_3)
+				players[2] = location;
+			else if (square == Square.Player_4 || square == Square.Bomb_1_4 || square == Square.Bomb_2_4 || square == Square.Bomb_3_4)
+				players[3] = location;
 		}
 	}
 }
