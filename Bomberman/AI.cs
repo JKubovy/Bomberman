@@ -16,7 +16,6 @@ namespace Bomberman
 		int[][] boardPossibleMovement;
 		int[][] boardPossiblePath;
 		Stack<Point> path = new Stack<Point>();
-		Random r = new Random();
 		Queue<Movement> saveMovement = new Queue<Movement>();
 
 		public AI(Square character)
@@ -260,7 +259,7 @@ namespace Bomberman
 			{
 				return saveMovement.Dequeue();
 			}
-			Movement movement = (Movement)(r.Next(1, 6));
+			Movement movement = (Movement)(Program.random.Next(1, 6));
 			if (movement == Movement.Plant_bomb)
 			{
 				RunAway(position, position);

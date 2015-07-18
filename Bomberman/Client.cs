@@ -46,7 +46,7 @@ namespace Bomberman
 		private void Handshake(bool update, bool user)
 		{
 			string request = "Bomberman " + update + " " + user;
-			writer.WriteLine(request);
+			Send(request);
 			string response = reader.ReadLine();
 			string[] tokens = response.Split(' ');
 			if (tokens[0] == "ACK")

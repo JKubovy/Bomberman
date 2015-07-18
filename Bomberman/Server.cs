@@ -57,7 +57,7 @@ namespace Bomberman
 					clients.Add(connection);
 					connection.playerNumber = clients.Count;
 				}
-				connection.writer.WriteLine(response);
+				Send(response, connection);
 				if (tokens[1] == true.ToString()) // if client need updates
 				{
 					lock (clientUpdate) clientUpdate.Add(connection);
@@ -114,7 +114,7 @@ namespace Bomberman
 				Change change = GameLogic.changes[i];
 				sb.Append(change.coordinate.X + " " + change.coordinate.Y + " " + (int)change.square + " ");
 			}
-			connection.writer.WriteLine(sb.ToString());
+			Send(sb.ToString(), connection);
 		}
 		private static async void StartListening(Connection connection)
 		{
@@ -129,9 +129,6 @@ namespace Bomberman
 			}
 			catch (System.IO.IOException)
 			{
-				//TESTING
-				//Send("Stop", clientAI[0]);
-				//TESTING
 				clientUpdate.Remove(connection);
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
@@ -171,7 +168,7 @@ namespace Bomberman
 				{
 					for (int i = 0; i < clientAI.Count; i++)
 					{
-						clientAI[i].writer.WriteLine("SendMoves");
+						Send("SendMoves", clientAI[i]);
 					}
 				}
 				Movement movement = (Movement)int.Parse(moves[1]);
@@ -196,7 +193,6 @@ namespace Bomberman
 			Program.playground.UpdateBombsFire();
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
-				//SendPlayground(clientUpdate[i]);
 				SendChanges(clientUpdate[i]);
 			}
 			GameLogic.changes.Clear();
@@ -272,7 +268,22 @@ namespace Bomberman
 		}
 		private static void Send(string msg, Connection connection)
 		{
-			connection.writer.WriteLine(msg);
+			try
+			{
+				connection.writer.WriteLine(msg);
+			}
+			catch (System.IO.IOException) // client disconected
+			{
+				clientUpdate.Remove(connection);
+				Clean(connection);
+				SendUpdate("Update " + connection.playerNumber + " Disconected");
+				connection.connectionWith.Close();
+				lock (futureMoves)
+				{
+					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				}
+				return;
+			}
 		}
 	}
 }

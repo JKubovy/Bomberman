@@ -152,16 +152,15 @@ namespace Bomberman
 		private List<Point> currentFire = new List<Point>();
 		private void Explode(Point location)
 		{
-			//SetFire(location, true);
-			//SetFire(new Point(location.X - 1, location.Y), false);
-			//SetFire(new Point(location.X, location.Y - 1), false);
-			//SetFire(new Point(location.X + 1, location.Y), false);
-			//SetFire(new Point(location.X, location.Y + 1), false);
 			currentFire.Add(location);
 			AddFire(location);
 			SetFire();
 			currentFire.Clear();
 		}
+		/// <summary>
+		/// Add coodinates where will be fire to List currentFire
+		/// </summary>
+		/// <param name="location">Location of exploded bomb</param>
 		private void AddFire(Point location)
 		{
 			if (!currentFire.Contains(location)) currentFire.Add(location);
@@ -179,6 +178,10 @@ namespace Bomberman
 				else if (!currentFire.Contains(loc)) currentFire.Add(loc);
 			}
 		}
+		/// <summary>
+		/// Process every location in List currentFire
+		/// Change square state on playground and enqueue position to Queue fire
+		/// </summary>
 		private void SetFire()
 		{
 			foreach (Point location in currentFire)
@@ -193,27 +196,6 @@ namespace Bomberman
 				fire.Enqueue(location);
 			}
 		}
-		/// <summary>
-		/// Set fire to location if it is possible
-		/// </summary>
-		/// <param name="location"></param>
-		/// <param name="center">if the location is where the bomb explode</param>
-		private void SetFire(Point location, bool center)
-		{
-			Square squere = board[location.X][location.Y];
-			if (squere == Square.Unbreakable_Wall) return;
-			if ((!center) && (squere >= Square.Bomb_1 && squere <= Square.Bomb_3_4)) Explode(location);
-			if ((squere >= Square.Player_1 && squere <= Square.Player_4) ||
-				(squere >= Square.Bomb_1_1 && squere <= Square.Bomb_1_4) ||
-				(squere >= Square.Bomb_2_1 && squere <= Square.Bomb_2_4) ||
-				(squere >= Square.Bomb_3_1 && squere <= Square.Bomb_3_4)) Server.Dead(location);
-			board[location.X][location.Y] = Square.Fire;
-			GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Fire));
-			fire.Enqueue(location);
-		}
-		/// <summary>
-		/// Set borders and corners with players
-		/// </summary>
 		private void InitPlayground()
 		{
 			#region Borders
