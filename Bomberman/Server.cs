@@ -185,10 +185,7 @@ namespace Bomberman
 				futureMoves.Enqueue(new FutureMove(movement, connection));
 				lock (futureMoves)
 				{
-					if (futureMoves.Count > 0 && futureMoves.Count == clients.Count * 2)
-					{
-						ProcessMove();
-					}
+					if (futureMoves.Count == clients.Count * 2) ProcessMove();
 				}
 			}
 		}
@@ -208,6 +205,7 @@ namespace Bomberman
 			}
 			GameLogic.changes.Clear();
 			Form1.updatePictureBox();
+			moveCount = futureMoves.Count;
 			for (int i = 0; i < moveCount; i++)
 			{
 				FutureMove futureMove = futureMoves.Dequeue();
@@ -220,7 +218,7 @@ namespace Bomberman
 		{
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
-				SendPlayground(clientUpdate[i]);
+				SendChanges(clientUpdate[i]);
 			}
 			Form1.updatePictureBox();
 			if (clients.Count == 1) EndOfGame();
@@ -236,15 +234,17 @@ namespace Bomberman
 			clients.Remove(connection);
 			clientAI.Remove(connection);
 			clientPlayers.Remove(connection);
+			for (int i = 0; i < futureMoves.Count; i++)
+			{
+				FutureMove tmp = futureMoves.Dequeue();
+				if (tmp.connection != connection) futureMoves.Enqueue(tmp);
+			}
 			Program.playground.board[connection.position.X][connection.position.Y] = Square.Empty;
 			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
-			//lock (futureMoves)
-			//{
-			//	if (futureMoves.Count > 0 && futureMoves.Count == clients.Count * 2)
-			//	{
-			//		ProcessMove();
-			//	}
-			//}
+			lock (futureMoves)
+			{
+				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+			}
 		}
 		/// <summary>
 		/// Find out who died on given location and send update
@@ -292,13 +292,10 @@ namespace Bomberman
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
 				connection.connectionWith.Close();
-				//lock (futureMoves)
-				//{
-				//	if (futureMoves.Count > 0 && futureMoves.Count == clients.Count * 2)
-				//	{
-				//		ProcessMove();
-				//	}
-				//}
+				lock (futureMoves)
+				{
+					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				}
 				return;
 			}
 		}

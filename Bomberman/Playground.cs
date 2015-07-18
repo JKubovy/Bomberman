@@ -152,10 +152,13 @@ namespace Bomberman
 		private List<Point> currentFire = new List<Point>();
 		private void Explode(Point location)
 		{
-			currentFire.Add(location);
-			AddFire(location);
-			SetFire();
-			currentFire.Clear();
+			lock (currentFire)
+			{
+				currentFire.Add(location);
+				AddFire(location);
+				SetFire();
+				currentFire.Clear();
+			}
 		}
 		/// <summary>
 		/// Add coodinates where will be fire to List currentFire
