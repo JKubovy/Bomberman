@@ -1,6 +1,7 @@
 ﻿using System;
 //using System.ComponentModel;
 //using System.Data;
+using System.Threading;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -214,6 +215,11 @@ namespace Bomberman
 		{
 			if (Program.playing)
 			{
+				//if (e.KeyCode == Keys.Escape)
+				//{
+				//	Stop();
+				//	return;
+				//}
 				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
 				if (!waiting & alive)
 				{
@@ -321,15 +327,20 @@ namespace Bomberman
 			UpdatePictureBoxMovements();
 			panelGame.Select();
 		}
-		System.Threading.CancellationTokenSource cancellation = new System.Threading.CancellationTokenSource();
+		//System.Threading.CancellationTokenSource cancellation = new System.Threading.CancellationTokenSource();
+		Thread server;
 		private void StartGame(int playersCount)
 		{
 			Program.playground = new Playground();
 			initGraphicPlayground();
-			Task.Factory.StartNew( () =>
-			{
-				Server.Start();
-			}, TaskCreationOptions.LongRunning);
+			//Task.Factory.StartNew( () =>
+			//{
+			//	Server.Start();
+			//}, TaskCreationOptions.LongRunning);
+
+			server = new Thread(() => Server.Start());
+			server.IsBackground = true;
+			server.Start();
 
 			Task.Factory.StartNew(() =>
 			{
@@ -342,6 +353,22 @@ namespace Bomberman
 					new Client(System.Net.IPAddress.IPv6Loopback, false, false);
 				}, TaskCreationOptions.LongRunning);
 			}
+		}
+		private void Stop()
+		{
+			if (server == null)
+			{
+				player.Stop();
+			}
+			else
+			{
+				Server.Stop();
+				server.Abort();
+			}
+			Program.playing = false;
+			waiting = true;
+			panelGameInfo.Visible = false;
+			splitContainerMenu.Visible = true;
 		}
 	}
 }

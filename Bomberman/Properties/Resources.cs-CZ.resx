@@ -160,7 +160,7 @@ Bomba exploduje 2. tah od položení.</value>
     <value>Ovládání</value>
   </data>
   <data name="Menu_Exit" xml:space="preserve">
-    <value>Vypnout</value>
+    <value>Ukončit</value>
   </data>
   <data name="Menu_Multiplayer" xml:space="preserve">
     <value>Hra pro více hráčů</value>

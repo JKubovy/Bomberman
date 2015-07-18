@@ -11,7 +11,7 @@ namespace Bomberman
 {
 	class Client
 	{
-		internal Point position;
+		internal Point position; // TODO change to Property
 
 		private TcpClient server;
 		private StreamWriter writer;
@@ -211,6 +211,7 @@ namespace Bomberman
 		}
 		private void ProcessUpdate(string[] tokens)
 		{
+			if (tokens.Length != 3) return;
 			Form form1 = Application.OpenForms[0];
 			Control[] controls = form1.Controls.Find("labelInfoPlayer" + tokens[1], true);
 			Label label = (Label)controls[0];
@@ -237,6 +238,10 @@ namespace Bomberman
 				ProcessUpdate(new string[] { "", i.ToString(), "Disconected" });
 			}
 			Form1.waiting = true;
+		}
+		internal void Stop()
+		{
+			server.Close();
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Drawing;
 using System.Threading;
 
@@ -11,6 +12,7 @@ namespace Bomberman
 {
 	class Server
 	{
+		static TcpListener listener;
 		static List<Connection> clients;
 		static List<Connection> clientUpdate;
 		static List<Connection> clientAI;
@@ -31,10 +33,11 @@ namespace Bomberman
 			clientPlayers = new List<Connection>();
 			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTick);
 			updateTimer.AutoReset = false;
-			TcpListener listener = TcpListener.Create(Program.port);
+			if (listener != null) listener.Stop();
+			listener = TcpListener.Create(Program.port);
 			listener.Start();
 			allDone = new ManualResetEvent(false);
-			listener.Start();
+			//listener.Start();
 			while (true)
 			{
 				allDone.Reset();
@@ -148,7 +151,7 @@ namespace Bomberman
 			{
 				clientUpdate.Remove(connection);
 				Clean(connection);
-				SendUpdate("Update " + connection.playerNumber + " AI_ERROR");
+				SendUpdate("Update " + connection.playerNumber + " Lost");
 				connection.connectionWith.Close();
 			}
 		}
@@ -182,7 +185,10 @@ namespace Bomberman
 				futureMoves.Enqueue(new FutureMove(movement, connection));
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+					if (futureMoves.Count > 0 && futureMoves.Count == clients.Count * 2)
+					{
+						ProcessMove();
+					}
 				}
 			}
 		}
@@ -232,10 +238,13 @@ namespace Bomberman
 			clientPlayers.Remove(connection);
 			Program.playground.board[connection.position.X][connection.position.Y] = Square.Empty;
 			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
-			lock (futureMoves)
-			{
-				if (futureMoves.Count == clients.Count * 2) ProcessMove();
-			}
+			//lock (futureMoves)
+			//{
+			//	if (futureMoves.Count > 0 && futureMoves.Count == clients.Count * 2)
+			//	{
+			//		ProcessMove();
+			//	}
+			//}
 		}
 		/// <summary>
 		/// Find out who died on given location and send update
@@ -283,11 +292,21 @@ namespace Bomberman
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
 				connection.connectionWith.Close();
-				lock (futureMoves)
-				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMove();
-				}
+				//lock (futureMoves)
+				//{
+				//	if (futureMoves.Count > 0 && futureMoves.Count == clients.Count * 2)
+				//	{
+				//		ProcessMove();
+				//	}
+				//}
 				return;
+			}
+		}
+		internal static void Stop()
+		{
+			for (int i = 0; i < clients.Count; i++)
+			{
+				Send("Stop", clients[i]);
 			}
 		}
 	}
