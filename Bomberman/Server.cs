@@ -138,8 +138,12 @@ namespace Bomberman
 				connection.connectionWith.Close();
 				if (futureMoves.Count == clients.Count * 2) ProcessMove();
 			}
-			catch (Exception)
+			catch (NullReferenceException)
 			{
+				clientUpdate.Remove(connection);
+				Clean(connection);
+				SendUpdate("Update " + connection.playerNumber + " AI_ERROR");
+				connection.connectionWith.Close();
 			}
 		}
 		private static void ProcessCommand(string command, Connection connection)
@@ -172,7 +176,6 @@ namespace Bomberman
 				movement = (Movement)int.Parse(moves[2]);
 				futureMoves.Enqueue(new FutureMove(movement, connection));
 				if (futureMoves.Count == clients.Count * 2) ProcessMove();
-				//if (futureMoves.Count == clientPlayers.Count * 2) ProcessMove();  // for testing
 			}
 		}
 		private static void ProcessMove()
@@ -207,7 +210,13 @@ namespace Bomberman
 				SendPlayground(clientUpdate[i]);
 			}
 			Form1.updatePictureBox();
-			Form1.waiting = false;
+			if (clients.Count == 1) EndOfGame();
+			else Form1.waiting = false;
+		}
+
+		private static void EndOfGame()
+		{
+			SendUpdate("Update " + clients[0].playerNumber + " WINNER!");
 		}
 		private static void Clean(Connection connection)
 		{
@@ -216,6 +225,7 @@ namespace Bomberman
 			clientPlayers.Remove(connection);
 			Program.playground.board[connection.position.X][connection.position.Y] = Square.Empty;
 			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
+			if (futureMoves.Count == clients.Count * 2) ProcessMove();
 		}
 		/// <summary>
 		/// Find out who died on given location and send update
@@ -233,6 +243,7 @@ namespace Bomberman
 				}
 			}
 			SendUpdate("Update " + connection.playerNumber + " Dead");
+			Send("Dead", connection);
 			Clean(connection);
 		}
 		private static void SendAll(string msg)
@@ -248,7 +259,7 @@ namespace Bomberman
 			{
 				Send(msg, clientUpdate[i]);
 			}
-			Send(msg, clientPlayers[0]);
+			if (clientPlayers.Count != 0) Send(msg, clientPlayers[0]);
 		}
 		private static void Send(string msg, Connection connection)
 		{

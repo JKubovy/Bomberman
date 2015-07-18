@@ -128,7 +128,6 @@ namespace Bomberman
 				case Square.Bomb_3_4:
 					return Square.Bomb_3;
 				default:
-					// TODO error
 					return Square.Empty;
 			}
 		}
@@ -196,8 +195,7 @@ namespace Bomberman
 				case "3":
 					return new Point(Playground.playgroundSize - 2, Playground.playgroundSize - 2);
 				default:
-					// TODO error
-					return new Point();
+					return new Point();  //unsupported number of players
 			}
 		}
 		/// <summary>

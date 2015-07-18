@@ -125,7 +125,15 @@ Autor: Jan Kubový
 Vytvoření: červenec 2015</value>
   </data>
   <data name="Controls_Text" xml:space="preserve">
-    <value>dodelat</value>
+    <value>Bomberman je tahový hra, u které se volí dva tahy najednou.
+
+Pomocí šipek určujete směr pohybu a stisknutím mezery položíte bombu.
+Klávesou Backspace můžete zrušit zvolené tahy.
+Zvolené tahy potvrdíte klávesou Enter.
+Bomba exploduje 2. tah od položení.</value>
+  </data>
+  <data name="Error_IP" xml:space="preserve">
+    <value>Neplatná IP adresa</value>
   </data>
   <data name="Info_Avatar" xml:space="preserve">
     <value>Vaše postava:</value>
@@ -162,6 +170,9 @@ Vytvoření: červenec 2015</value>
   </data>
   <data name="Multiplayer_PlayersCount" xml:space="preserve">
     <value>Počet hráčů:</value>
+  </data>
+  <data name="Multiplayer_Size" xml:space="preserve">
+    <value>Velikost pole:</value>
   </data>
   <data name="Multiplayer_Start" xml:space="preserve">
     <value>Začít</value>

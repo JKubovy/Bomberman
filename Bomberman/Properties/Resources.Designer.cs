@@ -264,7 +264,12 @@ namespace Bomberman.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dodelat.
+        ///   Looks up a localized string similar to Bomberman is turn-based game where you choosing two steps at one time.
+        ///
+        ///Use arrows to choose direction of movement or press the Space bar to drop a bomb.
+        ///Press the Backspace to cancel last move.
+        ///By pressing Enter you confirm your moves.
+        ///Bomb explode in the second step move after planting..
         /// </summary>
         internal static string Controls_Text {
             get {
@@ -279,6 +284,15 @@ namespace Bomberman.Properties {
             get {
                 object obj = ResourceManager.GetObject("Empty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid IP address.
+        /// </summary>
+        internal static string Error_IP {
+            get {
+                return ResourceManager.GetString("Error_IP", resourceCulture);
             }
         }
         
@@ -397,6 +411,15 @@ namespace Bomberman.Properties {
         internal static string Multiplayer_PlayersCount {
             get {
                 return ResourceManager.GetString("Multiplayer_PlayersCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playground size:.
+        /// </summary>
+        internal static string Multiplayer_Size {
+            get {
+                return ResourceManager.GetString("Multiplayer_Size", resourceCulture);
             }
         }
         

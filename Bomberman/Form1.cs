@@ -12,6 +12,7 @@ namespace Bomberman
 		public Form1()
 		{
 			InitializeComponent();
+			numericUpDownSize.Value = 14;
 			SetText();
 			this.KeyPreview = true;
 		}
@@ -21,12 +22,13 @@ namespace Bomberman
 			this.textBoxIP.Text = GameLogic.GetLanIP();
 
 			this.labelAbout.Text = Properties.Resources.About_Text;
-			this.labelControls_Text.Text = Properties.Resources.Controls_Text;
+			this.labelControls.Text = Properties.Resources.Controls_Text;
 			this.labelInfoPlayer1.Text = Properties.Resources.Info_Player1;
 			this.labelInfoPlayer2.Text = Properties.Resources.Info_Player2;
 			this.labelInfoPlayer3.Text = Properties.Resources.Info_Player3;
 			this.labelInfoPlayer4.Text = Properties.Resources.Info_Player4;
 			this.labelPlayerCount.Text = Properties.Resources.Multiplayer_PlayersCount;
+			this.labelSize.Text = Properties.Resources.Multiplayer_Size;
 
 			this.buttonAbout.Text = Properties.Resources.Menu_About;
 			this.buttonControls.Text = Properties.Resources.Menu_Controls;
@@ -138,27 +140,6 @@ namespace Bomberman
 			switch (square)
 			{
 				case Square.Player_1:
-					break;
-				case Square.Player_2:
-					break;
-				case Square.Player_3:
-					break;
-				case Square.Player_4:
-					break;
-				case Square.Empty:
-					break;
-				case Square.Wall:
-					break;
-				case Square.Unbreakable_Wall:
-					break;
-				case Square.Fire:
-					break;
-				default:
-					break;
-			}
-			switch (square)
-			{
-				case Square.Player_1:
 					return Properties.Resources.Player_1;
 				case Square.Player_2:
 					return Properties.Resources.Player_2;
@@ -205,7 +186,6 @@ namespace Bomberman
 				case Square.Fire:
 					return Properties.Resources.Fire;
 				default:
-					// TODO error
 					return null;
 			}
 		}
@@ -232,11 +212,10 @@ namespace Bomberman
 
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.Escape) Close();
 			if (Program.playing)
 			{
 				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
-				if (!waiting)
+				if (!waiting & alive)
 				{
 					UpdateFutureMoves(movement);
 					player.ProcessMovement(movement);
@@ -246,6 +225,7 @@ namespace Bomberman
 		Movement[] futureMovements = new Movement[2];
 		int indexFutureMovements = 0;
 		internal static bool waiting = true;
+		internal static bool alive = true;
 		private void UpdateFutureMoves(Movement movement)
 		{
 			switch (movement)
@@ -303,6 +283,7 @@ namespace Bomberman
 		private void radioButtonServer_CheckedChanged(object sender, EventArgs e)
 		{
 			textBoxIP.Enabled = !radioButtonServer.Checked;
+			panelSize.Enabled = radioButtonServer.Checked;
 			groupBoxPlayersCount.Enabled = radioButtonServer.Checked;
 		}
 
@@ -311,6 +292,7 @@ namespace Bomberman
 			if (radioButtonServer.Checked)
 			{
 				int playersCount;
+				Playground.playgroundSize = (int)numericUpDownSize.Value;
 				if (radioButton1.Checked) playersCount = 1;
 				else if (radioButton2.Checked) playersCount = 2;
 				else if (radioButton3.Checked) playersCount = 3;
@@ -319,11 +301,19 @@ namespace Bomberman
 			}
 			else
 			{
-				System.Net.IPAddress ip = System.Net.IPAddress.Parse(textBoxIP.Text); // TODO try catch
-				Task.Factory.StartNew(() =>
+				try
 				{
-					new Client(ip, true, true);
-				}, TaskCreationOptions.LongRunning);
+					System.Net.IPAddress ip = System.Net.IPAddress.Parse(textBoxIP.Text);
+					Task.Factory.StartNew(() =>
+					{
+						new Client(ip, true, true);
+					}, TaskCreationOptions.LongRunning);
+				}
+				catch(FormatException)
+				{
+					textBoxIP.Text = Properties.Resources.Error_IP;
+					return;
+				}
 			}
 			splitContainerMenu.Visible = false;
 			panelGameInfo.Visible = true;

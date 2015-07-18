@@ -34,10 +34,6 @@
 			this.buttonControls = new System.Windows.Forms.Button();
 			this.buttonMultiplayer = new System.Windows.Forms.Button();
 			this.buttonSingleplayer = new System.Windows.Forms.Button();
-			this.panelControls = new System.Windows.Forms.Panel();
-			this.labelControls_Text = new System.Windows.Forms.Label();
-			this.panelAbout = new System.Windows.Forms.Panel();
-			this.labelAbout = new System.Windows.Forms.Label();
 			this.panelMultiplayer = new System.Windows.Forms.Panel();
 			this.buttonStart = new System.Windows.Forms.Button();
 			this.groupBoxPlayersCount = new System.Windows.Forms.GroupBox();
@@ -51,6 +47,10 @@
 			this.groupBoxServerClient = new System.Windows.Forms.GroupBox();
 			this.radioButtonServer = new System.Windows.Forms.RadioButton();
 			this.radioButtonClient = new System.Windows.Forms.RadioButton();
+			this.panelControls = new System.Windows.Forms.Panel();
+			this.labelControls = new System.Windows.Forms.Label();
+			this.panelAbout = new System.Windows.Forms.Panel();
+			this.labelAbout = new System.Windows.Forms.Label();
 			this.panelGame = new System.Windows.Forms.Panel();
 			this.panelInfo = new System.Windows.Forms.Panel();
 			this.labelInfoPlayer4 = new System.Windows.Forms.Label();
@@ -64,20 +64,25 @@
 			this.pictureNextMove2 = new System.Windows.Forms.PictureBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.panelGameInfo = new System.Windows.Forms.Panel();
+			this.labelSize = new System.Windows.Forms.Label();
+			this.numericUpDownSize = new System.Windows.Forms.NumericUpDown();
+			this.panelSize = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).BeginInit();
 			this.splitContainerMenu.Panel1.SuspendLayout();
 			this.splitContainerMenu.Panel2.SuspendLayout();
 			this.splitContainerMenu.SuspendLayout();
-			this.panelControls.SuspendLayout();
-			this.panelAbout.SuspendLayout();
 			this.panelMultiplayer.SuspendLayout();
 			this.groupBoxPlayersCount.SuspendLayout();
 			this.groupBoxServerClient.SuspendLayout();
+			this.panelControls.SuspendLayout();
+			this.panelAbout.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAvatar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).BeginInit();
 			this.panelGameInfo.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).BeginInit();
+			this.panelSize.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainerMenu
@@ -167,53 +172,12 @@
 			this.buttonSingleplayer.UseVisualStyleBackColor = true;
 			this.buttonSingleplayer.Click += new System.EventHandler(this.buttonSingleplayer_Click);
 			// 
-			// panelControls
-			// 
-			this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelControls.Controls.Add(this.labelControls_Text);
-			this.panelControls.Location = new System.Drawing.Point(3, 3);
-			this.panelControls.Name = "panelControls";
-			this.panelControls.Size = new System.Drawing.Size(475, 444);
-			this.panelControls.TabIndex = 1;
-			this.panelControls.Visible = false;
-			// 
-			// labelControls_Text
-			// 
-			this.labelControls_Text.AutoSize = true;
-			this.labelControls_Text.Location = new System.Drawing.Point(15, 13);
-			this.labelControls_Text.Name = "labelControls_Text";
-			this.labelControls_Text.Size = new System.Drawing.Size(0, 17);
-			this.labelControls_Text.TabIndex = 0;
-			// 
-			// panelAbout
-			// 
-			this.panelAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelAbout.Controls.Add(this.labelAbout);
-			this.panelAbout.Location = new System.Drawing.Point(3, 3);
-			this.panelAbout.Name = "panelAbout";
-			this.panelAbout.Size = new System.Drawing.Size(475, 444);
-			this.panelAbout.TabIndex = 2;
-			this.panelAbout.Visible = false;
-			// 
-			// labelAbout
-			// 
-			this.labelAbout.AutoSize = true;
-			this.labelAbout.Location = new System.Drawing.Point(3, 9);
-			this.labelAbout.Name = "labelAbout";
-			this.labelAbout.Size = new System.Drawing.Size(422, 85);
-			this.labelAbout.TabIndex = 0;
-			this.labelAbout.Text = "Bomberman is a game for 1 - 4 player.\r\nMain goal is kill other three players with" +
-    " bombs which you can put.\r\n\r\nAutor: Jan Kubový\r\nBuild: July 2015";
-			// 
 			// panelMultiplayer
 			// 
 			this.panelMultiplayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelMultiplayer.Controls.Add(this.panelSize);
 			this.panelMultiplayer.Controls.Add(this.buttonStart);
 			this.panelMultiplayer.Controls.Add(this.groupBoxPlayersCount);
 			this.panelMultiplayer.Controls.Add(this.labelPlayerCount);
@@ -352,6 +316,48 @@
 			this.radioButtonClient.Text = "Client";
 			this.radioButtonClient.UseVisualStyleBackColor = true;
 			// 
+			// panelControls
+			// 
+			this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelControls.Controls.Add(this.labelControls);
+			this.panelControls.Location = new System.Drawing.Point(3, 3);
+			this.panelControls.Name = "panelControls";
+			this.panelControls.Size = new System.Drawing.Size(475, 444);
+			this.panelControls.TabIndex = 1;
+			this.panelControls.Visible = false;
+			// 
+			// labelControls
+			// 
+			this.labelControls.AutoSize = true;
+			this.labelControls.Location = new System.Drawing.Point(12, 19);
+			this.labelControls.Name = "labelControls";
+			this.labelControls.Size = new System.Drawing.Size(83, 17);
+			this.labelControls.TabIndex = 0;
+			this.labelControls.Text = "labelControl";
+			// 
+			// panelAbout
+			// 
+			this.panelAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelAbout.Controls.Add(this.labelAbout);
+			this.panelAbout.Location = new System.Drawing.Point(3, 3);
+			this.panelAbout.Name = "panelAbout";
+			this.panelAbout.Size = new System.Drawing.Size(475, 444);
+			this.panelAbout.TabIndex = 2;
+			this.panelAbout.Visible = false;
+			// 
+			// labelAbout
+			// 
+			this.labelAbout.AutoSize = true;
+			this.labelAbout.Location = new System.Drawing.Point(12, 19);
+			this.labelAbout.Name = "labelAbout";
+			this.labelAbout.Size = new System.Drawing.Size(75, 17);
+			this.labelAbout.TabIndex = 0;
+			this.labelAbout.Text = "labelAbout";
+			// 
 			// panelGame
 			// 
 			this.panelGame.AutoSize = true;
@@ -487,6 +493,46 @@
 			this.panelGameInfo.TabIndex = 3;
 			this.panelGameInfo.Visible = false;
 			// 
+			// labelSize
+			// 
+			this.labelSize.AutoSize = true;
+			this.labelSize.Location = new System.Drawing.Point(6, 3);
+			this.labelSize.Name = "labelSize";
+			this.labelSize.Size = new System.Drawing.Size(113, 17);
+			this.labelSize.TabIndex = 8;
+			this.labelSize.Text = "Playground size:";
+			// 
+			// numericUpDownSize
+			// 
+			this.numericUpDownSize.Location = new System.Drawing.Point(6, 24);
+			this.numericUpDownSize.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+			this.numericUpDownSize.Minimum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+			this.numericUpDownSize.Name = "numericUpDownSize";
+			this.numericUpDownSize.Size = new System.Drawing.Size(113, 22);
+			this.numericUpDownSize.TabIndex = 9;
+			this.numericUpDownSize.Value = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+			// 
+			// panelSize
+			// 
+			this.panelSize.Controls.Add(this.labelSize);
+			this.panelSize.Controls.Add(this.numericUpDownSize);
+			this.panelSize.Location = new System.Drawing.Point(6, 174);
+			this.panelSize.Name = "panelSize";
+			this.panelSize.Size = new System.Drawing.Size(129, 53);
+			this.panelSize.TabIndex = 10;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -494,8 +540,8 @@
 			this.AutoScroll = true;
 			this.AutoScrollMinSize = new System.Drawing.Size(200, 300);
 			this.ClientSize = new System.Drawing.Size(725, 450);
-			this.Controls.Add(this.panelGameInfo);
 			this.Controls.Add(this.splitContainerMenu);
+			this.Controls.Add(this.panelGameInfo);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -503,16 +549,16 @@
 			this.splitContainerMenu.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).EndInit();
 			this.splitContainerMenu.ResumeLayout(false);
-			this.panelControls.ResumeLayout(false);
-			this.panelControls.PerformLayout();
-			this.panelAbout.ResumeLayout(false);
-			this.panelAbout.PerformLayout();
 			this.panelMultiplayer.ResumeLayout(false);
 			this.panelMultiplayer.PerformLayout();
 			this.groupBoxPlayersCount.ResumeLayout(false);
 			this.groupBoxPlayersCount.PerformLayout();
 			this.groupBoxServerClient.ResumeLayout(false);
 			this.groupBoxServerClient.PerformLayout();
+			this.panelControls.ResumeLayout(false);
+			this.panelControls.PerformLayout();
+			this.panelAbout.ResumeLayout(false);
+			this.panelAbout.PerformLayout();
 			this.panelInfo.ResumeLayout(false);
 			this.panelInfo.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAvatar)).EndInit();
@@ -520,6 +566,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).EndInit();
 			this.panelGameInfo.ResumeLayout(false);
 			this.panelGameInfo.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).EndInit();
+			this.panelSize.ResumeLayout(false);
+			this.panelSize.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -561,7 +610,10 @@
 		private System.Windows.Forms.RadioButton radioButton3;
 		private System.Windows.Forms.RadioButton radioButton2;
 		private System.Windows.Forms.RadioButton radioButton1;
-		private System.Windows.Forms.Label labelControls_Text;
+		private System.Windows.Forms.Label labelControls;
+		private System.Windows.Forms.NumericUpDown numericUpDownSize;
+		private System.Windows.Forms.Label labelSize;
+		private System.Windows.Forms.Panel panelSize;
 
 
 	}

@@ -228,7 +228,12 @@ Build: July 2015</value>
     <value>..\Resources\Plant_Bomb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Controls_Text" xml:space="preserve">
-    <value>dodelat</value>
+    <value>Bomberman is turn-based game where you choosing two steps at one time.
+
+Use arrows to choose direction of movement or press the Space bar to drop a bomb.
+Press the Backspace to cancel last move.
+By pressing Enter you confirm your moves.
+Bomb explode in the second step move after planting.</value>
   </data>
   <data name="Info_Avatar" xml:space="preserve">
     <value>Your avatar:</value>
@@ -253,5 +258,11 @@ Build: July 2015</value>
   </data>
   <data name="Multiplayer_Start" xml:space="preserve">
     <value>Start</value>
+  </data>
+  <data name="Multiplayer_Size" xml:space="preserve">
+    <value>Playground size:</value>
+  </data>
+  <data name="Error_IP" xml:space="preserve">
+    <value>Invalid IP address</value>
   </data>
 </root>

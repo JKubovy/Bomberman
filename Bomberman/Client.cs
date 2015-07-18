@@ -52,7 +52,6 @@ namespace Bomberman
 			if (tokens[0] == "ACK")
 			{
 				position = GameLogic.GetStartPosition(tokens[1]);
-				AI = new AI(Program.playground.board[position.X][position.Y]);
 				if (update)
 				{
 					response = reader.ReadLine();
@@ -63,6 +62,10 @@ namespace Bomberman
 				{
 					Form form1 = Application.OpenForms[0];
 					((Form1)form1).SetAvatar();
+				}
+				else
+				{
+					AI = new AI(Program.playground.board[position.X][position.Y]);
 				}
 				StartListening();
 			}
@@ -96,16 +99,14 @@ namespace Bomberman
 					string command = reader.ReadLine();
 					ProcessCommand(command);
 				}
-				catch (IOException) // Server lost
+				catch (IOException) // Server is lost
 				{
-					// TODO error
+					ServerLost();
 				}
-				// TESTING
 				catch (TaskCanceledException) // Thread is canceled
 				{
 					break;
 				}
-				// TESTING
 			}
 		}
 		private void ProcessCommand(string command)
@@ -114,16 +115,8 @@ namespace Bomberman
 			switch (tokens[0])
 			{
 				case "SendMoves":
-					//PrepareHeadingPoint();
-					//CalculateFutureMoves();
-					//Point tmp;
-					//if (Check(position, futureMoves[0], out tmp)) updatePosition(futureMoves[0]);
-					//if (Check(position, futureMoves[1], out tmp)) updatePosition(futureMoves[1]);
-					//
 					futureMoves = AI.GetNextMovement(position, out position);
-					//futureMoves[1] = AI.GetNextMovement(position, out position);
 					indexFutureMoves = 2;
-					//
 					SendMoves();
 					break;
 				case "Playground":
@@ -138,7 +131,11 @@ namespace Bomberman
 				case "Start":
 					Form1.waiting = false;
 					break;
+				case "Dead":
+					Form1.alive = false;
+					break;
 				case "Stop":
+					server.Close();
 					throw new TaskCanceledException();
 				default:
 					break;
@@ -230,8 +227,16 @@ namespace Bomberman
 			}
 			catch (IOException)
 			{
-				// TODO error
+				ServerLost();
 			}
+		}
+		private void ServerLost()
+		{
+			for (int i = 1; i <= 4; i++)
+			{
+				ProcessUpdate(new string[] { "", i.ToString(), "Disconected" });
+			}
+			Form1.waiting = true;
 		}
 	}
 }
