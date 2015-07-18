@@ -11,10 +11,11 @@ namespace Bomberman
 {
 	class Server
 	{
-		static List<Connection> clients = new List<Connection>();
-		static List<Connection> clientUpdate = new List<Connection>();
-		static List<Connection> clientAI = new List<Connection>();
-		static List<Connection> clientPlayers = new List<Connection>();
+		static List<Connection> clients;
+		static List<Connection> clientUpdate;
+		static List<Connection> clientAI;
+		static List<Connection> clientPlayers;
+		static Queue<FutureMove> futureMoves;
 		static ManualResetEvent allDone;
 		static System.Timers.Timer updateTimer = new System.Timers.Timer(1000);
 
@@ -23,6 +24,11 @@ namespace Bomberman
 		/// </summary>
 		public static void Start()
 		{
+			futureMoves = new Queue<FutureMove>();
+			clients = new List<Connection>();
+			clientUpdate = new List<Connection>();
+			clientAI = new List<Connection>();
+			clientPlayers = new List<Connection>();
 			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTick);
 			updateTimer.AutoReset = false;
 			TcpListener listener = TcpListener.Create(Program.port);
@@ -158,7 +164,6 @@ namespace Bomberman
 					break;
 			}
 		}
-		static Queue<FutureMove> futureMoves = new Queue<FutureMove>();
 		private static void AddMove(string[] moves, Connection connection)
 		{
 			if (!clients.Contains(connection)) return; // check if moves send regular client

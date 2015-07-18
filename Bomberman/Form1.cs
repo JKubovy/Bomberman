@@ -62,18 +62,12 @@ namespace Bomberman
 
 		private void buttonExit_Click(object sender, EventArgs e)
 		{
-			// add stop server, client, etc.
+			// TODO add stop server, client, etc.
 			this.Close();
 		}
 
 		private void buttonSingleplayer_Click(object sender, EventArgs e)
 		{
-			//StartGame(1);
-			//splitContainerMenu.Visible = false;
-			//panelGameInfo.Visible = true;
-			//Program.playing = true;
-			//UpdatePictureBoxMovements();
-			//panelGame.Select();
 			panelMultiplayer.Visible = true;
 			panelControls.Visible = false;
 			panelAbout.Visible = false;
