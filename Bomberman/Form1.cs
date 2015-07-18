@@ -232,6 +232,7 @@ namespace Bomberman
 
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
+			if (e.KeyCode == Keys.Escape) Close();
 			if (Program.playing)
 			{
 				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
@@ -330,11 +331,12 @@ namespace Bomberman
 			UpdatePictureBoxMovements();
 			panelGame.Select();
 		}
+		System.Threading.CancellationTokenSource cancellation = new System.Threading.CancellationTokenSource();
 		private void StartGame(int playersCount)
 		{
 			Program.playground = new Playground();
 			initGraphicPlayground();
-			Task.Factory.StartNew(() =>
+			Task.Factory.StartNew( () =>
 			{
 				Server.Start();
 			}, TaskCreationOptions.LongRunning);

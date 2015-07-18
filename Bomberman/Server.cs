@@ -136,6 +136,10 @@ namespace Bomberman
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
 				connection.connectionWith.Close();
+				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+			}
+			catch (Exception)
+			{
 			}
 		}
 		private static void ProcessCommand(string command, Connection connection)

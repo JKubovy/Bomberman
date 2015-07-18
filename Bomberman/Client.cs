@@ -11,10 +11,12 @@ namespace Bomberman
 {
 	class Client
 	{
+		internal Point position;
+
 		private TcpClient server;
 		private StreamWriter writer;
 		private StreamReader reader;
-		internal Point position;
+		private AI AI;
 
 		/// <summary>
 		/// Start new Client and connect it to server
@@ -50,6 +52,7 @@ namespace Bomberman
 			if (tokens[0] == "ACK")
 			{
 				position = GameLogic.GetStartPosition(tokens[1]);
+				AI = new AI(Program.playground.board[position.X][position.Y]);
 				if (update)
 				{
 					response = reader.ReadLine();
@@ -60,10 +63,6 @@ namespace Bomberman
 				{
 					Form form1 = Application.OpenForms[0];
 					((Form1)form1).SetAvatar();
-				}
-				else
-				{
-					PrepareHeadingPoint();
 				}
 				StartListening();
 			}
@@ -97,7 +96,7 @@ namespace Bomberman
 					string command = reader.ReadLine();
 					ProcessCommand(command);
 				}
-				catch (IOException)
+				catch (IOException) // Server lost
 				{
 					// TODO error
 				}
@@ -115,11 +114,16 @@ namespace Bomberman
 			switch (tokens[0])
 			{
 				case "SendMoves":
-					// TODO vypocitat a poslat tahy
-					PrepareHeadingPoint();
-					CalculateFutureMoves();
-					updatePosition(futureMoves[0]);
-					updatePosition(futureMoves[1]);
+					//PrepareHeadingPoint();
+					//CalculateFutureMoves();
+					//Point tmp;
+					//if (Check(position, futureMoves[0], out tmp)) updatePosition(futureMoves[0]);
+					//if (Check(position, futureMoves[1], out tmp)) updatePosition(futureMoves[1]);
+					//
+					futureMoves = AI.GetNextMovement(position, out position);
+					//futureMoves[1] = AI.GetNextMovement(position, out position);
+					indexFutureMoves = 2;
+					//
 					SendMoves();
 					break;
 				case "Playground":
@@ -228,412 +232,6 @@ namespace Bomberman
 			{
 				// TODO error
 			}
-		}
-
-		Point heading;
-		bool enemyClose; 
-		Point[] players = new Point[4];
-		int[][] boardWithObstacles;
-		int[][] boardPossibleMovement;
-		int[][] boardPossiblePath;
-		Stack<Point> path = new Stack<Point>();
-		Queue<Movement> saveMovement = new Queue<Movement>();
-		private void PrepareBoardMovement()
-		{
-			boardWithObstacles = new int[Playground.playgroundSize][];
-			boardPossibleMovement = new int[Playground.playgroundSize][];
-			boardPossiblePath = new int[Playground.playgroundSize][];
-			for (int i = 0; i < Playground.playgroundSize; i++)
-			{
-				boardWithObstacles[i] = new int[Playground.playgroundSize];
-				boardPossibleMovement[i] = new int[Playground.playgroundSize];
-				boardPossiblePath[i] = new int[Playground.playgroundSize];
-			}
-			for (int i = 0; i < Playground.playgroundSize; i++)
-			{
-				for (int j = 0; j < Playground.playgroundSize; j++)
-				{
-					Square sqare = Program.playground.board[i][j];
-					if (sqare == Square.Unbreakable_Wall) boardWithObstacles[i][j] = -3;
-					else if (sqare == Square.Wall) boardWithObstacles[i][j] = -2;
-					else boardWithObstacles[i][j] = -1;
-
-					if (sqare == Square.Empty || sqare == Square.Fire) boardPossibleMovement[i][j] = -1;
-					else boardPossibleMovement[i][j] = -2;
-
-					if (sqare == Square.Unbreakable_Wall) boardPossiblePath[i][j] = -2;
-					else boardPossiblePath[i][j] = -1;
-
-					FindPlayer(new Point(i, j));
-				}
-			}
-			boardWithObstacles[position.X][position.Y] = 0;
-			boardPossibleMovement[position.X][position.Y] = 0;
-			boardPossiblePath[position.X][position.Y] = 0;
-			Queue<Point> queue = new Queue<Point>();
-			queue.Enqueue(new Point(position.X, position.Y));
-			do
-			{
-				Point p = queue.Dequeue();
-				#region Right
-				if (boardWithObstacles[p.X][p.Y + 1] == -2)
-				{
-					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X,p.Y + 1));
-				}
-				else if (boardWithObstacles[p.X][p.Y + 1] == -1)
-				{
-					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y];
-					queue.Enqueue(new Point(p.X, p.Y + 1));
-				}
-				else if (boardWithObstacles[p.X][p.Y + 1] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X][p.Y + 1] == Square.Wall)
-				{
-					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y] + 1;
-				}
-				else if (boardWithObstacles[p.X][p.Y + 1] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X][p.Y + 1] != Square.Wall)
-				{
-					boardWithObstacles[p.X][p.Y + 1] = boardWithObstacles[p.X][p.Y];
-				}
-				#endregion
-				#region Down
-				if (boardWithObstacles[p.X + 1][p.Y] == -2)
-				{
-					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X + 1, p.Y));
-				}
-				else if (boardWithObstacles[p.X + 1][p.Y] == -1)
-				{
-					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y];
-					queue.Enqueue(new Point(p.X + 1, p.Y));
-				}
-				else if (boardWithObstacles[p.X + 1][p.Y] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X + 1][p.Y] == Square.Wall)
-				{
-					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
-				}
-				else if (boardWithObstacles[p.X + 1][p.Y] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X + 1][p.Y] != Square.Wall)
-				{
-					boardWithObstacles[p.X + 1][p.Y] = boardWithObstacles[p.X][p.Y];
-				}
-				#endregion
-				#region Left
-				if (boardWithObstacles[p.X][p.Y - 1] == -2)
-				{
-					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y - 1));
-				}
-				else if (boardWithObstacles[p.X][p.Y - 1] == -1)
-				{
-					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y];
-					queue.Enqueue(new Point(p.X, p.Y - 1));
-				}
-				else if (boardWithObstacles[p.X][p.Y - 1] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X][p.Y - 1] == Square.Wall)
-				{
-					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y] + 1;
-				}
-				else if (boardWithObstacles[p.X][p.Y - 1] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X][p.Y - 1] != Square.Wall)
-				{
-					boardWithObstacles[p.X][p.Y - 1] = boardWithObstacles[p.X][p.Y];
-				}
-				#endregion
-				#region Up
-				if (boardWithObstacles[p.X - 1][p.Y] == -2)
-				{
-					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X - 1, p.Y));
-				}
-				else if (boardWithObstacles[p.X - 1][p.Y] == -1)
-				{
-					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y];
-					queue.Enqueue(new Point(p.X - 1, p.Y));
-				}
-				else if (boardWithObstacles[p.X - 1][p.Y] > boardWithObstacles[p.X][p.Y] + 1 && Program.playground.board[p.X - 1][p.Y] == Square.Wall)
-				{
-					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y] + 1;
-				}
-				else if (boardWithObstacles[p.X - 1][p.Y] > boardWithObstacles[p.X][p.Y] && Program.playground.board[p.X - 1][p.Y] != Square.Wall)
-				{
-					boardWithObstacles[p.X - 1][p.Y] = boardWithObstacles[p.X][p.Y];
-				}
-				#endregion
-			} while (queue.Count != 0);
-			queue.Enqueue(new Point(position.X, position.Y));
-			do
-			{
-				Point p = queue.Dequeue();
-				if (boardPossibleMovement[p.X][p.Y + 1] == -1)
-				{
-					boardPossibleMovement[p.X][p.Y + 1] = boardPossibleMovement[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y + 1));
-				}
-				if (boardPossibleMovement[p.X + 1][p.Y] == -1)
-				{
-					boardPossibleMovement[p.X + 1][p.Y] = boardPossibleMovement[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X + 1, p.Y));
-				}
-				if (boardPossibleMovement[p.X][p.Y - 1] == -1)
-				{
-					boardPossibleMovement[p.X][p.Y - 1] = boardPossibleMovement[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y - 1));
-				}
-				if (boardPossibleMovement[p.X - 1][p.Y] == -1)
-				{
-					boardPossibleMovement[p.X - 1][p.Y] = boardPossibleMovement[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X - 1, p.Y));
-				}
-			} while (queue.Count != 0);
-			queue.Enqueue(new Point(position.X, position.Y));
-			do
-			{
-				Point p = queue.Dequeue();
-				if (boardPossiblePath[p.X][p.Y + 1] == -1)
-				{
-					boardPossiblePath[p.X][p.Y + 1] = boardPossiblePath[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y + 1));
-				}
-				if (boardPossiblePath[p.X + 1][p.Y] == -1)
-				{
-					boardPossiblePath[p.X + 1][p.Y] = boardPossiblePath[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X + 1, p.Y));
-				}
-				if (boardPossiblePath[p.X][p.Y - 1] == -1)
-				{
-					boardPossiblePath[p.X][p.Y - 1] = boardPossiblePath[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y - 1));
-				}
-				if (boardPossiblePath[p.X - 1][p.Y] == -1)
-				{
-					boardPossiblePath[p.X - 1][p.Y] = boardPossiblePath[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X - 1, p.Y));
-				}
-			} while (queue.Count != 0);
-		}
-		private void PrepareHeadingPoint()
-		{
-			PrepareBoardMovement();
-			int shortestPathObstacles = Playground.playgroundSize * Playground.playgroundSize;
-			int shortestPathWithoutObstacles = Playground.playgroundSize * Playground.playgroundSize;
-			for (int i = 0; i < 4; i++)
-			{
-				int tmp = boardWithObstacles[players[i].X][players[i].Y];
-				if (tmp != 0 && tmp < shortestPathObstacles)
-				{
-					shortestPathObstacles = tmp;
-					heading = players[i];
-				}
-				tmp = boardPossibleMovement[players[i].X][players[i].Y];
-				if (tmp != -2 && tmp != 0 && tmp < shortestPathWithoutObstacles)
-				{
-					shortestPathWithoutObstacles = tmp;
-				}
-			}
-			FindPath(heading);
-			if (shortestPathWithoutObstacles <= 3) enemyClose = true;
-			else enemyClose = false;
-		}
-		private void FindPath(Point destination)
-		{
-			int size = boardPossiblePath[destination.X][destination.Y];
-			Queue<Point> steps = new Queue<Point>();
-			path.Clear();
-			steps.Enqueue(destination);
-			while (steps.Count != 0)
-			{
-				Point p = steps.Dequeue();
-				if (p == position) break;
-				size--;
-				path.Push(p);
-				if (boardPossiblePath[p.X][p.Y + 1] == boardPossiblePath[p.X][p.Y] - 1) steps.Enqueue(new Point(p.X, p.Y + 1));
-				else if (boardPossiblePath[p.X + 1][p.Y] == boardPossiblePath[p.X][p.Y] - 1) steps.Enqueue(new Point(p.X + 1, p.Y));
-				else if (boardPossiblePath[p.X][p.Y - 1] == boardPossiblePath[p.X][p.Y] - 1) steps.Enqueue(new Point(p.X, p.Y - 1));
-				else if (boardPossiblePath[p.X - 1][p.Y] == boardPossiblePath[p.X][p.Y] - 1) steps.Enqueue(new Point(p.X - 1, p.Y));
-			}
-		}
-		private void CalculateFutureMoves()
-		{
-			/*
-			// TESTING
-			Movement[] m = {Movement.Up, Movement.Right, Movement.Left, Movement.Down};
-			Random r = new Random();
-			futureMoves[0] = m[r.Next(4)];
-			futureMoves[1] = m[r.Next(4)];
-			indexFutureMoves = 2;
-			// TESTING
-			*/
-			if (enemyClose)
-			{
-
-			}
-			else
-			{
-				ProcessStep();
-				ProcessStep();
-			}
-		}
-		private void ProcessStep()
-		{
-			if (saveMovement.Count != 0)
-			{
-				futureMoves[indexFutureMoves] = saveMovement.Dequeue();
-				indexFutureMoves++;
-				return;
-			}
-			Point location = path.Pop();
-			if (Program.playground.board[location.X][location.Y] == Square.Wall)
-			{
-				futureMoves[indexFutureMoves] = Movement.Plant_bomb;
-				indexFutureMoves++;
-				if (indexFutureMoves == 2)
-				{
-					Point tmp;
-					Check(position, futureMoves[0], out tmp);
-					RunAway(tmp, tmp);
-				}
-				else RunAway(position, position);
-			}
-			else
-			{
-				Movement movement;
-				if (indexFutureMoves == 1)
-				{
-					Point tmp;
-					Check(position, futureMoves[0], out tmp);
-					movement = GetDirection(tmp, location);	
-				}
-				else movement = GetDirection(position, location);
-				futureMoves[indexFutureMoves] = movement;
-				indexFutureMoves++;
-			}
-		}
-		private Movement GetDirection(Point start, Point destination) // Have to be 1 step far from each other
-		{
-			if (start.X == destination.X && start.Y == destination.Y + 1) return Movement.Left;
-			else if (start.X == destination.X + 1 && start.Y == destination.Y) return Movement.Up;
-			else if (start.X == destination.X && start.Y == destination.Y - 1) return Movement.Right;
-			else if (start.X == destination.X - 1 && start.Y == destination.Y) return Movement.Down;
-			else return Movement.Nothing;
-		}
-		private void RunAway(Point bomb, Point location)
-		{
-			saveMovement.Clear();
-			List<Point> dangerous = new List<Point>() { 
-				bomb, 
-				new Point(bomb.X, bomb.Y + 1),
-				new Point(bomb.X + 1, bomb.Y),
-				new Point(bomb.X, bomb.Y - 1),
-				new Point(bomb.X - 1, bomb.Y)
-				};
-			Point newPosition,newPosition2;
-			foreach (Movement move in new Movement[]{Movement.Up, Movement.Left, Movement.Down, Movement.Right})
-			{
-				if (Check(location, move, out newPosition) && !dangerous.Contains(newPosition))
-				{
-					saveMovement.Enqueue(move);
-					return;
-				}
-			}
-			foreach (Tuple<Movement, Movement> move in GameLogic.possibleDoubleMove)
-			{
-				if (Check(location, move.Item1, out newPosition) && Check(newPosition, move.Item2, out newPosition2) && !dangerous.Contains(newPosition2))
-				{
-					saveMovement.Enqueue(move.Item1);
-					saveMovement.Enqueue(move.Item2);
-					return;
-				}
-			}
-
-			#region Trash
-			/*
-			int[][] board = new int[5][];
-			for (int i = 0; i < 5; i++)
-			{
-				board[i] = new int[5];
-			}
-			for (int i = -2; i < 3; i++)
-			{
-				for (int j = -2; j < 3; j++)
-				{
-					Square square = Program.playground.board[location.X + i][location.Y + j];
-					if (square == Square.Empty || square == Square.Fire) board[i + 2][j + 2] = -1;
-					else board[i + 2][j + 2] = -2;
-				}
-			}
-			board[2][2] = 0;
-			Queue<Point> queue = new Queue<Point>();
-			queue.Enqueue(new Point(2, 2));
-			do
-			{
-				Point p = queue.Dequeue();
-				if (board[p.X][p.Y + 1] == -1)
-				{
-					board[p.X][p.Y + 1] = board[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y + 1));
-				}
-				if (board[p.X + 1][p.Y] == -1)
-				{
-					board[p.X + 1][p.Y] = board[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X + 1, p.Y));
-				}
-				if (board[p.X][p.Y - 1] == -1)
-				{
-					board[p.X][p.Y - 1] = board[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X, p.Y - 1));
-				}
-				if (board[p.X - 1][p.Y] == -1)
-				{
-					board[p.X - 1][p.Y] = board[p.X][p.Y] + 1;
-					queue.Enqueue(new Point(p.X - 1, p.Y));
-				}
-			} while (queue.Count != 0);
-			*/
-			#endregion
-		}
-		/// <summary>
-		/// Check if it is possible to change place specific direction
-		/// </summary>
-		/// <param name="position">Start position</param>
-		/// <param name="movement">Wanted movement</param>
-		/// <returns></returns>
-		private bool Check(Point position, Movement movement, out Point newPosition)
-		{
-			switch (movement)
-			{
-				case Movement.Up:
-					position.X--;
-					break;
-				case Movement.Left:
-					position.Y--;
-					break;
-				case Movement.Down:
-					position.X++;
-					break;
-				case Movement.Right:
-					position.Y++;
-					break;
-				default:
-					newPosition = position;
-					return false;
-			}
-			Square square = Program.playground.board[position.X][position.Y];
-			newPosition = position;
-			if (square == Square.Empty || square == Square.Fire || square == Program.playground.board[this.position.X][this.position.Y]) return true;
-			else return false;
-		}
-
-		/// <summary>
-		/// Save to players array location of player if he is on location
-		/// </summary>
-		/// <param name="location">coordinate on playground</param>
-		private void FindPlayer(Point location)
-		{
-			Square square = Program.playground.board[location.X][location.Y];
-			if (square == Square.Player_1 || square == Square.Bomb_1_1 || square == Square.Bomb_2_1 || square == Square.Bomb_3_1)
-				players[0] = location;
-			else if (square == Square.Player_2 || square == Square.Bomb_1_2 || square == Square.Bomb_2_2 || square == Square.Bomb_3_2)
-				players[1] = location;
-			else if (square == Square.Player_3 || square == Square.Bomb_1_3 || square == Square.Bomb_2_3 || square == Square.Bomb_3_3)
-				players[2] = location;
-			else if (square == Square.Player_4 || square == Square.Bomb_1_4 || square == Square.Bomb_2_4 || square == Square.Bomb_3_4)
-				players[3] = location;
 		}
 	}
 }
