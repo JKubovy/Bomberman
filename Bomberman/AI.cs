@@ -356,7 +356,6 @@ namespace Bomberman
 			newPosition = position;
 			if (position.X <= 0 || position.X >= Playground.playgroundSize - 1 || position.Y <= 0 || position.Y >= Playground.playgroundSize - 1) return false;
 			Square square = Program.playground.board[position.X][position.Y];
-			//if (square == Square.Empty || square == Square.Fire || square == Program.playground.board[oldPosition.X][oldPosition.Y]) return true;
 			if (square == Square.Empty || square == Square.Fire || square == character) return true;
 			else return false;
 		}

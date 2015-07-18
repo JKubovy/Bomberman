@@ -136,7 +136,10 @@ namespace Bomberman
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
 				connection.connectionWith.Close();
-				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				lock (futureMoves)
+				{
+					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				}
 			}
 			catch (NullReferenceException)
 			{
@@ -175,7 +178,10 @@ namespace Bomberman
 				futureMoves.Enqueue(new FutureMove(movement, connection));
 				movement = (Movement)int.Parse(moves[2]);
 				futureMoves.Enqueue(new FutureMove(movement, connection));
-				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				lock (futureMoves)
+				{
+					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				}
 			}
 		}
 		private static void ProcessMove()
@@ -225,7 +231,10 @@ namespace Bomberman
 			clientPlayers.Remove(connection);
 			Program.playground.board[connection.position.X][connection.position.Y] = Square.Empty;
 			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
-			if (futureMoves.Count == clients.Count * 2) ProcessMove();
+			lock (futureMoves)
+			{
+				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+			}
 		}
 		/// <summary>
 		/// Find out who died on given location and send update
@@ -243,7 +252,7 @@ namespace Bomberman
 				}
 			}
 			SendUpdate("Update " + connection.playerNumber + " Dead");
-			Send("Dead", connection);
+			if (clientPlayers.Contains(connection)) Send("Dead", connection);
 			Clean(connection);
 		}
 		private static void SendAll(string msg)

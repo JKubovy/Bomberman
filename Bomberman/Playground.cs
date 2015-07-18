@@ -149,14 +149,49 @@ namespace Bomberman
 				}
 			}
 		}
-		//private Queue<Point> currentFire = new Queue<Point>();
+		private List<Point> currentFire = new List<Point>();
 		private void Explode(Point location)
 		{
-			SetFire(location, true);
-			SetFire(new Point(location.X - 1, location.Y), false);
-			SetFire(new Point(location.X, location.Y - 1), false);
-			SetFire(new Point(location.X + 1, location.Y), false);
-			SetFire(new Point(location.X, location.Y + 1), false);
+			//SetFire(location, true);
+			//SetFire(new Point(location.X - 1, location.Y), false);
+			//SetFire(new Point(location.X, location.Y - 1), false);
+			//SetFire(new Point(location.X + 1, location.Y), false);
+			//SetFire(new Point(location.X, location.Y + 1), false);
+			currentFire.Add(location);
+			AddFire(location);
+			SetFire();
+			currentFire.Clear();
+		}
+		private void AddFire(Point location)
+		{
+			if (!currentFire.Contains(location)) currentFire.Add(location);
+			foreach (Point loc in new Point[]{new Point(location.X - 1, location.Y),
+											new Point(location.X, location.Y - 1),
+											new Point(location.X + 1, location.Y),
+											new Point(location.X, location.Y + 1)})
+			{
+				Square squere = board[loc.X][loc.Y];
+				if (squere == Square.Unbreakable_Wall) continue;
+				if (squere >= Square.Bomb_1 && squere <= Square.Bomb_3_4)
+				{
+					if (!currentFire.Contains(loc)) AddFire(loc);
+				}
+				else if (!currentFire.Contains(loc)) currentFire.Add(loc);
+			}
+		}
+		private void SetFire()
+		{
+			foreach (Point location in currentFire)
+			{
+				Square squere = board[location.X][location.Y];
+				if ((squere >= Square.Player_1 && squere <= Square.Player_4) ||
+					(squere >= Square.Bomb_1_1 && squere <= Square.Bomb_1_4) ||
+					(squere >= Square.Bomb_2_1 && squere <= Square.Bomb_2_4) ||
+					(squere >= Square.Bomb_3_1 && squere <= Square.Bomb_3_4)) Server.Dead(location);
+				board[location.X][location.Y] = Square.Fire;
+				GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Fire));
+				fire.Enqueue(location);
+			}
 		}
 		/// <summary>
 		/// Set fire to location if it is possible
@@ -167,7 +202,7 @@ namespace Bomberman
 		{
 			Square squere = board[location.X][location.Y];
 			if (squere == Square.Unbreakable_Wall) return;
-			if ((!center)&&(squere >= Square.Bomb_1 && squere <= Square.Bomb_3_4)) Explode(location);
+			if ((!center) && (squere >= Square.Bomb_1 && squere <= Square.Bomb_3_4)) Explode(location);
 			if ((squere >= Square.Player_1 && squere <= Square.Player_4) ||
 				(squere >= Square.Bomb_1_1 && squere <= Square.Bomb_1_4) ||
 				(squere >= Square.Bomb_2_1 && squere <= Square.Bomb_2_4) ||

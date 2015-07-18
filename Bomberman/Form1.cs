@@ -57,6 +57,7 @@ namespace Bomberman
 			panelMultiplayer.Visible = true;
 			panelControls.Visible = false;
 			panelAbout.Visible = false;
+			radioButton4.Checked = true;
 		}
 
 		private void buttonExit_Click(object sender, EventArgs e)
@@ -67,12 +68,17 @@ namespace Bomberman
 
 		private void buttonSingleplayer_Click(object sender, EventArgs e)
 		{
-			StartGame(1);
-			splitContainerMenu.Visible = false;
-			panelGameInfo.Visible = true;
-			Program.playing = true;
-			UpdatePictureBoxMovements();
-			panelGame.Select();
+			//StartGame(1);
+			//splitContainerMenu.Visible = false;
+			//panelGameInfo.Visible = true;
+			//Program.playing = true;
+			//UpdatePictureBoxMovements();
+			//panelGame.Select();
+			panelMultiplayer.Visible = true;
+			panelControls.Visible = false;
+			panelAbout.Visible = false;
+			radioButton1.Checked = true;
+			radioButtonServer.Checked = true;
 		}
 
 		private static PictureBox[][] screen;
