@@ -240,6 +240,7 @@ namespace Bomberman
 			string[] oldTextSplit = text.Split(':');
 			text = oldTextSplit[0] + ": " + tokens[2];
 			((Form1)form1).SetLabelText(label, text);
+			
 		}
 		private void Send(string msg)
 		{
