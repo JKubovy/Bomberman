@@ -23,7 +23,13 @@ namespace Bomberman
 			this.character = character;
 		}
 
-		internal Movement[] GetNextMovement(Point position, out Point newPosition)
+		/// <summary>
+		/// Calculate next two movement
+		/// </summary>
+		/// <param name="position">Standing position</param>
+		/// <param name="newPosition">New position after make movement</param>
+		/// <returns>Array of TWO movement</returns>
+		internal Movement[] GetNextMovement(Point position)
 		{
 			Point tmp;
 			Movement[] movement = new Movement[2];
@@ -34,8 +40,6 @@ namespace Bomberman
 			if (Check(position, movement[0], out tmp)) position = tmp;
 			if (enemyClose) movement[1] = RandomStep(position);
 			else movement[1] = ProcessStep(position);
-			if (Check(position, movement[1], out tmp)) newPosition = tmp;
-			else newPosition = position;
 			return movement;
 		}
 

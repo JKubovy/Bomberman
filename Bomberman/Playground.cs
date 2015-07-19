@@ -196,7 +196,7 @@ namespace Bomberman
 					(squere >= Square.Bomb_3_1 && squere <= Square.Bomb_3_4)) Server.Dead(location);
 				board[location.X][location.Y] = Square.Fire;
 				GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Fire));
-				fire.Enqueue(location);
+				if (!fire.Contains(location)) fire.Enqueue(location);
 			}
 		}
 		private void InitPlayground()

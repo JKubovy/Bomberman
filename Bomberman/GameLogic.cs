@@ -255,6 +255,38 @@ namespace Bomberman
 			}
 			return "";
 		}
+		internal static bool IsPlayerSquare(Square square, int startPosition)
+		{
+			switch (square)
+			{
+				case Square.Player_1:
+				case Square.Bomb_1_1:
+				case Square.Bomb_2_1:
+				case Square.Bomb_3_1:
+					if (startPosition == 0) return true;
+					else return false;
+				case Square.Player_2:
+				case Square.Bomb_1_2:
+				case Square.Bomb_2_2:
+				case Square.Bomb_3_2:
+					if (startPosition == 1) return true;
+					else return false;
+				case Square.Player_3:
+				case Square.Bomb_1_3:
+				case Square.Bomb_2_3:
+				case Square.Bomb_3_3:
+					if (startPosition == 2) return true;
+					else return false;
+				case Square.Player_4:
+				case Square.Bomb_1_4:
+				case Square.Bomb_2_4:
+				case Square.Bomb_3_4:
+					if (startPosition == 3) return true;
+					else return false;
+				default:
+					return false;
+			}
+		}
 		public readonly static Tuple<Movement, Movement>[] possibleDoubleMove = { new Tuple<Movement, Movement>(Movement.Up, Movement.Left),
 																				new Tuple<Movement, Movement>(Movement.Up, Movement.Up),
 																				new Tuple<Movement, Movement>(Movement.Up, Movement.Right),

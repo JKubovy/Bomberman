@@ -17,6 +17,7 @@ namespace Bomberman
 		private StreamWriter writer;
 		private StreamReader reader;
 		private AI AI;
+		private int startPosition;
 
 		/// <summary>
 		/// Start new Client and connect it to server
@@ -51,6 +52,7 @@ namespace Bomberman
 			string[] tokens = response.Split(' ');
 			if (tokens[0] == "ACK")
 			{
+				startPosition = int.Parse(tokens[1]);
 				position = GameLogic.GetStartPosition(tokens[1]);
 				if (update)
 				{
@@ -115,7 +117,8 @@ namespace Bomberman
 			switch (tokens[0])
 			{
 				case "SendMoves":
-					futureMoves = AI.GetNextMovement(position, out position);
+					GetPosition();
+					futureMoves = AI.GetNextMovement(position);
 					indexFutureMoves = 2;
 					SendMoves();
 					break;
@@ -204,10 +207,28 @@ namespace Bomberman
 		{
 			for (int i = 0; i < int.Parse(tokens[1]); i++)
 			{
-				Program.playground.board[int.Parse(tokens[i*3+2])][int.Parse(tokens[i*3+3])] = (Square)int.Parse(tokens[i*3+4]);
+				Square square = (Square)int.Parse(tokens[i * 3 + 4]);
+				Point location = new Point(int.Parse(tokens[i * 3 + 2]), int.Parse(tokens[i * 3 + 3]));
+				Program.playground.board[location.X][location.Y] = square;
+				//if (GameLogic.IsPlayerSquare(square, startPosition)) position = location;
 			}
 			Form1.updatePictureBox();
 			Form1.waiting = false;
+		}
+		private void GetPosition()
+		{
+			for (int i = 0; i < Playground.playgroundSize; i++)
+			{
+				for (int j = 0; j < Playground.playgroundSize; j++)
+				{
+					Square square = Program.playground.board[i][j];
+					if (GameLogic.IsPlayerSquare(square, startPosition))
+					{
+						position = new Point(i, j);
+						return;
+					}
+				}
+			}
 		}
 		private void ProcessUpdate(string[] tokens)
 		{
