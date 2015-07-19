@@ -252,6 +252,10 @@ namespace Bomberman
 			{
 				ServerLost();
 			}
+			catch (ObjectDisposedException)
+			{
+				ServerLost();
+			}
 		}
 		private void ServerLost()
 		{

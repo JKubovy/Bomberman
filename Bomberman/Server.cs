@@ -38,20 +38,34 @@ namespace Bomberman
 			listener.Start();
 			allDone = new ManualResetEvent(false);
 			//listener.Start();
-			while (true)
+			try
 			{
-				allDone.Reset();
-				listener.BeginAcceptTcpClient(new AsyncCallback(AcceptTcpClient), listener);
-				allDone.WaitOne();
+				while (true)
+				{
+					allDone.Reset();
+					listener.BeginAcceptTcpClient(new AsyncCallback(AcceptTcpClient), listener);
+					allDone.WaitOne();
+				}
+			}
+			catch (ThreadAbortException)
+			{
+				listener.Stop();
 			}
 		}
 		private static void AcceptTcpClient(IAsyncResult ar)
 		{
-			allDone.Set();
-			TcpListener listener = (TcpListener)ar.AsyncState;
-			TcpClient client = listener.EndAcceptTcpClient(ar);
-			Connection connection = new Connection(client);
-			Handshake(connection);
+			try
+			{
+				allDone.Set();
+				TcpListener listener = (TcpListener)ar.AsyncState;
+				TcpClient client = listener.EndAcceptTcpClient(ar);
+				Connection connection = new Connection(client);
+				Handshake(connection);
+			}
+			catch (ObjectDisposedException) // server was stopped
+			{
+				return;
+			}
 		}
 		private static async void Handshake(Connection connection)
 		{

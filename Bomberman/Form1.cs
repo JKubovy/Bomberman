@@ -80,18 +80,29 @@ namespace Bomberman
 		internal static Client player;
 		internal void initGraphicPlayground()
 		{
-			if (screen == null) screen = new PictureBox[Playground.playgroundSize][];
+			if (screen != null)
+			{
+				for (int i = 0; i < screen.Length; i++)
+				{
+					for (int j = 0; j < screen[i].Length; j++)
+					{
+						screen[i][j].Dispose();
+					}
+				}
+				screen = null;
+			}
+			screen = new PictureBox[Playground.playgroundSize][];
 			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
 				screen[i] = new PictureBox[Playground.playgroundSize];
 				for (int j = 0; j < Playground.playgroundSize; j++)
 				{
 					PictureBox p = new PictureBox();
-					p.Name = "pictureBox_" + i + "_"+j;
+					p.Name = "pictureBox_" + i + "_" + j;
 					p.Size = new System.Drawing.Size(32, 32);
 					p.Location = new System.Drawing.Point((32 * j), (32 * i));
 					p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-					p.Image = getImage(i,j);
+					p.Image = getImage(i, j);
 					screen[i][j] = p;
 					AddPictureBox(p);
 				}
@@ -216,11 +227,11 @@ namespace Bomberman
 		{
 			if (Program.playing)
 			{
-				//if (e.KeyCode == Keys.Escape)
-				//{
-				//	Stop();
-				//	return;
-				//}
+				if (e.KeyCode == Keys.Escape)
+				{
+					Stop();
+					return;
+				}
 				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
 				if (!waiting & alive)
 				{
@@ -365,6 +376,7 @@ namespace Bomberman
 			{
 				Server.Stop();
 				server.Abort();
+				server = null;
 			}
 			Program.playing = false;
 			waiting = true;
