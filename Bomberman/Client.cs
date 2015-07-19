@@ -17,7 +17,7 @@ namespace Bomberman
 		private StreamWriter writer;
 		private StreamReader reader;
 		private AI AI;
-		private int startPosition;
+		private int startNumber;
 
 		/// <summary>
 		/// Start new Client and connect it to server
@@ -52,7 +52,7 @@ namespace Bomberman
 			string[] tokens = response.Split(' ');
 			if (tokens[0] == "ACK")
 			{
-				startPosition = int.Parse(tokens[1]);
+				startNumber = int.Parse(tokens[1]);
 				position = GameLogic.GetStartPosition(tokens[1]);
 				if (update)
 				{
@@ -222,7 +222,7 @@ namespace Bomberman
 				for (int j = 0; j < Playground.playgroundSize; j++)
 				{
 					Square square = Program.playground.board[i][j];
-					if (GameLogic.IsPlayerSquare(square, startPosition))
+					if (GameLogic.IsPlayerSquare(square, startNumber))
 					{
 						position = new Point(i, j);
 						return;
@@ -260,6 +260,9 @@ namespace Bomberman
 			}
 			Form1.waiting = true;
 		}
+		/// <summary>
+		/// Close connection with server
+		/// </summary>
 		internal void Stop()
 		{
 			server.Close();

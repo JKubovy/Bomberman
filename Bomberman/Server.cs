@@ -299,6 +299,9 @@ namespace Bomberman
 				return;
 			}
 		}
+		/// <summary>
+		/// Send STOP command to all clients
+		/// </summary>
 		internal static void Stop()
 		{
 			for (int i = 0; i < clients.Count; i++)

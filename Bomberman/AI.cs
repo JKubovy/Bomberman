@@ -22,12 +22,10 @@ namespace Bomberman
 		{
 			this.character = character;
 		}
-
 		/// <summary>
 		/// Calculate next two movement
 		/// </summary>
 		/// <param name="position">Standing position</param>
-		/// <param name="newPosition">New position after make movement</param>
 		/// <returns>Array of TWO movement</returns>
 		internal Movement[] GetNextMovement(Point position)
 		{
@@ -291,7 +289,6 @@ namespace Bomberman
 				return GetDirection(position, location);
 			}
 		}
-
 		private Movement GetDirection(Point start, Point destination) // Have to be 1 step far from each other
 		{
 			if (start.X == destination.X && start.Y == destination.Y + 1) return Movement.Left;
@@ -300,6 +297,11 @@ namespace Bomberman
 			else if (start.X == destination.X - 1 && start.Y == destination.Y) return Movement.Down;
 			else return Movement.Nothing;
 		}
+		/// <summary>
+		/// Find and save future steps to escape the explosion
+		/// </summary>
+		/// <param name="bomb">Location of bomb</param>
+		/// <param name="location">Player location</param>
 		private void RunAway(Point bomb, Point location)
 		{
 			saveMovement.Clear();
