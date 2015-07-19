@@ -63,7 +63,6 @@ namespace Bomberman
 
 		private void buttonExit_Click(object sender, EventArgs e)
 		{
-			// TODO add stop server, client, etc.
 			this.Close();
 		}
 
@@ -239,6 +238,7 @@ namespace Bomberman
 					player.ProcessMovement(movement);
 				}
 			}
+			else if (e.KeyCode == Keys.Escape) Close();
 		}
 		Movement[] futureMovements = new Movement[2];
 		int indexFutureMovements = 0;
@@ -289,7 +289,7 @@ namespace Bomberman
 		}
 		internal void SetAvatar()
 		{
-			Point position = player.position;
+			Point position = player.Position;
 			Image image;
 			if (position == new Point(1, 1)) image = Properties.Resources.Player_1;
 			else if (position == new Point(1, Playground.playgroundSize-2)) image = Properties.Resources.Player_2;
@@ -339,16 +339,11 @@ namespace Bomberman
 			UpdatePictureBoxMovements();
 			panelGame.Select();
 		}
-		//System.Threading.CancellationTokenSource cancellation = new System.Threading.CancellationTokenSource();
 		Thread server;
 		private void StartGame(int playersCount)
 		{
 			Program.playground = new Playground();
 			initGraphicPlayground();
-			//Task.Factory.StartNew( () =>
-			//{
-			//	Server.Start();
-			//}, TaskCreationOptions.LongRunning);
 
 			server = new Thread(() => Server.Start());
 			server.IsBackground = true;

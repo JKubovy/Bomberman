@@ -11,7 +11,7 @@ namespace Bomberman
 {
 	class Client
 	{
-		internal Point position; // TODO change to Property
+		internal Point Position { get; private set; }
 
 		private TcpClient server;
 		private StreamWriter writer;
@@ -53,7 +53,7 @@ namespace Bomberman
 			if (tokens[0] == "ACK")
 			{
 				startNumber = int.Parse(tokens[1]);
-				position = GameLogic.GetStartPosition(tokens[1]);
+				Position = GameLogic.GetStartPosition(tokens[1]);
 				if (update)
 				{
 					response = reader.ReadLine();
@@ -67,7 +67,7 @@ namespace Bomberman
 				}
 				else
 				{
-					AI = new AI(Program.playground.board[position.X][position.Y]);
+					AI = new AI(Program.playground.board[Position.X][Position.Y]);
 				}
 				StartListening();
 			}
@@ -118,7 +118,7 @@ namespace Bomberman
 			{
 				case "SendMoves":
 					GetPosition();
-					futureMoves = AI.GetNextMovement(position);
+					futureMoves = AI.GetNextMovement(Position);
 					indexFutureMoves = 2;
 					SendMoves();
 					break;
@@ -180,16 +180,16 @@ namespace Bomberman
 			switch (movement)
 			{
 				case Movement.Up:
-					position.X--;
+					Position = new Point(Position.X - 1, Position.Y);
 					break;
 				case Movement.Left:
-					position.Y--;
+					Position = new Point(Position.X, Position.Y - 1);
 					break;
 				case Movement.Down:
-					position.X++;
+					Position = new Point(Position.X + 1, Position.Y);
 					break;
 				case Movement.Right:
-					position.Y++;
+					Position = new Point(Position.X, Position.Y + 1);
 					break;
 				default:
 					break;
@@ -224,7 +224,7 @@ namespace Bomberman
 					Square square = Program.playground.board[i][j];
 					if (GameLogic.IsPlayerSquare(square, startNumber))
 					{
-						position = new Point(i, j);
+						Position = new Point(i, j);
 						return;
 					}
 				}

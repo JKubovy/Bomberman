@@ -205,7 +205,7 @@ namespace Bomberman
 		/// <returns></returns>
 		internal static Movement ProcessKeyPress(Keys key)
 		{
-			Point position = Form1.player.position;
+			Point position = Form1.player.Position;
 			Movement movement;
 			switch (key)
 			{
