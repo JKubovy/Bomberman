@@ -77,33 +77,37 @@ namespace Bomberman
 
 		private static PictureBox[][] screen;
 		internal static Client player;
+		static object screenLock = new object();
 		internal void initGraphicPlayground()
 		{
-			if (screen != null)
+			lock (screenLock)
 			{
-				for (int i = 0; i < screen.Length; i++)
+				if (screen != null)
 				{
-					for (int j = 0; j < screen[i].Length; j++)
+					for (int i = 0; i < screen.Length; i++)
 					{
-						screen[i][j].Dispose();
+						for (int j = 0; j < screen[i].Length; j++)
+						{
+							screen[i][j].Dispose();
+						}
 					}
+					screen = null;
 				}
-				screen = null;
-			}
-			screen = new PictureBox[Playground.playgroundSize][];
-			for (int i = 0; i < Playground.playgroundSize; i++)
-			{
-				screen[i] = new PictureBox[Playground.playgroundSize];
-				for (int j = 0; j < Playground.playgroundSize; j++)
+				screen = new PictureBox[Playground.playgroundSize][];
+				for (int i = 0; i < Playground.playgroundSize; i++)
 				{
-					PictureBox p = new PictureBox();
-					p.Name = "pictureBox_" + i + "_" + j;
-					p.Size = new System.Drawing.Size(32, 32);
-					p.Location = new System.Drawing.Point((32 * j), (32 * i));
-					p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-					p.Image = getImage(i, j);
-					screen[i][j] = p;
-					AddPictureBox(p);
+					screen[i] = new PictureBox[Playground.playgroundSize];
+					for (int j = 0; j < Playground.playgroundSize; j++)
+					{
+						PictureBox p = new PictureBox();
+						p.Name = "pictureBox_" + i + "_" + j;
+						p.Size = new System.Drawing.Size(32, 32);
+						p.Location = new System.Drawing.Point((32 * j), (32 * i));
+						p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+						p.Image = getImage(i, j);
+						screen[i][j] = p;
+						AddPictureBox(p);
+					}
 				}
 			}
 		}
@@ -138,11 +142,14 @@ namespace Bomberman
 
 		internal static void updatePictureBox()
 		{
-			for (int i = 0; i < Playground.playgroundSize; i++)
+			lock (screenLock)
 			{
-				for (int j = 0; j < Playground.playgroundSize; j++)
+				for (int i = 0; i < Playground.playgroundSize; i++)
 				{
-					screen[i][j].Image = getImage(i, j);
+					for (int j = 0; j < Playground.playgroundSize; j++)
+					{
+						screen[i][j].Image = getImage(i, j);
+					}
 				}
 			}
 		}
@@ -375,6 +382,7 @@ namespace Bomberman
 			}
 			Program.playing = false;
 			waiting = true;
+			alive = true;
 			panelGameInfo.Visible = false;
 			splitContainerMenu.Visible = true;
 		}

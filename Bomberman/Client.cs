@@ -133,6 +133,7 @@ namespace Bomberman
 					break;
 				case "Start":
 					Form1.waiting = false;
+					Form1.alive = true;
 					break;
 				case "Dead":
 					Form1.alive = false;

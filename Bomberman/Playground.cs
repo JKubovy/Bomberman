@@ -75,6 +75,7 @@ namespace Bomberman
 			int bombCount = bombs.Count;
 			for (int i = 0; i < bombCount; i++)
 			{
+				if (bombs.Count == 0) break;
 				Point location = bombs.Dequeue();
 				switch (board[location.X][location.Y])
 				{
@@ -84,13 +85,8 @@ namespace Bomberman
 						bombs.Enqueue(location);
 						break;
 					case Square.Bomb_2:
-						//board[location.X][location.Y] = Square.Bomb_3;
-						//bombs.Enqueue(location);
 						Explode(location);
 						break;
-					//case Square.Bomb_3:
-					//	Explode(location);
-					//	break;
 					case Square.Player_1:
 						board[location.X][location.Y] = Square.Bomb_1_1;
 						GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Bomb_1_1));
@@ -137,14 +133,7 @@ namespace Bomberman
 					case Square.Bomb_2_4:
 						Explode(location);
 						break;
-					//case Square.Bomb_3_1:
-					//case Square.Bomb_3_2:
-					//case Square.Bomb_3_3:
-					//case Square.Bomb_3_4:
-					//	Explode(location);
-					//	break;
 					default:
-						//bombs.Enqueue(location);
 						break;
 				}
 			}

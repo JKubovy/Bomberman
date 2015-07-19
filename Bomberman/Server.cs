@@ -245,9 +245,16 @@ namespace Bomberman
 		}
 		private static void Clean(Connection connection)
 		{
-			clients.Remove(connection);
-			clientAI.Remove(connection);
-			clientPlayers.Remove(connection);
+			try
+			{
+				clients.Remove(connection);
+				clientAI.Remove(connection);
+			}
+			catch (ArgumentOutOfRangeException) // Called in middle of stopping server
+			{
+				return;
+			} 
+
 			for (int i = 0; i < futureMoves.Count; i++)
 			{
 				FutureMove tmp = futureMoves.Dequeue();
@@ -310,6 +317,10 @@ namespace Bomberman
 				{
 					if (futureMoves.Count == clients.Count * 2) ProcessMove();
 				}
+				return;
+			}
+			catch (ObjectDisposedException) // Called in middle of stopping server
+			{
 				return;
 			}
 		}
