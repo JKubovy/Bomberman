@@ -233,7 +233,10 @@ Build: July 2015</value>
 Use arrows to choose direction of movement or press the Space bar to drop a bomb.
 Press the Backspace to cancel last move.
 By pressing Enter you confirm your moves.
-Bomb explode in the second step move after planting.</value>
+Bomb explode in the second step move after planting.
+
+Press Esc in menu to exit program
+and press Esc in game to return to menu</value>
   </data>
   <data name="Info_Avatar" xml:space="preserve">
     <value>Your avatar:</value>

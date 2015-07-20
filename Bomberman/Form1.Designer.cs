@@ -406,7 +406,6 @@
 			this.panelGame.Name = "panelGame";
 			this.panelGame.Size = new System.Drawing.Size(719, 444);
 			this.panelGame.TabIndex = 1;
-			this.panelGame.TabStop = true;
 			// 
 			// panelInfo
 			// 
@@ -472,6 +471,7 @@
 			this.buttonExit2.Name = "buttonExit2";
 			this.buttonExit2.Size = new System.Drawing.Size(251, 36);
 			this.buttonExit2.TabIndex = 5;
+			this.buttonExit2.TabStop = false;
 			this.buttonExit2.Text = global::Bomberman.Properties.Resources.Menu_Exit;
 			this.buttonExit2.UseVisualStyleBackColor = true;
 			this.buttonExit2.Click += new System.EventHandler(this.buttonExit_Click);
@@ -541,8 +541,8 @@
 			this.AutoScroll = true;
 			this.AutoScrollMinSize = new System.Drawing.Size(200, 300);
 			this.ClientSize = new System.Drawing.Size(725, 450);
-			this.Controls.Add(this.splitContainerMenu);
 			this.Controls.Add(this.panelGameInfo);
+			this.Controls.Add(this.splitContainerMenu);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);

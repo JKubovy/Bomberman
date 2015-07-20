@@ -269,7 +269,10 @@ namespace Bomberman.Properties {
         ///Use arrows to choose direction of movement or press the Space bar to drop a bomb.
         ///Press the Backspace to cancel last move.
         ///By pressing Enter you confirm your moves.
-        ///Bomb explode in the second step move after planting..
+        ///Bomb explode in the second step move after planting.
+        ///
+        ///Press Esc in menu to exit program
+        ///and press Esc in game to return to menu.
         /// </summary>
         internal static string Controls_Text {
             get {

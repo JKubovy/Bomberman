@@ -130,7 +130,10 @@ Vytvoření: červenec 2015</value>
 Pomocí šipek určujete směr pohybu a stisknutím mezery položíte bombu.
 Klávesou Backspace můžete zrušit zvolené tahy.
 Zvolené tahy potvrdíte klávesou Enter.
-Bomba exploduje 2. tah od položení.</value>
+Bomba exploduje 2. tah od položení.
+
+Stiskutím Esc v menu ukončíte aplikaci
+a stiskutím ve hře se vrátíte do menu</value>
   </data>
   <data name="Error_IP" xml:space="preserve">
     <value>Neplatná IP adresa</value>
