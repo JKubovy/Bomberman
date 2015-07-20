@@ -120,6 +120,8 @@
   <data name="About_Text" xml:space="preserve">
     <value>Bomberman je hra pro 1-4 hráče.
 Hlavní úkol je zabít zbylé tři protivníky bombami, které můžete pokládat.
+Zelené překážky mohou být zničený explozí bomby.
+
 
 Autor: Jan Kubový
 Vytvoření: červenec 2015</value>

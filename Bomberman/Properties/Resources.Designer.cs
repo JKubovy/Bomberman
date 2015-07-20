@@ -63,6 +63,7 @@ namespace Bomberman.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Bomberman is a game for 1 - 4 player.
         ///Main goal is kill other three players with bombs which you can put.
+        ///Green walls can be destroyed by bomb explosion.
         ///
         ///Autor: Jan Kubový
         ///Build: July 2015.

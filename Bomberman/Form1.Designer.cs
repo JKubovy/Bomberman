@@ -188,7 +188,6 @@
 			this.panelMultiplayer.Name = "panelMultiplayer";
 			this.panelMultiplayer.Size = new System.Drawing.Size(475, 444);
 			this.panelMultiplayer.TabIndex = 0;
-			this.panelMultiplayer.Visible = false;
 			// 
 			// panelSize
 			// 
@@ -256,12 +255,10 @@
 			// radioButton4
 			// 
 			this.radioButton4.AutoSize = true;
-			this.radioButton4.Checked = true;
 			this.radioButton4.Location = new System.Drawing.Point(135, 11);
 			this.radioButton4.Name = "radioButton4";
 			this.radioButton4.Size = new System.Drawing.Size(37, 21);
 			this.radioButton4.TabIndex = 3;
-			this.radioButton4.TabStop = true;
 			this.radioButton4.Text = "4";
 			this.radioButton4.UseVisualStyleBackColor = true;
 			// 
@@ -288,10 +285,12 @@
 			// radioButton1
 			// 
 			this.radioButton1.AutoSize = true;
+			this.radioButton1.Checked = true;
 			this.radioButton1.Location = new System.Drawing.Point(6, 11);
 			this.radioButton1.Name = "radioButton1";
 			this.radioButton1.Size = new System.Drawing.Size(37, 21);
 			this.radioButton1.TabIndex = 0;
+			this.radioButton1.TabStop = true;
 			this.radioButton1.Text = "1";
 			this.radioButton1.UseVisualStyleBackColor = true;
 			// 
@@ -541,8 +540,8 @@
 			this.AutoScroll = true;
 			this.AutoScrollMinSize = new System.Drawing.Size(200, 300);
 			this.ClientSize = new System.Drawing.Size(725, 450);
-			this.Controls.Add(this.panelGameInfo);
 			this.Controls.Add(this.splitContainerMenu);
+			this.Controls.Add(this.panelGameInfo);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
