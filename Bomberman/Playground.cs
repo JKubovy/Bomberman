@@ -66,10 +66,7 @@ namespace Bomberman
 		{
 			if (!bombs.Contains(location)) bombs.Enqueue(location);
 		}
-		/// <summary>
-		/// Clean squares on playground after fire, changing bomb squares and process explosions
-		/// </summary>
-		internal void UpdateBombsFire()
+		internal void UpdateFire()
 		{
 			int fireCount = fire.Count;
 			for (int i = 0; i < fireCount; i++)
@@ -81,6 +78,12 @@ namespace Bomberman
 					GameLogic.changes.Add(new Change(new Point(location.X, location.Y), Square.Empty));
 				}
 			}
+		}
+		/// <summary>
+		/// Clean squares on playground after fire, changing bomb squares and process explosions
+		/// </summary>
+		internal void UpdateBombs()
+		{
 			int bombCount = bombs.Count;
 			for (int i = 0; i < bombCount; i++)
 			{

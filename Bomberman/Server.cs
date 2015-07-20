@@ -163,7 +163,7 @@ namespace Bomberman
 				connection.client.Close();
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+					if (futureMoves.Count == clients.Count * 2) ProcessMoves();
 				}
 			}
 			catch (NullReferenceException) // client quit game
@@ -204,12 +204,13 @@ namespace Bomberman
 				futureMoves.Enqueue(new FutureMove(movement, connection));
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+					if (futureMoves.Count == clients.Count * 2) ProcessMoves();
 				}
 			}
 		}
-		private static void ProcessMove()
+		private static void ProcessMoves()
 		{
+			Program.playground.UpdateFire();
 			int moveCount = futureMoves.Count / 2;
 			for (int i = 0; i < moveCount; i++)
 			{
@@ -217,20 +218,21 @@ namespace Bomberman
 				GameLogic.Process(futureMove.movement, futureMove.connection);
 				futureMoves.Enqueue(futureMoves.Dequeue());
 			}
-			Program.playground.UpdateBombsFire();
+			Program.playground.UpdateBombs();
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
 				SendChanges(clientUpdate[i]);
 			}
 			GameLogic.changes.Clear();
 			Form1.updatePictureBox();
+			Program.playground.UpdateFire();
 			moveCount = futureMoves.Count;
 			for (int i = 0; i < moveCount; i++)
 			{
 				FutureMove futureMove = futureMoves.Dequeue();
 				GameLogic.Process(futureMove.movement, futureMove.connection);
 			}
-			Program.playground.UpdateBombsFire();
+			Program.playground.UpdateBombs();
 			updateTimer.Enabled = true;
 		}
 		private static void UpdateTick(Object source, ElapsedEventArgs e)
@@ -267,7 +269,7 @@ namespace Bomberman
 			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
 			lock (futureMoves)
 			{
-				if (futureMoves.Count == clients.Count * 2) ProcessMove();
+				if (futureMoves.Count == clients.Count * 2) ProcessMoves();
 			}
 		}
 		/// <summary>
@@ -318,7 +320,7 @@ namespace Bomberman
 				connection.client.Close();
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMove();
+					if (futureMoves.Count == clients.Count * 2) ProcessMoves();
 				}
 				return;
 			}
