@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Threading;
-
 using System.Timers;
 
 namespace Bomberman
@@ -37,7 +35,6 @@ namespace Bomberman
 			listener = TcpListener.Create(Program.port);
 			listener.Start();
 			allDone = new ManualResetEvent(false);
-			//listener.Start();
 			try
 			{
 				while (true)
@@ -62,7 +59,7 @@ namespace Bomberman
 				Connection connection = new Connection(client);
 				Handshake(connection);
 			}
-			catch (ObjectDisposedException) // server was stopped
+			catch (ObjectDisposedException) // server has been stopped
 			{
 				return;
 			}
@@ -81,17 +78,17 @@ namespace Bomberman
 					connection.playerNumber = clients.Count;
 				}
 				Send(response, connection);
-				if (tokens[1] == true.ToString()) // if client need updates
+				if (tokens[1] == true.ToString()) // client need updates
 				{
 					lock (clientUpdate) clientUpdate.Add(connection);
 					SendPlayground(connection);
 				}
-				if (tokens[2] == false.ToString()) // if client is AI
+				if (tokens[2] == false.ToString()) // client is AI
 				{
 					lock (clientAI) clientAI.Add(connection);
 					SendAll("Update " + connection.playerNumber + " AI");
 				}
-				else // client is Player
+				else // client is user
 				{
 					lock (clientPlayers) clientPlayers.Add(connection);
 					SendAll("Update " + connection.playerNumber + " Alive");
@@ -116,6 +113,10 @@ namespace Bomberman
 			}
 			SendUpdate("Start");
 		}
+		/// <summary>
+		/// Send to coresponding client whole playground
+		/// </summary>
+		/// <param name="connection">Receiver connection</param>
 		private static void SendPlayground(Connection connection)
 		{
 			StringBuilder sb = new StringBuilder("Playground " + Playground.playgroundSize + " ");
@@ -129,6 +130,10 @@ namespace Bomberman
 			string data = sb.ToString();
 			Send(data, connection);
 		}
+		/// <summary>
+		/// Send to coresponding client changes on playground
+		/// </summary>
+		/// <param name="connection">Receiver connection</param>
 		private static void SendChanges(Connection connection)
 		{
 			StringBuilder sb = new StringBuilder("Change " + GameLogic.changes.Count + " ");
@@ -144,29 +149,29 @@ namespace Bomberman
 			string line;
 			try
 			{
-				while (connection.connectionWith.Connected)
+				while (connection.client.Connected)
 				{
 					line = await connection.reader.ReadLineAsync();
 					ProcessCommand(line, connection);
 				}
 			}
-			catch (System.IO.IOException)
+			catch (System.IO.IOException) // connection with client has been lost
 			{
 				clientUpdate.Remove(connection);
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
-				connection.connectionWith.Close();
+				connection.client.Close();
 				lock (futureMoves)
 				{
 					if (futureMoves.Count == clients.Count * 2) ProcessMove();
 				}
 			}
-			catch (NullReferenceException)
+			catch (NullReferenceException) // client quit game
 			{
 				clientUpdate.Remove(connection);
 				Clean(connection);
-				SendUpdate("Update " + connection.playerNumber + " Lost");
-				connection.connectionWith.Close();
+				SendUpdate("Update " + connection.playerNumber + " Quit");
+				connection.client.Close();
 			}
 		}
 		private static void ProcessCommand(string command, Connection connection)
@@ -183,7 +188,7 @@ namespace Bomberman
 		}
 		private static void AddMove(string[] moves, Connection connection)
 		{
-			if (!clients.Contains(connection)) return; // check if moves send regular client
+			if (!clients.Contains(connection)) return; // check if sender is regular client
 			lock (futureMoves)
 			{
 				if (futureMoves.Count == 0)
@@ -238,7 +243,6 @@ namespace Bomberman
 			if (clients.Count == 1) EndOfGame();
 			else Form1.waiting = false;
 		}
-
 		private static void EndOfGame()
 		{
 			SendUpdate("Update " + clients[0].playerNumber + " WINNER!");
@@ -254,7 +258,6 @@ namespace Bomberman
 			{
 				return;
 			} 
-
 			for (int i = 0; i < futureMoves.Count; i++)
 			{
 				FutureMove tmp = futureMoves.Dequeue();
@@ -312,7 +315,7 @@ namespace Bomberman
 				clientUpdate.Remove(connection);
 				Clean(connection);
 				SendUpdate("Update " + connection.playerNumber + " Disconected");
-				connection.connectionWith.Close();
+				connection.client.Close();
 				lock (futureMoves)
 				{
 					if (futureMoves.Count == clients.Count * 2) ProcessMove();

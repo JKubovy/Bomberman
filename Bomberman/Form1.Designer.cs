@@ -35,6 +35,9 @@
 			this.buttonMultiplayer = new System.Windows.Forms.Button();
 			this.buttonSingleplayer = new System.Windows.Forms.Button();
 			this.panelMultiplayer = new System.Windows.Forms.Panel();
+			this.panelSize = new System.Windows.Forms.Panel();
+			this.labelSize = new System.Windows.Forms.Label();
+			this.numericUpDownSize = new System.Windows.Forms.NumericUpDown();
 			this.buttonStart = new System.Windows.Forms.Button();
 			this.groupBoxPlayersCount = new System.Windows.Forms.GroupBox();
 			this.radioButton4 = new System.Windows.Forms.RadioButton();
@@ -64,14 +67,13 @@
 			this.pictureNextMove2 = new System.Windows.Forms.PictureBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.panelGameInfo = new System.Windows.Forms.Panel();
-			this.labelSize = new System.Windows.Forms.Label();
-			this.numericUpDownSize = new System.Windows.Forms.NumericUpDown();
-			this.panelSize = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).BeginInit();
 			this.splitContainerMenu.Panel1.SuspendLayout();
 			this.splitContainerMenu.Panel2.SuspendLayout();
 			this.splitContainerMenu.SuspendLayout();
 			this.panelMultiplayer.SuspendLayout();
+			this.panelSize.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).BeginInit();
 			this.groupBoxPlayersCount.SuspendLayout();
 			this.groupBoxServerClient.SuspendLayout();
 			this.panelControls.SuspendLayout();
@@ -81,8 +83,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).BeginInit();
 			this.panelGameInfo.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).BeginInit();
-			this.panelSize.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainerMenu
@@ -189,6 +189,46 @@
 			this.panelMultiplayer.Size = new System.Drawing.Size(475, 444);
 			this.panelMultiplayer.TabIndex = 0;
 			this.panelMultiplayer.Visible = false;
+			// 
+			// panelSize
+			// 
+			this.panelSize.Controls.Add(this.labelSize);
+			this.panelSize.Controls.Add(this.numericUpDownSize);
+			this.panelSize.Location = new System.Drawing.Point(6, 174);
+			this.panelSize.Name = "panelSize";
+			this.panelSize.Size = new System.Drawing.Size(129, 53);
+			this.panelSize.TabIndex = 10;
+			// 
+			// labelSize
+			// 
+			this.labelSize.AutoSize = true;
+			this.labelSize.Location = new System.Drawing.Point(6, 3);
+			this.labelSize.Name = "labelSize";
+			this.labelSize.Size = new System.Drawing.Size(113, 17);
+			this.labelSize.TabIndex = 8;
+			this.labelSize.Text = "Playground size:";
+			// 
+			// numericUpDownSize
+			// 
+			this.numericUpDownSize.Location = new System.Drawing.Point(6, 24);
+			this.numericUpDownSize.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+			this.numericUpDownSize.Minimum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+			this.numericUpDownSize.Name = "numericUpDownSize";
+			this.numericUpDownSize.Size = new System.Drawing.Size(113, 22);
+			this.numericUpDownSize.TabIndex = 9;
+			this.numericUpDownSize.Value = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
 			// 
 			// buttonStart
 			// 
@@ -366,6 +406,7 @@
 			this.panelGame.Name = "panelGame";
 			this.panelGame.Size = new System.Drawing.Size(719, 444);
 			this.panelGame.TabIndex = 1;
+			this.panelGame.TabStop = true;
 			// 
 			// panelInfo
 			// 
@@ -493,46 +534,6 @@
 			this.panelGameInfo.TabIndex = 3;
 			this.panelGameInfo.Visible = false;
 			// 
-			// labelSize
-			// 
-			this.labelSize.AutoSize = true;
-			this.labelSize.Location = new System.Drawing.Point(6, 3);
-			this.labelSize.Name = "labelSize";
-			this.labelSize.Size = new System.Drawing.Size(113, 17);
-			this.labelSize.TabIndex = 8;
-			this.labelSize.Text = "Playground size:";
-			// 
-			// numericUpDownSize
-			// 
-			this.numericUpDownSize.Location = new System.Drawing.Point(6, 24);
-			this.numericUpDownSize.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-			this.numericUpDownSize.Minimum = new decimal(new int[] {
-            7,
-            0,
-            0,
-            0});
-			this.numericUpDownSize.Name = "numericUpDownSize";
-			this.numericUpDownSize.Size = new System.Drawing.Size(113, 22);
-			this.numericUpDownSize.TabIndex = 9;
-			this.numericUpDownSize.Value = new decimal(new int[] {
-            7,
-            0,
-            0,
-            0});
-			// 
-			// panelSize
-			// 
-			this.panelSize.Controls.Add(this.labelSize);
-			this.panelSize.Controls.Add(this.numericUpDownSize);
-			this.panelSize.Location = new System.Drawing.Point(6, 174);
-			this.panelSize.Name = "panelSize";
-			this.panelSize.Size = new System.Drawing.Size(129, 53);
-			this.panelSize.TabIndex = 10;
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -551,6 +552,9 @@
 			this.splitContainerMenu.ResumeLayout(false);
 			this.panelMultiplayer.ResumeLayout(false);
 			this.panelMultiplayer.PerformLayout();
+			this.panelSize.ResumeLayout(false);
+			this.panelSize.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).EndInit();
 			this.groupBoxPlayersCount.ResumeLayout(false);
 			this.groupBoxPlayersCount.PerformLayout();
 			this.groupBoxServerClient.ResumeLayout(false);
@@ -566,9 +570,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureNextMove2)).EndInit();
 			this.panelGameInfo.ResumeLayout(false);
 			this.panelGameInfo.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).EndInit();
-			this.panelSize.ResumeLayout(false);
-			this.panelSize.PerformLayout();
 			this.ResumeLayout(false);
 
 		}

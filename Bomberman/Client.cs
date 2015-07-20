@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -23,20 +22,28 @@ namespace Bomberman
 		/// Start new Client and connect it to server
 		/// </summary>
 		/// <param name="ip">IP address of server in local network</param>
-		/// <param name="user">boolean represent if client control user</param>
-		/// <param name="update">boolean represent if client want to recieve updates</param>
+		/// <param name="user">The client is controled by user</param>
+		/// <param name="update">The client wants to receive updates</param>
 		public Client(IPAddress ip, bool user, bool update)
 		{
 			server = new TcpClient(AddressFamily.InterNetworkV6);
 			server.Client.DualMode = true;
-			server.Connect(ip,Program.port);
-			writer = new StreamWriter(server.GetStream());
-			reader = new StreamReader(server.GetStream());
-			writer.AutoFlush = true;
 			if (user)
 			{
 				Form1.player = this;
 			}
+			try
+			{
+				server.Connect(ip, Program.port);
+			}
+			catch (SocketException)
+			{
+				ServerUnreachable();
+				return;
+			}
+			writer = new StreamWriter(server.GetStream());
+			reader = new StreamReader(server.GetStream());
+			writer.AutoFlush = true;
 			Handshake(update, user);
 		}
 		/// <summary>
@@ -117,7 +124,7 @@ namespace Bomberman
 			switch (tokens[0])
 			{
 				case "SendMoves":
-					GetPosition();
+					UpdatePosition();
 					futureMoves = AI.GetNextMovement(Position);
 					indexFutureMoves = 2;
 					SendMoves();
@@ -145,9 +152,12 @@ namespace Bomberman
 					break;
 			}
 		}
-
 		Movement[] futureMoves = new Movement[2];
 		int indexFutureMoves = 0;
+		/// <summary>
+		/// Process key press coresponding to movement
+		/// </summary>
+		/// <param name="movement">Movement to precess</param>
 		internal void ProcessMovement(Movement movement)
 		{
 			switch (movement)
@@ -161,7 +171,7 @@ namespace Bomberman
 					{
 						futureMoves[indexFutureMoves] = movement;
 						indexFutureMoves++;
-						updatePosition(movement);
+						UpdatePosition(movement);
 					}
 					break;
 				case Movement.Backspace:
@@ -176,7 +186,7 @@ namespace Bomberman
 					break;
 			}
 		}
-		private void updatePosition(Movement movement)
+		private void UpdatePosition(Movement movement)
 		{
 			switch (movement)
 			{
@@ -211,12 +221,11 @@ namespace Bomberman
 				Square square = (Square)int.Parse(tokens[i * 3 + 4]);
 				Point location = new Point(int.Parse(tokens[i * 3 + 2]), int.Parse(tokens[i * 3 + 3]));
 				Program.playground.board[location.X][location.Y] = square;
-				//if (GameLogic.IsPlayerSquare(square, startPosition)) position = location;
 			}
 			Form1.updatePictureBox();
 			Form1.waiting = false;
 		}
-		private void GetPosition()
+		private void UpdatePosition()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
@@ -258,6 +267,13 @@ namespace Bomberman
 				ServerLost();
 			}
 		}
+		private void ServerUnreachable()
+		{
+			for (int i = 1; i <= 4; i++)
+			{
+				ProcessUpdate(new string[] { "", i.ToString(), "Server_Unreachable" });
+			}
+		}
 		private void ServerLost()
 		{
 			for (int i = 1; i <= 4; i++)
@@ -271,7 +287,11 @@ namespace Bomberman
 		/// </summary>
 		internal void Stop()
 		{
-			server.Close();
+			for (int i = 1; i <= 4; i++)
+			{
+				ProcessUpdate(new string[] { "", i.ToString(), "" });
+			}
+			if (server != null) server.Close();
 		}
 	}
 }

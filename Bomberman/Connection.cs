@@ -7,8 +7,7 @@ namespace Bomberman
 {
 	class Connection
 	{
-		public TcpClient connectionWith = null;
-		public DateTime lastTouch;
+		public TcpClient client = null;
 		public StreamWriter writer;
 		public StreamReader reader;
 		public Point position;
@@ -16,11 +15,10 @@ namespace Bomberman
 
 		public Connection(TcpClient client)
 		{
-			this.connectionWith = client;
-			this.writer = new StreamWriter(connectionWith.GetStream());
-			this.reader = new StreamReader(connectionWith.GetStream());
+			this.client = client;
+			this.writer = new StreamWriter(client.GetStream());
+			this.reader = new StreamReader(client.GetStream());
 			this.writer.AutoFlush = true;
-			this.lastTouch = DateTime.Now;
 		}
 	}
 }

@@ -178,10 +178,10 @@ namespace Bomberman
 			}
 		}
 		/// <summary>
-		/// Return coordinates on playground
+		/// Get a starting position based on the start number
 		/// </summary>
-		/// <param name="number">player's number</param>
-		/// <returns>coordinates on playground</returns>
+		/// <param name="number">Player's start number</param>
+		/// <returns>Coordinates on playground</returns>
 		internal static Point GetStartPosition(string number)
 		{
 			switch (number)
@@ -199,10 +199,10 @@ namespace Bomberman
 			}
 		}
 		/// <summary>
-		/// Get Movement which coresponding pressed key
+		/// Get Movement which coresponding to pressed key
 		/// </summary>
-		/// <param name="key"></param>
-		/// <returns></returns>
+		/// <param name="key">Pressed key</param>
+		/// <returns>Coresponding Movement</returns>
 		internal static Movement ProcessKeyPress(Keys key)
 		{
 			Point position = Form1.player.Position;
@@ -255,6 +255,12 @@ namespace Bomberman
 			}
 			return "";
 		}
+		/// <summary>
+		/// Determinate if the square represent some player
+		/// </summary>
+		/// <param name="square"></param>
+		/// <param name="startPosition">Player's start number</param>
+		/// <returns></returns>
 		internal static bool IsPlayerSquare(Square square, int startPosition)
 		{
 			switch (square)
@@ -287,6 +293,9 @@ namespace Bomberman
 					return false;
 			}
 		}
+		/// <summary>
+		/// Every combination of two movement heading to diferent position
+		/// </summary>
 		public readonly static Tuple<Movement, Movement>[] possibleDoubleMove = { new Tuple<Movement, Movement>(Movement.Up, Movement.Left),
 																				new Tuple<Movement, Movement>(Movement.Up, Movement.Up),
 																				new Tuple<Movement, Movement>(Movement.Up, Movement.Right),

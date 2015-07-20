@@ -1,6 +1,4 @@
 ﻿using System;
-//using System.ComponentModel;
-//using System.Data;
 using System.Threading;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -45,14 +43,12 @@ namespace Bomberman
 			panelControls.Visible = false;
 			panelAbout.Visible = true;
 		}
-
 		private void buttonControls_Click(object sender, EventArgs e)
 		{
 			panelMultiplayer.Visible = false;
 			panelControls.Visible = true;
 			panelAbout.Visible = false;
 		}
-
 		private void buttonMultiplayer_Click(object sender, EventArgs e)
 		{
 			panelMultiplayer.Visible = true;
@@ -60,12 +56,10 @@ namespace Bomberman
 			panelAbout.Visible = false;
 			radioButton4.Checked = true;
 		}
-
 		private void buttonExit_Click(object sender, EventArgs e)
 		{
 			this.Close();
 		}
-
 		private void buttonSingleplayer_Click(object sender, EventArgs e)
 		{
 			panelMultiplayer.Visible = true;
@@ -78,21 +72,13 @@ namespace Bomberman
 		private static PictureBox[][] screen;
 		internal static Client player;
 		static object screenLock = new object();
+		/// <summary>
+		/// Create PictureBoxes grid coresponding to size of array
+		/// </summary>
 		internal void initGraphicPlayground()
 		{
 			lock (screenLock)
 			{
-				if (screen != null)
-				{
-					for (int i = 0; i < screen.Length; i++)
-					{
-						for (int j = 0; j < screen[i].Length; j++)
-						{
-							screen[i][j].Dispose();
-						}
-					}
-					screen = null;
-				}
 				screen = new PictureBox[Playground.playgroundSize][];
 				for (int i = 0; i < Playground.playgroundSize; i++)
 				{
@@ -111,6 +97,27 @@ namespace Bomberman
 				}
 			}
 		}
+		/// <summary>
+		/// Remove PictureBoxes
+		/// </summary>
+		private void CleanScreen()
+		{
+			lock (screenLock)
+			{
+				if (screen != null)
+				{
+					for (int i = 0; i < screen.Length; i++)
+					{
+						for (int j = 0; j < screen[i].Length; j++)
+						{
+							screen[i][j].Dispose();
+						}
+					}
+					screen = null;
+				}
+			}
+		}
+
 		delegate void AddPictureBoxCallback(PictureBox p);
 		private void AddPictureBox(PictureBox p)
 		{
@@ -124,7 +131,6 @@ namespace Bomberman
 				panelGame.Controls.Add(p);
 			}
 		}
-
 		delegate void SetLabelTextCallback(Label label, String text);
 		internal void SetLabelText(Label label, String text)
 		{
@@ -144,6 +150,7 @@ namespace Bomberman
 		{
 			lock (screenLock)
 			{
+				if (screen == null) return;
 				for (int i = 0; i < Playground.playgroundSize; i++)
 				{
 					for (int j = 0; j < Playground.playgroundSize; j++)
@@ -311,7 +318,6 @@ namespace Bomberman
 			panelSize.Enabled = radioButtonServer.Checked;
 			groupBoxPlayersCount.Enabled = radioButtonServer.Checked;
 		}
-
 		private void buttonStart_Click(object sender, EventArgs e)
 		{
 			if (radioButtonServer.Checked)
@@ -372,7 +378,7 @@ namespace Bomberman
 		{
 			if (server == null)
 			{
-				player.Stop();
+				if (player != null) player.Stop();
 			}
 			else
 			{
@@ -385,6 +391,7 @@ namespace Bomberman
 			alive = true;
 			panelGameInfo.Visible = false;
 			splitContainerMenu.Visible = true;
+			CleanScreen();
 		}
 	}
 }

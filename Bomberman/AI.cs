@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace Bomberman
 {
+	/// <summary>
+	/// Class AI provides the possibility of calculating the next steps
+	/// Use by computer-controlled characters
+	/// </summary>
 	class AI
 	{
 		Point heading;
@@ -32,15 +34,18 @@ namespace Bomberman
 			Point tmp;
 			Movement[] movement = new Movement[2];
 			PrepareBoardMovement(position);
-			PrepareHeadingPoint(position);
+			SelectHeadingPoint(position);
 			if (enemyClose) movement[0] = RandomStep(position);
-			else movement[0] = ProcessStep(position);
+			else movement[0] = MovingStep(position);
 			if (Check(position, movement[0], out tmp)) position = tmp;
 			if (enemyClose) movement[1] = RandomStep(position);
-			else movement[1] = ProcessStep(position);
+			else movement[1] = MovingStep(position);
 			return movement;
 		}
-
+		/// <summary>
+		/// Prepare boards with steps
+		/// </summary>
+		/// <param name="position">Player position</param>
 		private void PrepareBoardMovement(Point position)
 		{
 			boardWithObstacles = new int[Playground.playgroundSize][];
@@ -215,7 +220,7 @@ namespace Bomberman
 				}
 			} while (queue.Count != 0);
 		}
-		private void PrepareHeadingPoint(Point position)
+		private void SelectHeadingPoint(Point position)
 		{
 			int shortestPathObstacles = int.MaxValue;
 			int shortestPathWithoutObstacles = int.MaxValue;
@@ -255,6 +260,12 @@ namespace Bomberman
 				else if (boardPossiblePath[p.X - 1][p.Y] == boardPossiblePath[p.X][p.Y] - 1) steps.Enqueue(new Point(p.X - 1, p.Y));
 			}
 		}
+		/// <summary>
+		/// Randomly choose next movement
+		/// using System.Random
+		/// </summary>
+		/// <param name="position">Current position</param>
+		/// <returns>Random Movement</returns>
 		private Movement RandomStep(Point position)
 		{
 			if (saveMovement.Count != 0)
@@ -268,7 +279,12 @@ namespace Bomberman
 			}
 			return movement;
 		}
-		private Movement ProcessStep(Point position)
+		/// <summary>
+		/// Get next step by folowing calculated path
+		/// </summary>
+		/// <param name="position">Current position</param>
+		/// <returns>Next movement</returns>
+		private Movement MovingStep(Point position)
 		{
 			if (saveMovement.Count != 0)
 			{
@@ -286,10 +302,10 @@ namespace Bomberman
 			}
 			else
 			{
-				return GetDirection(position, location);
+				return GetMovementDirection(position, location);
 			}
 		}
-		private Movement GetDirection(Point start, Point destination) // Have to be 1 step far from each other
+		private Movement GetMovementDirection(Point start, Point destination) // Have to be 1 step far from each other
 		{
 			if (start.X == destination.X && start.Y == destination.Y + 1) return Movement.Left;
 			else if (start.X == destination.X + 1 && start.Y == destination.Y) return Movement.Up;
@@ -332,11 +348,11 @@ namespace Bomberman
 			}
 		}
 		/// <summary>
-		/// Check if it is possible to change place specific direction
+		/// Check if the next move is possible
 		/// </summary>
-		/// <param name="position">Start position</param>
-		/// <param name="movement">Wanted movement</param>
-		/// <returns></returns>
+		/// <param name="position">Current position</param>
+		/// <param name="movement">Next movement</param>
+		/// <returns>Possibility of movement</returns>
 		private bool Check(Point position, Movement movement, out Point newPosition)
 		{
 			Point oldPosition = position;
@@ -365,9 +381,9 @@ namespace Bomberman
 			else return false;
 		}
 		/// <summary>
-		/// Save to players array location of player if he is on location
+		/// Save players location
 		/// </summary>
-		/// <param name="location">coordinate on playground</param>
+		/// <param name="location">Location on playground</param>
 		private void RecognizePlayer(Point location)
 		{
 			Square square = Program.playground.board[location.X][location.Y];

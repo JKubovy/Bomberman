@@ -30,14 +30,16 @@ namespace Bomberman
 		Bomb_3_4,
 		Fire
 	}
-
 	class Playground
 	{
-		internal static int playgroundSize = 14; // must be greater or eaqual to 7! 14
+		internal static int playgroundSize = 14; // must be greater or eaqual to 7!
 		public Square[][] board;
 		private Queue<Point> bombs = new Queue<Point>();
 		private Queue<Point> fire = new Queue<Point>();
 
+		/// <summary>
+		/// Prepare board array and initialize values
+		/// </summary>
 		public Playground()
 		{
 			this.board = new Square[playgroundSize][];
@@ -47,6 +49,10 @@ namespace Bomberman
 			}
 			InitPlayground();
 		}
+		/// <summary>
+		/// Prepare board array in specific size
+		/// </summary>
+		/// <param name="size">Size of playground</param>
 		public Playground(int size)
 		{
 			playgroundSize = size;
@@ -60,6 +66,9 @@ namespace Bomberman
 		{
 			if (!bombs.Contains(location)) bombs.Enqueue(location);
 		}
+		/// <summary>
+		/// Clean squares on playground after fire, changing bomb squares and process explosions
+		/// </summary>
 		internal void UpdateBombsFire()
 		{
 			int fireCount = fire.Count;
@@ -281,7 +290,7 @@ namespace Bomberman
 		/// <summary>
 		/// Findeout if every player can reach other players
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Feasibility of playground</returns>
 		private bool CheckFeasibility()
 		{
 			bool[][] field = new bool[playgroundSize][];
