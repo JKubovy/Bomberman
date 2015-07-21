@@ -43,14 +43,12 @@ namespace Bomberman
 		/// <summary>
 		/// Determinate changes on playground base on player's movements
 		/// </summary>
-		/// <param name="playground">Instance of playground to update</param>
 		/// <param name="movement">Array of moves by players</param>
-		/// <param name="connection"></param>
-		/// <returns>Updated playground</returns>
-		internal static Playground Process(Movement movement, Connection connection)
+		/// <param name="connection">Connection coresponding to player who want to make a move</param>
+		internal static void Process(Movement movement, Connection connection)
 		{
 			Playground playground = Program.playground;
-			if (playground.board[connection.position.X][connection.position.Y] == Square.Fire) return playground;
+			if (playground.board[connection.position.X][connection.position.Y] == Square.Fire) return;
 			switch (movement)
 			{
 				case Movement.Up:
@@ -60,7 +58,7 @@ namespace Bomberman
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X - 1, connection.position.Y));
 						connection.position = new Point(connection.position.X - 1, connection.position.Y);
 					}
-					return playground;
+					return;
 				case Movement.Left:
 					if ((playground.board[connection.position.X][connection.position.Y - 1] == Square.Empty) ||
 						(playground.board[connection.position.X][connection.position.Y - 1] == Square.Fire))
@@ -68,7 +66,7 @@ namespace Bomberman
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y - 1));
 						connection.position = new Point(connection.position.X,connection.position.Y - 1);
 					}
-					return playground;
+					return;
 				case Movement.Down:
 					if ((playground.board[connection.position.X + 1][connection.position.Y] == Square.Empty) ||
 						(playground.board[connection.position.X + 1][connection.position.Y] == Square.Fire))
@@ -76,7 +74,7 @@ namespace Bomberman
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X + 1, connection.position.Y));
 						connection.position = new Point(connection.position.X + 1, connection.position.Y);
 					}
-					return playground;
+					return;
 				case Movement.Right:
 					if ((playground.board[connection.position.X][connection.position.Y + 1] == Square.Empty) ||
 						(playground.board[connection.position.X][connection.position.Y + 1] == Square.Fire))
@@ -84,12 +82,12 @@ namespace Bomberman
 						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y + 1));
 						connection.position = new Point(connection.position.X, connection.position.Y + 1);
 					}
-					return playground;
+					return;
 				case Movement.Plant_bomb:
 					playground.AddBomb(new Point(connection.position.X, connection.position.Y));
-					return playground;
+					return;
 				default:
-					return playground;
+					return;
 			}
 		}
 		private static Square GetFirstBombSquare(Square square)
@@ -180,11 +178,11 @@ namespace Bomberman
 		/// <summary>
 		/// Get a starting position based on the start number
 		/// </summary>
-		/// <param name="number">Player's start number</param>
+		/// <param name="startNumber">Player's start number</param>
 		/// <returns>Coordinates on playground</returns>
-		internal static Point GetStartPosition(string number)
+		internal static Point GetStartPosition(string startNumber)
 		{
-			switch (number)
+			switch (startNumber)
 			{
 				case "0":
 					return new Point(1, 1);
@@ -195,7 +193,7 @@ namespace Bomberman
 				case "3":
 					return new Point(Playground.playgroundSize - 2, Playground.playgroundSize - 2);
 				default:
-					return new Point();  //unsupported number of players
+					return new Point();  //unsupported start number
 			}
 		}
 		/// <summary>
@@ -226,11 +224,13 @@ namespace Bomberman
 					movement = Movement.Down;
 					break;
 				case Keys.Space:
+				case Keys.E:
 					movement = Movement.Plant_bomb;
 					break;
 				case Keys.Enter:
 					return Movement.Enter;
 				case Keys.Back:
+				case Keys.Q:
 					return Movement.Backspace;
 				default:
 					movement = Movement.Nothing;
@@ -239,21 +239,28 @@ namespace Bomberman
 			return movement;
 		}
 		/// <summary>
-		/// Get local IP address of current computer
+		/// Get the local IP address of current computer
 		/// </summary>
 		/// <returns>IP address</returns>
 		internal static string GetLanIP()
 		{
-			string strHostName = System.Net.Dns.GetHostName();
-			IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(strHostName);
-			foreach (IPAddress ipAddress in ipEntry.AddressList)
+			try
 			{
-				if (ipAddress.AddressFamily.ToString() == "InterNetwork")
+				string hostName = System.Net.Dns.GetHostName();
+				IPHostEntry ipAddresses = System.Net.Dns.GetHostEntry(hostName);
+				foreach (IPAddress ipAddress in ipAddresses.AddressList)
 				{
-					return ipAddress.ToString();
+					if (ipAddress.AddressFamily.ToString() == "InterNetwork")
+					{
+						return ipAddress.ToString();
+					}
 				}
+				return ""; // can't find any local IP address
 			}
-			return "";
+			catch (System.Net.Sockets.SocketException)
+			{
+				return ""; // unable to get valid data
+			}
 		}
 		/// <summary>
 		/// Determinate if the square represent some player
@@ -294,7 +301,7 @@ namespace Bomberman
 			}
 		}
 		/// <summary>
-		/// Every combination of two movement heading to diferent position
+		/// Every combination of two movement ends in different position
 		/// </summary>
 		public readonly static Tuple<Movement, Movement>[] possibleDoubleMove = { new Tuple<Movement, Movement>(Movement.Up, Movement.Left),
 																				new Tuple<Movement, Movement>(Movement.Up, Movement.Up),

@@ -11,7 +11,8 @@ namespace Bomberman
 	class Server
 	{
 		static TcpListener listener;
-		static List<Connection> clients;
+		static List<Connection> clientsAll;
+		static List<Connection> clientsPlaying;
 		static List<Connection> clientUpdate;
 		static List<Connection> clientAI;
 		static List<Connection> clientPlayers;
@@ -25,10 +26,11 @@ namespace Bomberman
 		public static void Start()
 		{
 			futureMoves = new Queue<FutureMove>();
-			clients = new List<Connection>();
+			clientsPlaying = new List<Connection>();
 			clientUpdate = new List<Connection>();
 			clientAI = new List<Connection>();
 			clientPlayers = new List<Connection>();
+			clientsAll = new List<Connection>();
 			updateTimer.Elapsed += new ElapsedEventHandler(UpdateTick);
 			updateTimer.AutoReset = false;
 			if (listener != null) listener.Stop();
@@ -71,11 +73,12 @@ namespace Bomberman
 			if (tokens[0] == "Bomberman")
 			{
 				string response;
-				lock(clients){
-					response = "ACK " + clients.Count;
-					connection.position = GameLogic.GetStartPosition(clients.Count.ToString());
-					clients.Add(connection);
-					connection.playerNumber = clients.Count;
+				lock(clientsPlaying){
+					response = "ACK " + clientsPlaying.Count;
+					connection.position = GameLogic.GetStartPosition(clientsPlaying.Count.ToString());
+					clientsPlaying.Add(connection);
+					clientsAll.Add(connection);
+					connection.playerNumber = clientsPlaying.Count;
 				}
 				Send(response, connection);
 				if (tokens[1] == true.ToString()) // client need updates
@@ -93,56 +96,56 @@ namespace Bomberman
 					lock (clientPlayers) clientPlayers.Add(connection);
 					SendAll("Update " + connection.playerNumber + " Alive");
 				}
-				if (clients.Count == 4) SendInitUpdate();
+				if (clientsPlaying.Count == 4) SendInitUpdate();
 				StartListening(connection);
 			}
 		}
 		private static void SendInitUpdate()
 		{
-			for (int i = 0; i < clients.Count; i++)
+			for (int i = 0; i < clientsPlaying.Count; i++)
 			{
-				if (clientAI.Contains(clients[i]))
+				if (clientAI.Contains(clientsPlaying[i]))
 				{
-					SendUpdate("Update " + clients[i].playerNumber + " AI");
+					SendUpdate("Update " + clientsPlaying[i].playerNumber + " AI");
 				}
 				else
 				{
 
-					SendUpdate("Update " + clients[i].playerNumber + " Alive");
+					SendUpdate("Update " + clientsPlaying[i].playerNumber + " Alive");
 				}
 			}
 			SendUpdate("Start");
 		}
 		/// <summary>
-		/// Send to coresponding client whole playground
+		/// Send to coresponding client to connection whole playground
 		/// </summary>
 		/// <param name="connection">Receiver connection</param>
 		private static void SendPlayground(Connection connection)
 		{
-			StringBuilder sb = new StringBuilder("Playground " + Playground.playgroundSize + " ");
+			StringBuilder message = new StringBuilder("Playground " + Playground.playgroundSize + " ");
 			for (int i = 0; i < Playground.playgroundSize; i++)
 			{
 				for (int j = 0; j < Playground.playgroundSize; j++)
 				{
-					sb.Append((int)Program.playground.board[i][j] + " ");
+					message.Append((int)Program.playground.board[i][j] + " ");
 				}
 			}
-			string data = sb.ToString();
+			string data = message.ToString();
 			Send(data, connection);
 		}
 		/// <summary>
-		/// Send to coresponding client changes on playground
+		/// Send to coresponding client to connection changes on playground
 		/// </summary>
 		/// <param name="connection">Receiver connection</param>
 		private static void SendChanges(Connection connection)
 		{
-			StringBuilder sb = new StringBuilder("Change " + GameLogic.changes.Count + " ");
+			StringBuilder message = new StringBuilder("Change " + GameLogic.changes.Count + " ");
 			for (int i = 0; i < GameLogic.changes.Count; i++)
 			{
 				Change change = GameLogic.changes[i];
-				sb.Append(change.coordinate.X + " " + change.coordinate.Y + " " + (int)change.square + " ");
+				message.Append(change.coordinate.X + " " + change.coordinate.Y + " " + (int)change.square + " ");
 			}
-			Send(sb.ToString(), connection);
+			Send(message.ToString(), connection);
 		}
 		private static async void StartListening(Connection connection)
 		{
@@ -163,7 +166,7 @@ namespace Bomberman
 				connection.client.Close();
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMoves();
+					if (futureMoves.Count == clientsPlaying.Count * 2) ProcessMoves();
 				}
 			}
 			catch (NullReferenceException) // client quit game
@@ -180,15 +183,15 @@ namespace Bomberman
 			switch (tokens[0])
 			{
 				case "Move":
-					AddMove(tokens, connection);
+					AddMoves(tokens, connection);
 					break;
 				default:
 					break;
 			}
 		}
-		private static void AddMove(string[] moves, Connection connection)
+		private static void AddMoves(string[] moves, Connection connection)
 		{
-			if (!clients.Contains(connection)) return; // check if sender is regular client
+			if (!clientsPlaying.Contains(connection)) return; // check if sender is regular client
 			lock (futureMoves)
 			{
 				if (futureMoves.Count == 0)
@@ -204,7 +207,7 @@ namespace Bomberman
 				futureMoves.Enqueue(new FutureMove(movement, connection));
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMoves();
+					if (futureMoves.Count == clientsPlaying.Count * 2) ProcessMoves();
 				}
 			}
 		}
@@ -242,18 +245,18 @@ namespace Bomberman
 				SendChanges(clientUpdate[i]);
 			}
 			Form1.updatePictureBox();
-			if (clients.Count == 1) EndOfGame();
+			if (clientsPlaying.Count == 1) EndOfGame();
 			else Form1.waiting = false;
 		}
 		private static void EndOfGame()
 		{
-			SendUpdate("Update " + clients[0].playerNumber + " WINNER!");
+			SendUpdate("Update " + clientsPlaying[0].playerNumber + " WINNER!");
 		}
 		private static void Clean(Connection connection)
 		{
 			try
 			{
-				clients.Remove(connection);
+				clientsPlaying.Remove(connection);
 				clientAI.Remove(connection);
 			}
 			catch (ArgumentOutOfRangeException) // Called in middle of stopping server
@@ -269,7 +272,7 @@ namespace Bomberman
 			GameLogic.changes.Add(new Change(new Point(connection.position.X, connection.position.Y), Square.Empty));
 			lock (futureMoves)
 			{
-				if (futureMoves.Count == clients.Count * 2) ProcessMoves();
+				if (futureMoves.Count == clientsPlaying.Count * 2) ProcessMoves();
 			}
 		}
 		/// <summary>
@@ -278,12 +281,12 @@ namespace Bomberman
 		/// <param name="location">Coordinate of dead</param>
 		internal static void Dead(Point location)
 		{
-			Connection connection = clients[0]; // just init value
-			for (int i = 0; i < clients.Count; i++)
+			Connection connection = clientsPlaying[0]; // just init value
+			for (int i = 0; i < clientsPlaying.Count; i++)
 			{
-				if (clients[i].position == location)
+				if (clientsPlaying[i].position == location)
 				{
-					connection = clients[i];
+					connection = clientsPlaying[i];
 					break;
 				}
 			}
@@ -291,13 +294,19 @@ namespace Bomberman
 			if (clientPlayers.Contains(connection)) Send("Dead", connection);
 			Clean(connection);
 		}
-		private static void SendAll(string msg)
+		/// <summary>
+		/// Send message to all clients in clientUpdate
+		/// </summary>
+		private static void SendAll(string msg) 
 		{
 			for (int i = 0; i < clientUpdate.Count; i++)
 			{
 				Send(msg, clientUpdate[i]);
 			}
 		}
+		/// <summary>
+		/// Send message to all clients in clientUpdate and player running server
+		/// </summary>
 		private static void SendUpdate(string msg)
 		{
 			for (int i = 0; i < clientUpdate.Count; i++)
@@ -320,7 +329,7 @@ namespace Bomberman
 				connection.client.Close();
 				lock (futureMoves)
 				{
-					if (futureMoves.Count == clients.Count * 2) ProcessMoves();
+					if (futureMoves.Count == clientsPlaying.Count * 2) ProcessMoves();
 				}
 				return;
 			}
@@ -334,10 +343,14 @@ namespace Bomberman
 		/// </summary>
 		internal static void Stop()
 		{
-			for (int i = 0; i < clients.Count; i++)
+			for (int i = 0; i < clientsAll.Count; i++)
 			{
-				Send("Stop", clients[i]);
+				Send("Stop", clientsAll[i]);
 			}
+			//for (int i = 0; i < allConections.Count; i++)
+			//{
+			//	Send("Stop", allConections[i]);
+			//}
 		}
 	}
 }

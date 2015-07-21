@@ -162,7 +162,7 @@ namespace Bomberman
 			}
 		}
 		/// <summary>
-		/// Add coodinates where will be fire to List currentFire
+		/// Add coodinates where will be fire to currentFire
 		/// </summary>
 		/// <param name="location">Location of exploded bomb</param>
 		private void AddFire(Point location)

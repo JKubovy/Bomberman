@@ -47,7 +47,7 @@ namespace Bomberman
 			Handshake(update, user);
 		}
 		/// <summary>
-		/// Start comunicate with server
+		/// Start comunication with server
 		/// </summary>
 		/// <param name="update">Boolean if client want to recive updates</param>
 		/// <param name="user">Boolean if client is user</param>
@@ -79,7 +79,6 @@ namespace Bomberman
 				StartListening();
 			}
 		}
-
 		private void ProcessPlayground(string[] data)
 		{
 			int size = int.Parse(data[1]);
@@ -225,6 +224,9 @@ namespace Bomberman
 			Form1.updatePictureBox();
 			Form1.waiting = false;
 		}
+		/// <summary>
+		/// Find myself on playground and save this position
+		/// </summary>
 		private void UpdatePosition()
 		{
 			for (int i = 0; i < Playground.playgroundSize; i++)
