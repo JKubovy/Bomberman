@@ -28,6 +28,8 @@ namespace Bomberman
 			this.labelInfoPlayer4.Text = Properties.Resources.Info_Player4;
 			this.labelPlayerCount.Text = Properties.Resources.Multiplayer_PlayersCount;
 			this.labelSize.Text = Properties.Resources.Multiplayer_Size;
+			this.labelNextMoves.Text = Properties.Resources.Info_NextMoves;
+			this.labelAvatar.Text = Properties.Resources.Info_Avatar;
 
 			this.buttonAbout.Text = Properties.Resources.Menu_About;
 			this.buttonControls.Text = Properties.Resources.Menu_Controls;
@@ -85,14 +87,14 @@ namespace Bomberman
 					screen[i] = new PictureBox[Playground.playgroundSize];
 					for (int j = 0; j < Playground.playgroundSize; j++)
 					{
-						PictureBox p = new PictureBox();
-						p.Name = "pictureBox_" + i + "_" + j;
-						p.Size = new System.Drawing.Size(32, 32);
-						p.Location = new System.Drawing.Point((32 * j), (32 * i));
-						p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-						p.Image = getImage(i, j);
-						screen[i][j] = p;
-						AddPictureBox(p);
+						PictureBox pictureBox = new PictureBox();
+						pictureBox.Name = "pictureBox_" + i + "_" + j;
+						pictureBox.Size = new System.Drawing.Size(32, 32);
+						pictureBox.Location = new System.Drawing.Point((32 * j), (32 * i));
+						pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+						pictureBox.Image = getImage(i, j);
+						screen[i][j] = pictureBox;
+						AddPictureBox(pictureBox);
 					}
 				}
 			}
@@ -118,17 +120,17 @@ namespace Bomberman
 			}
 		}
 
-		delegate void AddPictureBoxCallback(PictureBox p);
-		private void AddPictureBox(PictureBox p)
+		delegate void AddPictureBoxCallback(PictureBox pictureBox);
+		private void AddPictureBox(PictureBox pictureBox)
 		{
 			if (panelGame.InvokeRequired)
 			{
 				AddPictureBoxCallback d = new AddPictureBoxCallback(AddPictureBox);
-				this.Invoke(d, new object[] { p });
+				this.Invoke(d, new object[] { pictureBox });
 			}
 			else
 			{
-				panelGame.Controls.Add(p);
+				panelGame.Controls.Add(pictureBox);
 			}
 		}
 		delegate void SetLabelTextCallback(Label label, String text);

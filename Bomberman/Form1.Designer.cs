@@ -62,10 +62,10 @@
 			this.labelInfoPlayer1 = new System.Windows.Forms.Label();
 			this.buttonExit2 = new System.Windows.Forms.Button();
 			this.pictureBoxAvatar = new System.Windows.Forms.PictureBox();
-			this.label2 = new System.Windows.Forms.Label();
+			this.labelAvatar = new System.Windows.Forms.Label();
 			this.pictureNextMove1 = new System.Windows.Forms.PictureBox();
 			this.pictureNextMove2 = new System.Windows.Forms.PictureBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.labelNextMoves = new System.Windows.Forms.Label();
 			this.panelGameInfo = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMenu)).BeginInit();
 			this.splitContainerMenu.Panel1.SuspendLayout();
@@ -415,10 +415,10 @@
 			this.panelInfo.Controls.Add(this.labelInfoPlayer1);
 			this.panelInfo.Controls.Add(this.buttonExit2);
 			this.panelInfo.Controls.Add(this.pictureBoxAvatar);
-			this.panelInfo.Controls.Add(this.label2);
+			this.panelInfo.Controls.Add(this.labelAvatar);
 			this.panelInfo.Controls.Add(this.pictureNextMove1);
 			this.panelInfo.Controls.Add(this.pictureNextMove2);
-			this.panelInfo.Controls.Add(this.label1);
+			this.panelInfo.Controls.Add(this.labelNextMoves);
 			this.panelInfo.Location = new System.Drawing.Point(449, -3);
 			this.panelInfo.Name = "panelInfo";
 			this.panelInfo.Size = new System.Drawing.Size(267, 447);
@@ -484,14 +484,14 @@
 			this.pictureBoxAvatar.TabIndex = 4;
 			this.pictureBoxAvatar.TabStop = false;
 			// 
-			// label2
+			// labelAvatar
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(7, 86);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(86, 17);
-			this.label2.TabIndex = 3;
-			this.label2.Text = "Your avatar:";
+			this.labelAvatar.AutoSize = true;
+			this.labelAvatar.Location = new System.Drawing.Point(7, 86);
+			this.labelAvatar.Name = "labelAvatar";
+			this.labelAvatar.Size = new System.Drawing.Size(86, 17);
+			this.labelAvatar.TabIndex = 3;
+			this.labelAvatar.Text = "Your avatar:";
 			// 
 			// pictureNextMove1
 			// 
@@ -511,14 +511,14 @@
 			this.pictureNextMove2.TabIndex = 2;
 			this.pictureNextMove2.TabStop = false;
 			// 
-			// label1
+			// labelNextMoves
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(4, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(85, 17);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Next moves:";
+			this.labelNextMoves.AutoSize = true;
+			this.labelNextMoves.Location = new System.Drawing.Point(4, 9);
+			this.labelNextMoves.Name = "labelNextMoves";
+			this.labelNextMoves.Size = new System.Drawing.Size(85, 17);
+			this.labelNextMoves.TabIndex = 0;
+			this.labelNextMoves.Text = "Next moves:";
 			// 
 			// panelGameInfo
 			// 
@@ -540,8 +540,8 @@
 			this.AutoScroll = true;
 			this.AutoScrollMinSize = new System.Drawing.Size(200, 300);
 			this.ClientSize = new System.Drawing.Size(725, 450);
-			this.Controls.Add(this.splitContainerMenu);
 			this.Controls.Add(this.panelGameInfo);
+			this.Controls.Add(this.splitContainerMenu);
 			this.Name = "Form1";
 			this.Text = "Bomberman";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -586,13 +586,13 @@
 		private System.Windows.Forms.Panel panelMultiplayer;
 		private System.Windows.Forms.Label labelAbout;
 		private System.Windows.Forms.Panel panelGame;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label labelNextMoves;
 		private System.Windows.Forms.PictureBox pictureNextMove2;
 		private System.Windows.Forms.PictureBox pictureNextMove1;
 		private System.Windows.Forms.Panel panelInfo;
 		private System.Windows.Forms.Panel panelGameInfo;
 		private System.Windows.Forms.PictureBox pictureBoxAvatar;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label labelAvatar;
 		private System.Windows.Forms.Button buttonExit2;
 		private System.Windows.Forms.Label labelInfoPlayer4;
 		private System.Windows.Forms.Label labelInfoPlayer3;
