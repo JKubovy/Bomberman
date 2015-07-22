@@ -347,10 +347,6 @@ namespace Bomberman
 			{
 				Send("Stop", clientsAll[i]);
 			}
-			//for (int i = 0; i < allConections.Count; i++)
-			//{
-			//	Send("Stop", allConections[i]);
-			//}
 		}
 	}
 }
