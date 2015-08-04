@@ -11,7 +11,7 @@ namespace Bomberman
 		public Form1()
 		{
 			InitializeComponent();
-			numericUpDownSize.Value = 14;
+            numericUpDownSize.Value = 14;
 			SetText();
 			this.KeyPreview = true;
 		}
@@ -240,21 +240,24 @@ namespace Bomberman
 
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (Program.playing)
-			{
-				if (e.KeyCode == Keys.Escape)
-				{
-					Stop();
-					return;
-				}
-				Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
-				if (!waiting & alive)
-				{
-					UpdateFutureMoves(movement);
-					player.ProcessMovement(movement);
-				}
-			}
-			else if (e.KeyCode == Keys.Escape) Close();
+            if (Program.playing)
+            {
+                if (e.KeyCode == Keys.Escape)
+                {
+                    Stop();
+                    return;
+                }
+                Movement movement = GameLogic.ProcessKeyPress(e.KeyCode);
+                if (!waiting & alive)
+                {
+                    UpdateFutureMoves(movement);
+                    player.ProcessMovement(movement);
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
 		}
 		Movement[] futureMovements = new Movement[2];
 		int indexFutureMovements = 0;
@@ -391,7 +394,9 @@ namespace Bomberman
 			Program.playing = false;
 			waiting = true;
 			alive = true;
-			panelGameInfo.Visible = false;
+            DeleteFutureMovement();
+            UpdatePictureBoxMovements();
+            panelGameInfo.Visible = false;
 			splitContainerMenu.Visible = true;
 			CleanScreen();
 		}
