@@ -20,6 +20,12 @@ Bomb explode in the second step move after planting.
 Press Esc in menu to exit program
 and press Esc in game to return to menu
 
+Graphic
+------
+Use texture / icons
+	* <a href="http://opengameart.org/content/bomb-party-the-complete-set">Bomb Party</a> <a href="http://creativecommons.org/licenses/by/3.0/">CC-BY 3.0</a>
+	* <a href="https://www.iconfinder.com/iconsets/glyphpack">glypgpack</a> <a href="http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL#9ccf5052">SIL OFL 1.1</a>
+
 Autor
 ------
 Jan Kubový
