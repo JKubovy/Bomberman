@@ -55,7 +55,7 @@ namespace Bomberman
 					if ((playground.board[connection.position.X - 1][connection.position.Y] == Square.Empty) ||
 						(playground.board[connection.position.X - 1][connection.position.Y] == Square.Fire))
 					{
-						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X - 1, connection.position.Y));
+						Move(new Point(connection.position.X, connection.position.Y), new Point(connection.position.X - 1, connection.position.Y));
 						connection.position = new Point(connection.position.X - 1, connection.position.Y);
 					}
 					return;
@@ -63,7 +63,7 @@ namespace Bomberman
 					if ((playground.board[connection.position.X][connection.position.Y - 1] == Square.Empty) ||
 						(playground.board[connection.position.X][connection.position.Y - 1] == Square.Fire))
 					{
-						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y - 1));
+						Move(new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y - 1));
 						connection.position = new Point(connection.position.X,connection.position.Y - 1);
 					}
 					return;
@@ -71,7 +71,7 @@ namespace Bomberman
 					if ((playground.board[connection.position.X + 1][connection.position.Y] == Square.Empty) ||
 						(playground.board[connection.position.X + 1][connection.position.Y] == Square.Fire))
 					{
-						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X + 1, connection.position.Y));
+						Move(new Point(connection.position.X, connection.position.Y), new Point(connection.position.X + 1, connection.position.Y));
 						connection.position = new Point(connection.position.X + 1, connection.position.Y);
 					}
 					return;
@@ -79,7 +79,7 @@ namespace Bomberman
 					if ((playground.board[connection.position.X][connection.position.Y + 1] == Square.Empty) ||
 						(playground.board[connection.position.X][connection.position.Y + 1] == Square.Fire))
 					{
-						Move(playground, new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y + 1));
+						Move(new Point(connection.position.X, connection.position.Y), new Point(connection.position.X, connection.position.Y + 1));
 						connection.position = new Point(connection.position.X, connection.position.Y + 1);
 					}
 					return;
@@ -155,8 +155,9 @@ namespace Bomberman
 		}
 
 		internal static List<Change> changes = new List<Change>();
-		private static void Move(Playground playground, Point oldLocation, Point newLocation)
+		private static void Move(Point oldLocation, Point newLocation)
 		{
+			Playground playground = Program.playground;
 			Square oldSquare = playground.board[oldLocation.X][oldLocation.Y];
 			if ((oldSquare >= Square.Bomb_1_1 && oldSquare <= Square.Bomb_1_4) ||
 				(oldSquare >= Square.Bomb_2_1 && oldSquare <= Square.Bomb_2_4) ||

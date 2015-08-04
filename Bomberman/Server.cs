@@ -250,8 +250,8 @@ namespace Bomberman
 		}
 		private static void EndOfGame()
 		{
-			SendUpdate("Update " + clientsPlaying[0].playerNumber + " WINNER!");
-		}
+            lock (clientsPlaying) if (clientsPlaying.Count == 1) SendUpdate("Update " + clientsPlaying[0].playerNumber + " WINNER!");
+        }
 		private static void Clean(Connection connection)
 		{
 			try

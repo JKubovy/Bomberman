@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace Bomberman
 {
-	class Connection
+	class Connection: IDisposable
 	{
 		public TcpClient client = null;
 		public StreamWriter writer;
@@ -20,5 +20,12 @@ namespace Bomberman
 			this.reader = new StreamReader(client.GetStream());
 			this.writer.AutoFlush = true;
 		}
-	}
+
+        public void Dispose()
+        {
+            ((IDisposable)writer).Dispose();
+            ((IDisposable)reader).Dispose();
+            ((IDisposable)client).Dispose();
+        }
+    }
 }

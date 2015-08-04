@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Bomberman
 {
-	class Client
+	class Client: IDisposable
 	{
 		internal Point Position { get; private set; }
 
@@ -295,5 +295,12 @@ namespace Bomberman
 			}
 			if (server != null) server.Close();
 		}
-	}
+
+        public void Dispose()
+        {
+            ((IDisposable)server).Dispose();
+            ((IDisposable)writer).Dispose();
+            ((IDisposable)reader).Dispose();
+        }
+    }
 }

@@ -92,7 +92,7 @@ namespace Bomberman
 						pictureBox.Size = new System.Drawing.Size(32, 32);
 						pictureBox.Location = new System.Drawing.Point((32 * j), (32 * i));
 						pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-						pictureBox.Image = getImage(i, j);
+						pictureBox.Image = getImage(new Point(i, j));
 						screen[i][j] = pictureBox;
 						AddPictureBox(pictureBox);
 					}
@@ -157,14 +157,14 @@ namespace Bomberman
 				{
 					for (int j = 0; j < Playground.playgroundSize; j++)
 					{
-						screen[i][j].Image = getImage(i, j);
+						screen[i][j].Image = getImage(new Point(i, j));
 					}
 				}
 			}
 		}
-		private static Image getImage(int x, int y)
+		private static Image getImage(Point position)
 		{
-			Square square = Program.playground.board[x][y];
+			Square square = Program.playground.board[position.X][position.Y];
 			switch (square)
 			{
 				case Square.Player_1:
